@@ -89,8 +89,28 @@ test case. Once this data is collected following a test suite run, SFL assesses
 the suspiciousness of code blocks depending on how many failing test cases run
 those blocks. From a logical point of view, the block/line of code executed the
 most by a failing test case is the most likely to contain the fault. SFL also
-uses various equations to calculate and quantitatively evaluate the
-suspiciousness all blocks of code.
+uses various equations to calculate and quantify the
+suspiciousness of blocks of code. The equations are expressed as functions of
+elements, where each element is the line or block of code under inspection. The
+functions typically include the following variables\cite{Wong2014DStar}:
+
+\begin{center}
+	\textbf{N$_{S}$}: total number of successful test cases
+
+	\textbf{N$_{F}$}: total number of failed test cases
+
+	\textbf{N$_{C}$}: total number of test cases that cover the statement
+
+	\textbf{N$_{U}$}: total number of test cases that do not cover the statement
+
+	\textbf{N$_{CF}$}: number of failed test cases that cover the statement
+
+	\textbf{N$_{UF}$}: number of failed test cases that do not cover the statement
+
+	\textbf{N$_{CS}$}: number of successful test cases that cover the statement
+
+	\textbf{N$_{US}$}: number of successful test cases that do not cover the statement
+\end{center}
 
 While SFL can provide great insight for developers looking to debug their code,
 it's not always reliable or applicable. In the case where a test suite hasn't
@@ -101,14 +121,17 @@ Overall limitations of SFL will be discussed and acknowledged
 in evaluating the outcome of this research.
 
 % TODO: include other criticism of SFL
+% TODO: add a brief description on the variables in the SFL equations
 
 \section{Main Aims}
 \label{sec:aims}
 
+% TODO: maybe talk about the other existing python tool?
 With the demonstrated importance of debugging tools and strategies that increase
 developer efficiency, this research implements and evaluates an AFL tool to
 assist in debugging code. AFLuent is built using  Python programming
 language and uses SFL approach to identify faults in a
+% TODO: create citation
 program. Stack Overflow 2021 Developer Survey identified Python as the third
 most used programming/markup language used by developers worldwide. With that in
 mind, an automated fault localization tool in Python can reach a wide audience
@@ -126,50 +149,62 @@ following that step, AFLuent uses the resulting test suite data to identify the
 introduced fault. Through this process, AFLuent's performance and ability to
 correctly identify and rank suspicious statements/and blocks is assessed.
 
-\section{Research Question}
+\section{Research Questions}
 \label{sec:researchq}
 
-% TODO: edit this to fit in
-With the importance of fault localization algorithms in mind, and the need for a
-functional and robust tool for beginners, this research proposal
-seeks to answer the following general research questions:
+Throughout the implementation, testing, and evaluation of AFLuent, this research
+presents the following research questions and aims to answer each in detail.
+There are two main research questions that focus on different aspects of
+AFLuent. Each one is further split into sub-questions to facilitate organization.
 
 \begin{center}
-	\emph{RQ1. What are the best available techniques to automate the process of
+	\emph{RQ1. What are the most accurate available techniques to automate the process of
 	fault localization using test coverage data?
 	}
 \end{center}
 
-This question is focused on the theoretical and evaluative purpose of this
-proposed work. However, it's very helpful in building a foundational
-understanding of automated fault localization, and assessing the results of the
-research. Since this research question is general, it's further split into
+This general research question focuses on the core implementation and
+evaluation of AFLuent. Considering that many SFL strategies and formulas can be
+used, finding the most suitable and most accurate one in detecting bugs is one
+of the goals of this research. In order to answer this question,
+available literature on SFL is analysed and the most popular and cited formulas
+are included in the implementation of AFLuent. Answering this question also
+requires that each approach is evaluated through an experiment section.
+Since this research question is includes two separate sections, it's further split into
 smaller sub-questions discussed below.
 
 \begin{center}
-	\emph{RQ1.1. What are the most popular formulas for code suspiciousness
+	\emph{RQ1.1. What are the four most popular formulas for code suspiciousness
 	created and evaluated by past literature?
 	}
 \end{center}
 
-To answer this question, an extensive literature review is needed to understand
-existing research on these formulas. Additionally, many studies contain
-empirical evaluation of their formula/approach that distinguishes it from
-others. All of these aspects will need to be taken into consideration when
-deciding which formulas to implement and evaluate as part of the automated fault
-localization tool.
+Available literature surrounding SFL is reviewed to identify four
+different formulas used to calculate suspiciousness scores using test coverage
+information. Each of these formulas are integrated into AFLuent where the user
+is able to select the approach to use while debugging. The popularity, accuracy,
+and performance as found in past work are the main criteria used to pick the top
+formulas.
+
 
 \begin{center}
-	\emph{RQ1.2. How should each selected formula/technique be empirically
-	evaluated to reflect the accuracy of the resulting rankings?
+	\emph{RQ1.2.  What is the accuracy and efficiency of the chosen
+	formulas when applied to Python projects?
 	}
 \end{center}
 
-To ensure correctness and effectiveness, this research question requires that a
-thorough process is planned for collecting data and testing the tool post
-implementation. A more extensive discussion for this question will be addressed
-in the evaluation section, which will outline the process of collecting data,
-and conducting analysis on the results.
+To ensure correctness and effectiveness, the implemented formulas in AFLuent are
+evaluated through experiments that measure their accuracy in sorting suspicious
+statements and blocks. More specifically, the formulas will be assessed in in
+the context of Python projects that use the Pytest unit testing framework.
+More details on this research question can be found in the evaluation section.
+
+While RQ1 involves technical details around implementation and assessment of
+AFLuent, RQ2 focuses on user experience. Since the target audience of AFLuent is
+beginner developers, it's important to ensure that AFLuent produces meaningful
+and clear results that guide developers. In order to answer this question,
+AFLuent adopts various standards in interacting with the user through console
+output, as well as error messages and warnings.
 
 \begin{center}
 	\emph{RQ2. How can automated fault localization techniques be implemented in
@@ -177,12 +212,21 @@ and conducting analysis on the results.
 	}
 \end{center}
 
-This research question focuses on the implementation section
-of this research where the result is a functional tool that can be used by
-developers. Since the target audience of the proposed tool is novice developers,
-special consideration is needed in regards to ease of use and installation.
-The method of approach section will further expand on the planned steps to
-answer this question.
+In addition to ensuring a smooth user experience while utilizing AFLuent
+functionalities, setup process and usage of the tool AFLuent is simplified to
+facilitate installation. Clear and descriptive documentation is also a crucial
+step in making AFLuent accessible available for new users.
 
 \section{Thesis Outline}
 \label{sec:outline}
+
+Starting with a literature review, this research identifies important sources
+that guide the implementation of AFLuent and discusses their use. Additionally,
+the methods section extensively describes how AFLuent is implemented and the
+steps taken to ensure it functions correctly while being up to industry
+standards. The different tools used to build and test AFLuent are also
+discussed in the methods sections. Following that, the evaluation section
+describes the steps taken to evaluate AFLuent by testing the tool and
+collecting data regarding it's output. The evaluation section also includes an
+analysis of the results of the evaluation and various plots and charts that
+show the findings.
