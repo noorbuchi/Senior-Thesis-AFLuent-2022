@@ -4,6 +4,8 @@
 \section{Motivation}
 \label{sec:motivation}
 
+% TODO: Define debugging and bug
+
 Debugging is a task that every developer and software engineer will have to go
 through while writing code. It's often a
 tedious process that involves manually checking the code and running it multiple
@@ -27,6 +29,7 @@ With special concentration on novice and beginner developers in an educational
 environment, this research implements and evaluates a tool focused on helping
 developers find bugs in their code.
 
+% TODO: check all citations
 % TODO: create citation
 \begin{figure}[!htb]
 	\begin{center}
@@ -95,22 +98,99 @@ elements, where each element is the line or block of code under inspection. The
 functions typically include the following variables\cite{Wong2014DStar}:
 
 \begin{center}
-	\textbf{N$_{S}$}: total number of successful test cases
+	\textbf{e$_{f}$}: number of failed test cases that execute/cover the element
 
-	\textbf{N$_{F}$}: total number of failed test cases
+	\textbf{n$_{f}$}: number of failed test cases that do not execute/cover the element
 
-	\textbf{N$_{C}$}: total number of test cases that cover the statement
+	\textbf{e$_{p}$}: number of passed test cases that execute/cover the element
 
-	\textbf{N$_{U}$}: total number of test cases that do not cover the statement
-
-	\textbf{N$_{CF}$}: number of failed test cases that cover the statement
-
-	\textbf{N$_{UF}$}: number of failed test cases that do not cover the statement
-
-	\textbf{N$_{CS}$}: number of successful test cases that cover the statement
-
-	\textbf{N$_{US}$}: number of successful test cases that do not cover the statement
+	\textbf{n$_{p}$}: number of passed test cases that do not execute/cover the element
 \end{center}
+
+% TODO: needs updated when the fourth equation is picked
+Using these variables, past research has come up with many equations to
+calculate elements' suspiciousness scores. This research focuses on three main
+popular equations and adds support for them in AFLuent. The reasoning behind the
+equation choices is further discusses in Related Works, however, this section
+will give an overview of how each looks like.
+
+\subsubsection{Tarantula}
+\label{subsubsec:Tarantula}
+\begin{figure}[!htb]
+	\begin{center}
+		\begin{equation}
+			Tarantula(element) = \frac{\frac{\textbf{e$_{f}$}}{\textbf{e$_{f}$} + \textbf{n$_{f}$}}}{\frac{\textbf{e$_{p}$}}{\textbf{e$_{p}$}+\textbf{n$_{p}$}} + \frac{\textbf{e$_{f}$}}{\textbf{e$_{f}$}+\textbf{n$_{f}$}}}
+		\end{equation}
+		\caption{\label{fig:tarantulaEquation} Tarantula Equation\cite{Jones2005TarantulaEval}}
+	\end{center}
+\end{figure}
+
+The Tarantula equation is one of most popular Coverage based fault localization
+formulas to calculate suspiciousness scores of code elements. It uses the
+variables listed previously to generate a score between 0 and 1, where 0 is
+assigned for non-suspicious elements and 1 is assigned for most suspicious ones.
+
+\subsubsection{Ochiai}
+\label{subsubsec:Ochiai}
+\begin{figure}[!htb]
+	\begin{center}
+		\begin{equation}
+			Ochiai(element) = \frac{\textbf{e$_{f}$}}{\sqrt{(\textbf{e$_{f}$}  + \textbf{n$_{f}$}) \cdot (\textbf{e$_{f}$}  + \textbf{e$_{p}$})}}
+		\end{equation}
+		\caption{\label{fig:ochiaiEquation} Ochiai Equation\cite{Abreu2006Ochiai}}
+	\end{center}
+\end{figure}
+
+Ochiai is another equation used to calculate suspiciousness scores between 0 and
+1. It relies on similar code test and coverage variables as the Tarantula
+equation. AFLuent supports using this equation in its automated fault
+localization process. More discussion around Ochiai can be found in the related
+works section.
+
+\subsubsection{DStar}
+\label{subsubsec:DStar}
+\begin{figure}[!htb]
+	\begin{center}
+		\begin{equation}
+			Dstar(element) = \frac{(\textbf{e$_{f}$})^{\ast}}{\textbf{e$_{p}$} + \textbf{n$_{f}$}}
+		\end{equation}
+		\caption{\label{fig:dstarEquation} DStar Equation\cite{Wong2014DStar}}
+	\end{center}
+\end{figure}
+
+The DStar equation also results in a score between 0 and 1, however, it includes
+a new variable represented as the * symbol. This variable can give more
+weight to \textbf{e$_{f}$} and can be set to any number. However, the
+researchers suggested that * is set to 2 or 3.
+
+\subsection{SFL in Action}
+\label{subsec:SFLinAction}
+
+\begin{figure}[!htb]
+	\begin{center}
+		\includegraphics[width=\textwidth]{SFL_example.png}
+		\caption{\label{fig:sfl_example} Example of SFL Equations}
+	\end{center}
+\end{figure}
+
+With the discussed equations and techniques to calculate suspiciousness in mind,
+the following example will demonstrate and discuss how AFLuent will utilize unit
+test and coverage data to locate faults in a program. Fig\ref{fig:sfl_example}
+shows a sample python program to find the middle value
+from three integers. The program contains a bug on line 9 where the wrong middle
+number is detected. The figure also shows six different test cases that pass
+various inputs to the function and check whether the actual output matches the
+expected. The results of each test is found on the last row of the table.
+Additionally, the large dots under the Input Tests column illustrate the concept
+of code coverage. For each line of code and test input, a dot in the cell means
+that the line was executed when this input was passed. On the rightmost column
+of the table, suspiciousness scores for each line are calculated using the three
+formulas (Tarantula, Ochiai, and DStar). High suspiciousness scores are also
+highlighted in warmer colors. Overall, all three equations are able to detect
+that line 9 is the most suspicious and is likely the cause of the test failure.
+
+\subsection{AFL Criticism}
+\label{subsec:Criticism}
 
 While SFL can provide great insight for developers looking to debug their code,
 it's not always reliable or applicable. In the case where a test suite hasn't
@@ -121,7 +201,6 @@ Overall limitations of SFL will be discussed and acknowledged
 in evaluating the outcome of this research.
 
 % TODO: include other criticism of SFL
-% TODO: add a brief description on the variables in the SFL equations
 
 \section{Main Aims}
 \label{sec:aims}

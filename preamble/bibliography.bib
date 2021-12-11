@@ -25,3 +25,37 @@ author = {Rui Abreu and Peter Zoeteweij and Rob Golsteijn and Arjan J.C. {van Ge
 keywords = {Test data analysis, Software fault diagnosis, Program spectra, Real-time and embedded systems, Consumer electronics},
 abstract = {Spectrum-based fault localization (SFL) shortens the test–diagnose–repair cycle by reducing the debugging effort. As a light-weight automated diagnosis technique it can easily be integrated with existing testing schemes. Since SFL is based on discovering statistical coincidences between system failures and the activity of the different parts of a system, its diagnostic accuracy is inherently limited. Using a common benchmark consisting of the Siemens set and the space program, we investigate this diagnostic accuracy as a function of several parameters (such as quality and quantity of the program spectra collected during the execution of the system), some of which directly relate to test design. Our results indicate that the superior performance of a particular similarity coefficient, used to analyze the program spectra, is largely independent of test design. Furthermore, near-optimal diagnostic accuracy (exonerating over 80% of the blocks of code on average) is already obtained for low-quality error observations and limited numbers of test cases. In addition to establishing these results in the controlled environment of our benchmark set, we show that SFL can effectively be applied in the context of embedded software development in an industrial environment.}
 }
+
+@inproceedings{Jones2005TarantulaEval,
+author = {Jones, James A. and Harrold, Mary Jean},
+title = {Empirical Evaluation of the Tarantula Automatic Fault-Localization Technique},
+year = {2005},
+isbn = {1581139934},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/1101908.1101949},
+doi = {10.1145/1101908.1101949},
+abstract = {The high cost of locating faults in programs has motivated the development of techniques
+that assist in fault localization by automating part of the process of searching for
+faults. Empirical studies that compare these techniques have reported the relative
+effectiveness of four existing techniques on a set of subjects. These studies compare
+the rankings that the techniques compute for statements in the subject programs and
+the effectiveness of these rankings in locating the faults. However, it is unknown
+how these four techniques compare with Tarantula, another existing fault-localization
+technique, although this technique also provides a way to rank statements in terms
+of their suspiciousness. Thus, we performed a study to compare the Tarantula technique
+with the four techniques previously compared. This paper presents our study---it overviews
+the Tarantula technique along with the four other techniques studied, describes our
+experiment, and reports and discusses the results. Our studies show that, on the same
+set of subjects, the Tarantula technique consistently outperforms the other four techniques
+in terms of effectiveness in fault localization, and is comparable in efficiency to
+the least expensive of the other four techniques.},
+booktitle = {Proceedings of the 20th IEEE/ACM International Conference on Automated Software Engineering},
+pages = {273–282},
+numpages = {10},
+keywords = {empirical study, program analysis, fault localization, automated debugging},
+location = {Long Beach, CA, USA},
+series = {ASE '05}
+}
+
+@inproceedings{Abreu2006Ochiai,  author={Abreu, Rui and Zoeteweij, Peter and Van Gemund, Arjan J.c.},  booktitle={2006 12th Pacific Rim International Symposium on Dependable Computing (PRDC'06)},   title={An Evaluation of Similarity Coefficients for Software Fault Localization},   year={2006},  volume={},  number={},  pages={39-46},  doi={10.1109/PRDC.2006.18}}
