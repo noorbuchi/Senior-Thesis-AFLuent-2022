@@ -4,17 +4,20 @@
 \section{Motivation}
 \label{sec:motivation}
 
-% TODO: Define debugging and bug
-
 Debugging is a task that every developer and software engineer will have to go
 through while writing code. It's often a
 tedious process that involves manually checking the code and running it multiple
-times to simply find the location of the error in the code. Finding possible
-solutions to fix the fault would then be the next step in the debugging process.
-In Postman's 2020 State of the API Report, developers reported allocating
-seventeen percent of their time debugging and manually testing their code.
+times to simply find the location of the error in the code. More formally,
+debugging ``involves analyzing and possibly extending the given program that
+does not meet the specification in order to find a new program that is close to
+the original and does satisfy the specifications... it is the process of
+`diagnosing the precise nature of a known error and then correcting it' '' \cite{Hailpern2002Debugging}.
+Finding possible solutions to fix the fault would then be the next step
+in the debugging process. In Postman's 2020 State of the API Report,
+developers reported allocating seventeen percent of their time
+debugging and manually testing their code.
 Fig \ref{fig:development_time} demonstrates that debugging makes up the
-second most time consuming task for API developers.
+second most time-consuming task for API developers.
 In an effort to facilitate and automate this process, different tools have been
 created to guide the developer in locating error(s) and suggesting how to go
 about fixing them. Solving this problem can significantly increase the
@@ -24,7 +27,7 @@ debugging and allow developers to focus on other important tasks.
 Beginner and novice developers can also benefit greatly from tools
 that facilitate the debugging process, which could ease the learning process and help
 them avoid making mistakes. Overall, contributions to this field of study could
-assist developers and software engineer of all levels.
+assist developers and software engineers of all levels.
 With special concentration on novice and beginner developers in an educational
 environment, this research implements and evaluates a tool focused on helping
 developers find bugs in their code.
@@ -59,8 +62,8 @@ with a way to essentially pause the runtime of a program using breakpoints to di
 information about the state of different variables and function call stack.
 Through debuggers, developers can run the code line by line until an unexpected
 behavior is detected. There is no denial that debuggers are very effective,
-however, using them can be time consuming, especially for complex bugs.
-Additionally, debuggers require that the code is ran during the debugging
+however, using them can be time-consuming, especially for complex bugs.
+Additionally, debuggers require that the code is run during the debugging
 process which could increase the time needed to debug and might not always be
 feasible. With these drawbacks in mind, several automated fault localization (AFL)
 algorithms and approaches have been studied to increase the
@@ -70,12 +73,12 @@ efficiency of the debugging process.
 Automated Fault Localization approaches perform different types of analysis to
 the code and attempt to find the location of existing faults. Some approaches
 use trained artificial intelligence models to assess the code and make
-predictions on where some faults may exist. Others construct and analyse
+predictions on where some faults may exist. Others construct and analyze
 abstract syntax trees to look for potential errors. On the other hand,
 approaches such as spectrum-based fault localization rely on data collected
 during the runtime of the code to ``identify the part of the program whose
 activity correlates most with the detection of errors'' \cite{ABREU20091780}.
-More specifically, the results of the program's test suite is used to find this
+More specifically, the results of the program's test suite are used to find this
 correlation. This latter approach is the focus of this research, where a
 spectrum-based automated fault localization tool is implemented.
 
@@ -111,7 +114,7 @@ functions typically include the following variables\cite{Wong2014DStar}:
 Using these variables, past research has come up with many equations to
 calculate elements' suspiciousness scores. This research focuses on three main
 popular equations and adds support for them in AFLuent. The reasoning behind the
-equation choices is further discusses in Related Works, however, this section
+equation choices is further discussed in Related Works, however, this section
 will give an overview of how each looks like.
 
 \subsubsection{Tarantula}
@@ -125,7 +128,7 @@ will give an overview of how each looks like.
 	\end{center}
 \end{figure}
 
-The Tarantula equation is one of most popular Coverage based fault localization
+The Tarantula equation is one of the most popular Coverage based fault localization
 formulas to calculate suspiciousness scores of code elements. It uses the
 variables listed previously to generate a score between 0 and 1, where 0 is
 assigned for non-suspicious elements and 1 is assigned for most suspicious ones.
@@ -169,7 +172,7 @@ researchers suggested that * is set to 2 or 3.
 \begin{figure}[!htb]
 	\begin{center}
 		\includegraphics[width=\textwidth]{SFL_example.png}
-		\caption{\label{fig:sfl_example} Example of SFL Equations}
+		\caption{\label{fig:sfl_example} Applied Example of SFL Equations}
 	\end{center}
 \end{figure}
 
@@ -189,7 +192,7 @@ formulas (Tarantula, Ochiai, and DStar). High suspiciousness scores are also
 highlighted in warmer colors. Overall, all three equations are able to detect
 that line 9 is the most suspicious and is likely the cause of the test failure.
 
-\subsection{AFL Criticism}
+\subsection{SFL Criticism}
 \label{subsec:Criticism}
 
 While SFL can provide great insight for developers looking to debug their code,
@@ -197,10 +200,8 @@ it's not always reliable or applicable. In the case where a test suite hasn't
 been fully implemented, the output of SFL may not narrow down potentially faulty
 code to a single line. Additionally, ties in suspiciousness scores between lines
 and blocks may come up, which may not offer the developer any valuable output.
-Overall limitations of SFL will be discussed and acknowledged
-in evaluating the outcome of this research.
-
-% TODO: include other criticism of SFL
+Overall limitations of SFL will be discussed in Related Works and acknowledged
+while evaluating the outcome of this research.
 
 \section{Main Aims}
 \label{sec:aims}
