@@ -85,29 +85,29 @@ spectrum-based automated fault localization tool is implemented.
 \subsection{Spectrum Based Fault Localization}
 \label{subsec:SpectrumBased}
 
-The reliance of spectrum based fault localization (SFL) on data already
+The reliance of spectrum based fault localization (SBFL) on data already
 collected during running and testing reduces the overall cost of debugging since
 there is no need to rerun the code. When focusing on collected test suite data,
-SFL becomes even more applicable since it can be integrated with many unit test
+SBFL becomes even more applicable since it can be integrated with many unit test
 frameworks. In addition to the per-test outcome of a test suite, per-test
-coverage data is also used in SFL to identify which lines are executed by each
-test case. Once this data is collected following a test suite run, SFL assesses
+coverage data is also used in SBFL to identify which lines are executed by each
+test case. Once this data is collected following a test suite run, SBFL assesses
 the suspiciousness of code blocks depending on how many failing test cases run
 those blocks. From a logical point of view, the block/line of code executed the
-most by a failing test case is the most likely to contain the fault. SFL also
+most by a failing test case is the most likely to contain the fault. SBFL also
 uses various equations to calculate and quantify the
 suspiciousness of blocks of code. The equations are expressed as functions of
 elements, where each element is the line or block of code under inspection. The
 functions typically include the following variables\cite{Wong2014DStar}:
 
 \begin{center}
-	\textbf{e$_{f}$}: number of failed test cases that execute/cover the element
+	\textbf{N$_{CF}$}: number of failed test cases that execute/cover the element
 
-	\textbf{n$_{f}$}: number of failed test cases that do not execute/cover the element
+	\textbf{N$_{UF}$}: number of failed test cases that do not execute/cover the element
 
-	\textbf{e$_{p}$}: number of passed test cases that execute/cover the element
+	\textbf{N$_{CS}$}: number of passed test cases that execute/cover the element
 
-	\textbf{n$_{p}$}: number of passed test cases that do not execute/cover the element
+	\textbf{N$_{US}$}: number of passed test cases that do not execute/cover the element
 \end{center}
 
 % TODO: needs updated when the fourth equation is picked
@@ -122,7 +122,7 @@ will give an overview of how each looks like.
 \begin{figure}[!htb]
 	\begin{center}
 		\begin{equation}
-			Tarantula(element) = \frac{\frac{\textbf{e$_{f}$}}{\textbf{e$_{f}$} + \textbf{n$_{f}$}}}{\frac{\textbf{e$_{p}$}}{\textbf{e$_{p}$}+\textbf{n$_{p}$}} + \frac{\textbf{e$_{f}$}}{\textbf{e$_{f}$}+\textbf{n$_{f}$}}}
+			Tarantula(element) = \frac{\frac{\textbf{N$_{CF}$}}{\textbf{N$_{CF}$} + \textbf{N$_{UF}$}}}{\frac{\textbf{N$_{CS}$}}{\textbf{N$_{CS}$}+\textbf{N$_{US}$}} + \frac{\textbf{N$_{CF}$}}{\textbf{N$_{CF}$}+\textbf{N$_{UF}$}}}
 		\end{equation}
 		\caption{\label{fig:tarantulaEquation} Tarantula Equation\cite{Jones2005TarantulaEval}}
 	\end{center}
@@ -138,7 +138,7 @@ assigned for non-suspicious elements and 1 is assigned for most suspicious ones.
 \begin{figure}[!htb]
 	\begin{center}
 		\begin{equation}
-			Ochiai(element) = \frac{\textbf{e$_{f}$}}{\sqrt{(\textbf{e$_{f}$}  + \textbf{n$_{f}$}) \cdot (\textbf{e$_{f}$}  + \textbf{e$_{p}$})}}
+			Ochiai(element) = \frac{\textbf{N$_{CF}$}}{\sqrt{(\textbf{N$_{CF}$}  + \textbf{N$_{UF}$}) \cdot (\textbf{N$_{CF}$}  + \textbf{N$_{CS}$})}}
 		\end{equation}
 		\caption{\label{fig:ochiaiEquation} Ochiai Equation\cite{Abreu2006Ochiai}}
 	\end{center}
@@ -155,7 +155,7 @@ works section.
 \begin{figure}[!htb]
 	\begin{center}
 		\begin{equation}
-			Dstar(element) = \frac{(\textbf{e$_{f}$})^{\ast}}{\textbf{e$_{p}$} + \textbf{n$_{f}$}}
+			Dstar(element) = \frac{(\textbf{N$_{CF}$})^{\ast}}{\textbf{N$_{CS}$} + \textbf{N$_{UF}$}}
 		\end{equation}
 		\caption{\label{fig:dstarEquation} DStar Equation\cite{Wong2014DStar}}
 	\end{center}
@@ -163,22 +163,22 @@ works section.
 
 The DStar equation also results in a score between 0 and 1, however, it includes
 a new variable represented as the * symbol. This variable can give more
-weight to \textbf{e$_{f}$} and can be set to any number. However, the
+weight to \textbf{N$_{CF}$} and can be set to any number. However, the
 researchers suggested that * is set to 2 or 3.
 
-\subsection{SFL in Action}
-\label{subsec:SFLinAction}
+\subsection{SBFL in Action}
+\label{subsec:SBFLinAction}
 
 \begin{figure}[!htb]
 	\begin{center}
 		\includegraphics[width=\textwidth]{SFL_example.png}
-		\caption{\label{fig:sfl_example} Applied Example of SFL Equations}
+		\caption{\label{fig:sbfl} Applied Example of SBFL Equations}
 	\end{center}
 \end{figure}
 
 With the discussed equations and techniques to calculate suspiciousness in mind,
 the following example will demonstrate and discuss how AFLuent will utilize unit
-test and coverage data to locate faults in a program. Fig\ref{fig:sfl_example}
+test and coverage data to locate faults in a program. Fig\ref{fig:sbfl_example}
 shows a sample python program to find the middle value
 from three integers. The program contains a bug on line 9 where the wrong middle
 number is detected. The figure also shows six different test cases that pass
@@ -192,15 +192,15 @@ formulas (Tarantula, Ochiai, and DStar). High suspiciousness scores are also
 highlighted in warmer colors. Overall, all three equations are able to detect
 that line 9 is the most suspicious and is likely the cause of the test failure.
 
-\subsection{SFL Criticism}
+\subsection{SBFL Criticism}
 \label{subsec:Criticism}
 
-While SFL can provide great insight for developers looking to debug their code,
+While SBFL can provide great insight for developers looking to debug their code,
 it's not always reliable or applicable. In the case where a test suite hasn't
-been fully implemented, the output of SFL may not narrow down potentially faulty
+been fully implemented, the output of SBFL may not narrow down potentially faulty
 code to a single line. Additionally, ties in suspiciousness scores between lines
 and blocks may come up, which may not offer the developer any valuable output.
-Overall limitations of SFL will be discussed in Related Works and acknowledged
+Overall limitations of SBFL will be discussed in Related Works and acknowledged
 while evaluating the outcome of this research.
 
 \section{Main Aims}
@@ -210,7 +210,7 @@ while evaluating the outcome of this research.
 With the demonstrated importance of debugging tools and strategies that increase
 developer efficiency, this research implements and evaluates an AFL tool to
 assist in debugging code. AFLuent is built using  Python programming
-language and uses SFL approach to identify faults in a
+language and uses SBFL approach to identify faults in a
 % TODO: create citation
 program. Stack Overflow 2021 Developer Survey identified Python as the third
 most used programming/markup language used by developers worldwide. With that in
@@ -244,10 +244,10 @@ AFLuent. Each one is further split into sub-questions to facilitate organization
 \end{center}
 
 This general research question focuses on the core implementation and
-evaluation of AFLuent. Considering that many SFL strategies and formulas can be
+evaluation of AFLuent. Considering that many SBFL strategies and formulas can be
 used, finding the most suitable and most accurate one in detecting bugs is one
 of the goals of this research. In order to answer this question,
-available literature on SFL is analysed and the most popular and cited formulas
+available literature on SBFL is analysed and the most popular and cited formulas
 are included in the implementation of AFLuent. Answering this question also
 requires that each approach is evaluated through an experiment section.
 Since this research question is includes two separate sections, it's further split into
@@ -259,7 +259,7 @@ smaller sub-questions discussed below.
 	}
 \end{center}
 
-Available literature surrounding SFL is reviewed to identify four
+Available literature surrounding SBFL is reviewed to identify four
 different formulas used to calculate suspiciousness scores using test coverage
 information. Each of these formulas are integrated into AFLuent where the user
 is able to select the approach to use while debugging. The popularity, accuracy,
