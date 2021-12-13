@@ -121,11 +121,54 @@ useful to include Tarantula as one of the available options.
 \subsubsection{Ochiai}
 \label{subsubsec:ochiai_lit}
 
+Ochiai is another similarity coefficient formula for SBFL that uses code
+coverage information and test output to produce as suspiciousness score.
+Originally used in computing genetic similarity in molecular biology and
+evaluated in Abreu et al. \cite{Abreu2006Ochiai}, the equation for this approach
+is shown in fog.\ref{fig:ochiaiEquation}. Similar to Tarantula, the number of
+failing test cases that execute an element are the main factor in increasing
+suspiciousness. The formula uses similar terms as Tarantula such as total number
+of tests that cover the element, unlike Tarantula, however, it does not consider
+successful tests that do not cover the element.
+Papers such as \cite{Abreu2006Ochiai,ABREU20091780} also evaluate the
+performance of Ochiai in comparison to other such as Tarantula, AMPLE, and
+Jaccard. Another evaluation of Ochiai is done by Le et al. \cite{le2013theory}
+where it was found to have a statistically significant improvement when compared
+to Tarantula. The paper demonstrates that on average developers only need to
+inspect 21.02\% of the source code before finding the fault.
+AFLuent includes and implementation and evaluation of Ochiai to
+validate that it performs as expected compared to the Tarantula technique.
+Additionally, considering that Ochiai is considered a fairly accurate and
+effective formula to detect faults, AFLuent takes advantage of the performance
+it offers.
+
+\begin{figure}[!htb]
+	\begin{center}
+		\begin{equation}
+			Ochiai2(element) = \frac{\textbf{N$_{CF}$}\cdot{\textbf{N$_{US}$}}}{\sqrt{(\textbf{N$_{CF}$}  + \textbf{N$_{CS}$}) \cdot (\textbf{N$_{US}$}  + \textbf{N$_{UF}$}) \cdot (\textbf{N$_{CF}$}  + \textbf{N$_{UF}$}) \cdot (\textbf{N$_{CP}$}  + \textbf{N$_{US}$})}}
+		\end{equation}
+		\caption{\label{fig:ochiai2Equation} Ochiai2 Equation\cite{wong2016survey}}
+	\end{center}
+\end{figure}
+
+In addition to the Ochiai formula in fig.\ref{fig:ochiaiEquation}, another
+variation of Ochiai is identified and evaluated by \cite{naish2011model}. The
+formula for Ochiai2 is shown in \ref{fig:ochiai2Equation} and it takes into
+consideration all the possible outcomes of unit test coverage. Overall, this
+variation is included in AFLuent to compare the performance between Ochiai2 and
+the original formula and see if it provides an improvement in effectiveness.
+Both Ochiai and Ochiai2 are relevant similarity coefficient-based approaches
+that add variety to AFLuent and allow a representative evaluation of the tool
+that takes in many different approaches..
+
 \subsubsection{DStar}
 \label{subsubsec:dstar_lit}
 
-\subsubsection{O and \textbf{$O^p$}}
-\label{subsubsec:o_lit}
+DStar (also written as D*) is another SPFL technique that utilizes code coverage
+information of a program to locate and rank faults. The equation for this
+approach can be found in fig.\ref{fig:dstarEquation}. Wong et al.
+\cite{Wong2014DStar} introduce and extensively evaluate this approach in a 2014
+paper that demonstrate it's effectiveness compared to other formulas.
 
 \subsection{Combining Approaches}
 \label{subsec:combining_approaches}

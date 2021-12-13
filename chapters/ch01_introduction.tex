@@ -98,17 +98,23 @@ most by a failing test case is the most likely to contain the fault. SBFL also
 uses various equations to calculate and quantify the
 suspiciousness of blocks of code. The equations are expressed as functions of
 elements, where each element is the line or block of code under inspection. The
-functions typically include the following variables\cite{Wong2014DStar}:
+functions typically include the variables shown in
+Fig.\ref{fig:contingency_table}. The figure also provides a table to visualize
+the relationship of the variables \cite{Wong2014DStar}.
 
-\begin{center}
-	\textbf{N$_{CF}$}: number of failed test cases that execute/cover the element
+\begin{figure}[!htb]
+	\begin{center}
+		\textbf{N$_{CF}$}: number of failed test cases that execute/cover the element
 
-	\textbf{N$_{UF}$}: number of failed test cases that do not execute/cover the element
-
-	\textbf{N$_{CS}$}: number of passed test cases that execute/cover the element
-
-	\textbf{N$_{US}$}: number of passed test cases that do not execute/cover the element
-\end{center}
+		\textbf{N$_{UF}$}: number of failed test cases that do not execute/cover the element
+	
+		\textbf{N$_{CS}$}: number of passed test cases that execute/cover the element
+	
+		\textbf{N$_{US}$}: number of passed test cases that do not execute/cover the element
+		\includegraphics[width=7cm]{contingency_table.png}
+		\caption{\label{fig:contingency_table} Variables in SBFL}
+	\end{center}
+\end{figure}
 
 % TODO: needs updated when the fourth equation is picked
 Using these variables, past research has come up with many equations to
