@@ -1,11 +1,5 @@
-\chapter{Related Work} 
+\chapter{Related Work}
 \label{ch:relatedwork}
-
-% This chapter should include a broad and detailed review of relevant existing
-% work. The literature review
-% should provide background and context for the thesis work. The subsections may be organized in whatever
-% manner seems best suited to the material---chronological, or by topic, or
-% according to some other criteria (e.g., primary versus secondary resources).
 
 Automated fault localization in general and more specifically spectrum based
 fault localization have extensive literature exploring the different approaches
@@ -278,6 +272,51 @@ reducing the number of found ties in Tarantula and Ochiai approaches.
 
 \section{Existing Tools}
 \label{sec:existing_tools}
+
+Some tools that perform SBFL have already been proposed and implemented. While
+they tend to be standalone applications that operate differently than AFLuent,
+it's important to explore the way these applications interact with the user and
+show output. Zoltar \cite{janssen2009zoltar} is a standalone tool for C/C++
+programs that offers a
+graphical user interface for users to view program spectra and calculate
+suspiciousness scores using various techniques. The tool also uses the hue
+concept developed by an early study that proposes Tarantula \cite{jones2002viz}.
+By color coding statements based on their rank and suspiciousness scores, Zoltar
+simplifies the user interaction by making it clear which statement is the most
+likely to be faulty. While AFLuent lives and runs in a terminal window, it does
+utilize color coding elements in its output to increase output readability and
+facilitate user interaction. Additionally, AFLuent solves some of the problems
+present with Zoltar by existing as a Pytest plugin, which gives it easy access
+to program spectra such as test results and statement coverage.
+
+\begin{figure}[!htb]
+	\begin{center}
+		\includegraphics[width=6cm]{zoltar.png}
+		\caption{\label{fig:zoltar} Example of Zoltar Interface \cite{janssen2009zoltar}}
+	\end{center}
+\end{figure}
+
+In contrast to Zoltar, which was used to analyze programs written in C and C++,
+CharmFL, is a Python tool that performs SBFL to identify faults. Sarhan et al.
+\cite{sarhan2021charmfl} introduce CharmFL in a study that
+discusses its features and implementation. The study recognizes the need for
+SBFL tools to assist Python developers since it has become a very popular
+language. Additionally, it presents CharmFL as a plugin for the popular IDE and
+text editor PyCharm. Similar to AFLuent, it uses the Pytest framework to collect
+program spectra and calculates suspiciousness scores using Tarantula, Ochiai,
+and DStar approaches. Overall, CharmFL has many similarities with AFLuent, but
+it's also less accessible considering that it's a PyCharm plugin which is not
+used by every developer. Overall, the implementation of CharmFL provides and
+inspiration for AFLuent and encourages improvements where CharmFL may fall
+short.
+
+\begin{figure}[!htb]
+	\begin{center}
+		\includegraphics[width=10cm]{CharmFL.png}
+		\caption{\label{fig:charmfl} Example interface of CharmFL \cite{sarhan2021charmfl}}
+	\end{center}
+\end{figure}
+
 
 \section{Usability and Accessibility}
 \label{sec:usability_accessibility}
