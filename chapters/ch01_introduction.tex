@@ -167,7 +167,7 @@ works section.
 	\end{center}
 \end{figure}
 
-The DStar equation also results in a score between 0 and 1, however, it includes
+The scores resulting from the DStar equation can range beyond 0 and 1 because it includes
 a new variable represented as the * symbol. This variable can give more
 weight to \textbf{N$_{CF}$} and can be set to any number. However, the
 researchers suggested that * is set to 2 or 3.
@@ -178,13 +178,14 @@ researchers suggested that * is set to 2 or 3.
 \begin{figure}[!htb]
 	\begin{center}
 		\includegraphics[width=\textwidth]{SFL_example.png}
-		\caption{\label{fig:sbfl} Applied Example of SBFL Equations}
+		\caption{\label{fig:sbfl_example} Applied Example of SBFL Equations}
 	\end{center}
 \end{figure}
 
 With the discussed equations and techniques to calculate suspiciousness in mind,
 the following example will demonstrate and discuss how AFLuent will utilize unit
-test and coverage data to locate faults in a program. Fig\ref{fig:sbfl_example}
+test and coverage data to locate faults in a program.
+Fig.\ref{fig:sbfl_example}
 shows a sample python program to find the middle value
 from three integers. The program contains a bug on line 9 where the wrong middle
 number is detected. The figure also shows six different test cases that pass
@@ -224,7 +225,10 @@ mind, an automated fault localization tool in Python can reach a wide audience
 in various fields such as data science and AI who may have various levels of
 experience. By implementing AFLuent using Python, powerful libraries and
 packages such as Pytest and Coverage.py can be used to collect test suite data
-in order to calculate suspiciousness.
+in order to calculate suspiciousness. AFLuent runs as a Pytest plugin and is
+integrated with the command line interface of Pytest, this feature increases
+it's accessibility by allowing developers to easily integrate it into their
+development environment.
 
 Following the implementation of AFLuent, this research evaluates the
 tool's performance and accuracy. Several open source projects
@@ -233,7 +237,9 @@ sample of projects with various sizes and relevance will be used to collect
 data. Mutation testing libraries are used to introduce bugs into the code,
 following that step, AFLuent uses the resulting test suite data to identify the
 introduced fault. Through this process, AFLuent's performance and ability to
-correctly identify and rank suspicious statements/and blocks is assessed.
+correctly identify and rank suspicious statements/and blocks assessed.
+The evaluation section will describe this crucial process that ensures that
+AFLuent functions as intended and is able to locate faults in code.
 
 \section{Research Questions}
 \label{sec:researchq}

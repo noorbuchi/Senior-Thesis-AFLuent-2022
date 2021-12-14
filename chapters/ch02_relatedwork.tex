@@ -168,17 +168,113 @@ DStar (also written as D*) is another SPFL technique that utilizes code coverage
 information of a program to locate and rank faults. The equation for this
 approach can be found in fig.\ref{fig:dstarEquation}. Wong et al.
 \cite{Wong2014DStar} introduce and extensively evaluate this approach in a 2014
-paper that demonstrate it's effectiveness compared to other formulas.
+paper that demonstrate it's effectiveness compared to other formulas. In the
+process of constructing D*, the paper lists the factors involved in determining
+suspiciousness of an element. The principles are as follows:
+\begin{enumerate}
+	\item Suspiciousness is directly proportional to the number of failed tests
+	covering the element.
+	\item Suspiciousness is inversely proportional to the number of successful tests
+	covering the element.
+	\item Suspiciousness is inversely proportional to the number of failed tests
+	that do not cover the element.
+	\item The number of failed tests covering the element should have the most
+	weight in determining suspiciousness.
+\end{enumerate}
+
+Considering that multiplying \(\textbf{N$_{CF}$}\) by a constant to increase its
+weight will not affect the ranking of statements, he authors argue that
+rasing \(\textbf{N$_{CF}$}\) to a value * greater than
+or equal to 1 would be more appropriate in increasing the weight of this
+variable. The study continues by illustrating how increasing the value of *
+produces more clear rankings that facilitate the debugging process by requiring
+the developer to examine less elements in bot the best and worst case. However,
+the authors also point out that this benefit of increasing teh value of * levels
+off at a certain point depending on the size of the program under analysis.
+The paper concludes by reviewing performance results showing that D* is more
+effective than the previously discussed formulas (Tarantula, Ochiai, and
+Ochiai2). With that in mind, D* offers the latest and most effective formula to
+calculate suspiciousness compared to all others included in this research.
+AFLuent implements D* to validate this step up in effectiveness in the context of
+Python projects and gives the user the ability to use t.
 
 \subsection{Combining Approaches}
 \label{subsec:combining_approaches}
 
-While AFLuent does not rely on non-SBFL approaches in its implementations, it's
+While AFLuent only relies SBFL approaches in its implementations, it's
 useful to explore other methodologies that could assist in the debugging
-process. This creates a guide for potential extendibility of AFLuent and
-provides a way to fill in the shortcomings of AFLuent.
-% TODO: develop more using "Search-based fault localization" and "Learning to Combine Multiple Ranking Metrics
-% for Fault Localization"
+process. This creates a guide for potential extention of AFLuent and
+provides a way to fill in the shortcomings of AFLuent. Xuan et al. explores the
+possibility of combining several SBFL metrics of fault localization and
+introducing a machine learning model to assist with the ranking
+\cite{Xuan2014Combine}. While AFLuent does not support this approach, Xuan et
+al. shows some promising results that could potentially uncover performance
+improvements in fault localization. There are many tricky aspects of this
+research, especially that it suggests to train a machine learning model to
+assist with ranking. Depending on the data used to train the model, the results
+could be very different. Overall, while AFLuent does not use machine learning,
+this research provides a great idea for future work and improvements.
+
+Another proposed extension to the existing SBFL work is studied by Wang et al.
+\cite{Wang2011Search} where similar to the previous work, a ``Search-Based
+Composition Engine'' is trained using a set of coverage information as well as
+locations of existing bugs. Additionally, it creates a composite equation using
+multiple coefficient-based formulas and their weights as part of the engine. The
+resulting evaluation shows that this approach does, in fact, outperform standard
+formulas like Tarantula and Ochiai.
+
+Overall, while these works are somewhat out of scope of AFLuent since they use
+different techniques, they have the same intention in optimizing the debugging
+process and reducing its cost. The research discussed in this section could
+potentially get used to extend the functionality of AFLuent where a model/engine
+is trained through the feedback of users which allows them to use it later in
+their debugging efforts.
+
+\subsection{Acknowledging Problems}
+\label{subsec:acknowledging_problems}
+
+With the multitude of approaches and formulas to use in SBFL, various criticisms
+are brought up for each proposed research. In a survey study, Wong et al.
+\cite{wong2016survey} identifies a series of issues and concerns surrounding
+SBFL in general. The main one being the central problem of giving failed and
+successful tests accurate weights in order to produce a meaningful
+suspiciousness score and reduce the potential for ties. Another identified
+concern is the assumption that a well written and extensive test suite exists
+for the program under examinations but more specifically the assumption SBFL approaches tend to make by
+considering passing test cases indicators of error absence. In many instances,
+test cases themselves could contain bugs causing them to produce inaccurate results. Existing literature
+on both of these concerns exist and it's required to consider this criticism in
+the development of AFLuent.
+
+One of the brought up concerns of SBFL is the inclusion of passed program
+spectra in calculating suspiciousness of an element. Xie et al.
+\cite{xie2010isolating} argue that while a failed program test case does
+indicate the presence of an error a passed program spectra/test data, ``is not
+guaranteed to be absolutely free of any faulty statement''. With that in mind,
+passed tests information alone do not give reliable results on an element
+suspiciousness. The proposed approach to mitigate this problem is to organize
+program entities into two main groups, those who have been ``activated'' at
+least once by a failed program spectra, and ``clean'' ones, which have not at
+all. The research continues by experimenting with this approach and presenting
+results that showed some signs of improvement on existing SBFL formulas.
+Overall, this research provides a way to address inaccuracies with AFLuent and
+assists in expending the project beyond simple calculations based on formulas.
+
+Another concern with the use of SBFL to debug programs is the possibility of
+having equal suspiciousness scores assigned to multiple statements. These ties
+hinder the debugging process and present the developer with a dilemma. Which
+element should be inspected first? they're equally suspicious! This problem
+becomes more significant when only one of the tied elements actually contain the
+fault. A study by Xu et al. \cite{xu2011ties} recognizes this problem and
+expands on the different outcomes. In the best case, the developer picks the
+statement containing the fault as their first choice and finds the error right
+after. However, the worst case would require the developer to examine every tied
+element before reaching the one containing the fault. The research continues by
+showing that ties in calculated suspiciousness scores are frequent no matter the
+chosen formula. Other contributions of this research include strategies to break
+ties and facilitate suspiciousness ranking between elements. The research
+concludes by presenting that the tie breaking strategies were impactful in
+reducing the number of found ties in Tarantula and Ochiai approaches.
 
 \section{Existing Tools}
 \label{sec:existing_tools}
