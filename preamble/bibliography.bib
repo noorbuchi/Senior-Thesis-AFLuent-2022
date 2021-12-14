@@ -38,7 +38,7 @@ doi = {https://doi.org/10.1016/j.jss.2009.06.035},
 url = {https://www.sciencedirect.com/science/article/pii/S0164121209001319},
 author = {Rui Abreu and Peter Zoeteweij and Rob Golsteijn and Arjan J.C. {van Gemund}},
 keywords = {Test data analysis, Software fault diagnosis, Program spectra, Real-time and embedded systems, Consumer electronics},
-abstract = {Spectrum-based fault localization (SFL) shortens the test–diagnose–repair cycle by reducing the debugging effort. As a light-weight automated diagnosis technique it can easily be integrated with existing testing schemes. Since SFL is based on discovering statistical coincidences between system failures and the activity of the different parts of a system, its diagnostic accuracy is inherently limited. Using a common benchmark consisting of the Siemens set and the space program, we investigate this diagnostic accuracy as a function of several parameters (such as quality and quantity of the program spectra collected during the execution of the system), some of which directly relate to test design. Our results indicate that the superior performance of a particular similarity coefficient, used to analyze the program spectra, is largely independent of test design. Furthermore, near-optimal diagnostic accuracy (exonerating over 80% of the blocks of code on average) is already obtained for low-quality error observations and limited numbers of test cases. In addition to establishing these results in the controlled environment of our benchmark set, we show that SFL can effectively be applied in the context of embedded software development in an industrial environment.}
+abstract = {Spectrum-based fault localization (SFL) shortens the test-diagnose-repair cycle by reducing the debugging effort. As a light-weight automated diagnosis technique it can easily be integrated with existing testing schemes. Since SFL is based on discovering statistical coincidences between system failures and the activity of the different parts of a system, its diagnostic accuracy is inherently limited. Using a common benchmark consisting of the Siemens set and the space program, we investigate this diagnostic accuracy as a function of several parameters (such as quality and quantity of the program spectra collected during the execution of the system), some of which directly relate to test design. Our results indicate that the superior performance of a particular similarity coefficient, used to analyze the program spectra, is largely independent of test design. Furthermore, near-optimal diagnostic accuracy (exonerating over 80% of the blocks of code on average) is already obtained for low-quality error observations and limited numbers of test cases. In addition to establishing these results in the controlled environment of our benchmark set, we show that SFL can effectively be applied in the context of embedded software development in an industrial environment.}
 }
 
 @INPROCEEDINGS{debroy2010grouping,
@@ -86,7 +86,7 @@ set of subjects, the Tarantula technique consistently outperforms the other four
 in terms of effectiveness in fault localization, and is comparable in efficiency to
 the least expensive of the other four techniques.},
 booktitle = {Proceedings of the 20th IEEE/ACM International Conference on Automated Software Engineering},
-pages = {273–282},
+pages = {273-282},
 numpages = {10},
 keywords = {empirical study, program analysis, fault localization, automated debugging},
 location = {Long Beach, CA, USA},
@@ -104,6 +104,42 @@ series = {ASE '05}
   pages={114--119},
   year={2021},
   organization={IEEE}
+}
+
+@inproceedings{kohn2019error,
+author = {Kohn, Tobias},
+title = {The Error Behind The Message: Finding the Cause of Error Messages in Python},
+year = {2019},
+isbn = {9781450358903},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3287324.3287381},
+doi = {10.1145/3287324.3287381},
+abstract = {The interaction between a novice programmer, and the compiler plays a crucial role in the learning process of the novice programmer. Of particular importance is the compiler's feedback on errors in the program code. Accordingly, compiler error messages are an important and active field of research. Yet, a language that has largely been left out of this discussion so far is Python. We have collected Python programs from high school students taking introductory courses. For each collected erroneous program, we sought to classify the effective error, and assess if the student was able to fix the error. Our study is a precursor to providing improved error messages in Python, and assess their effectiveness. As such, we are eventually interested in finding ways to automatically determine the effective error, so as to base the displayed message on. From our data, we found that a considerable part of students' errors can be attributed to minor mistakes, which can easily be identified and corrected. However, beyond such minor mistakes, a proper error diagnosis might have to be based on a goal/plan analysis of the entire program. Likewise, proper assessment of whether an error has been fixed frequently requires more context than is provided by the program alone.},
+booktitle = {Proceedings of the 50th ACM Technical Symposium on Computer Science Education},
+pages = {524-530},
+numpages = {7},
+keywords = {error message, python, cem, compiler errors},
+location = {Minneapolis, MN, USA},
+series = {SIGCSE '19}
+}
+
+@inproceedings{cosman2020pablo,
+author = {Cosman, Benjamin and Endres, Madeline and Sakkas, Georgios and Medvinsky, Leon and Yang, Yao-Yuan and Jhala, Ranjit and Chaudhuri, Kamalika and Weimer, Westley},
+title = {PABLO: Helping Novices Debug Python Code Through Data-Driven Fault Localization},
+year = {2020},
+isbn = {9781450367936},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3328778.3366860},
+doi = {10.1145/3328778.3366860},
+abstract = {As dynamically-typed languages grow in popularity, especially among beginning programmers, there is an increased need to pinpoint their defects. Localization for novice bugs can be ambiguous: not all locations formally implicated are equally useful for beginners. We propose a scalable fault localization approach for dynamic languages that is helpful for debugging and generalizes to handle a wide variety of errors commonly faced by novice programmers. We base our approach on a combination of static, dynamic, and contextual features, guided by machine learning. We evaluate on over 980,000 diverse real user interactions across four years from the popular PythonTutor.com website, which is used both in classes and by non-traditional learners. We find that our approach is scalable, general, and quite accurate: up to 77% of these historical novice users would have been helped by our top-three responses, compared to 45% for the default interpreter. We also conducted a human study: participants preferred our approach to the baseline ($p = 0.018)$, and found it additionally useful for bugs meriting multiple edits.},
+booktitle = {Proceedings of the 51st ACM Technical Symposium on Computer Science Education},
+pages = {1047-1053},
+numpages = {7},
+keywords = {fault localization, debugging, machine learning},
+location = {Portland, OR, USA},
+series = {SIGCSE '20}
 }
 
 @ARTICLE{Hailpern2002Debugging,  author={Hailpern, B. and Santhanam, P.},
@@ -145,3 +181,18 @@ doi={10.1147/sj.411.0004}}
   year={2014},
   publisher={Citeseer}
 }
+
+@misc{2020_state_of_api_report,
+  author = {Postman},
+  title = {2020 State of API Report Postman},
+  year = 2020,
+  url = {https://www.statista.com/statistics/1083189/worldwide-api-tasks-time-allocation/},
+}
+
+@misc{2021_stackoverflow_survey,
+  author = {StackOverflow},
+  title = {2021 Stack Overflow Developer Survey},
+  year = 2021,
+  url = {https://insights.stackoverflow.com/survey/2021},
+}
+

@@ -317,7 +317,41 @@ short.
 	\end{center}
 \end{figure}
 
-
+% TODO: requires more expansion
 \section{Usability and Accessibility}
 \label{sec:usability_accessibility}
 
+Considering that the focus of AFLuent is not to simply be a fault localization
+tool but rather an accessible one for beginner and novice developers, it's
+important to better understand how the tool can be catered to that audience.
+This can be done in many different ways, one of which is to increase the clarity
+and verbosity of output messages from the tool. Instead of simply displaying the
+ranked scores of statements, it would be more user friendly to explain the
+meaning of the output to guide the user into beginning the debugging process.
+Kohn \cite{kohn2019error} explores the experience of beginner with Python errors
+with different severity and various Python interpreter error output. The results
+confirm that more clear error messages tend to have a higher percentage of
+students finding and fixing the error. This connection between error output and
+the ability for beginner developers to fix faults is very crucial in the case of
+AFLuent. And while a user survey is out of scope of this research, it's Kohn
+provides encouragement to account for the different use cases in AFLuent and
+attempt to provide a clear output that describes the fault and guides the
+developer for the next step.
+
+Another aspiration of AFLuent is to assist beginners in debugging their code in
+ways that go beyond simply looking at the suspiciousness ranking of elements. By
+identifying popular python errors in Python among beginners, cause of faults can
+more quickly be pointed out after statement ranking has been produced. These
+steps require additional analysis of the suspicious statements by analyzing
+their syntax to identify potential cause. The goal of AFLuent would then become
+more than simply locating the fault, but also giving an educated guess regarding
+the reason behind the error. Cosman et al. \cite{cosman2020pablo} create a tool
+named PABLO that uses a trained classifier to identify common bugs and faults in
+beginner written Python programs. PABLO is also evaluated using an empirical and
+human study to analyze how accurate it is in detecting mistakes and how helpful
+users find the tool. Overall, PABLO is found to be ``helpful, providing
+high-accuracy fault localization that implicates the correct terms
+59-77\% of the time''. The ability of PABLO to describe the cause of error is
+very valuable to incorporate in AFLuent, especially that AFLuent is only able to
+conclude that there is an error and where it's possibly located. PABLO provides
+another layer of fault localization that can only enhance the user experience.

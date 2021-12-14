@@ -13,7 +13,7 @@ does not meet the specification in order to find a new program that is close to
 the original and does satisfy the specifications... it is the process of
 `diagnosing the precise nature of a known error and then correcting it' '' \cite{Hailpern2002Debugging}.
 Finding possible solutions to fix the fault would then be the next step
-in the debugging process. In Postman's 2020 State of the API Report,
+in the debugging process. In Postman's 2020 State of the API Report \cite{2020_state_of_api_report},
 developers reported allocating seventeen percent of their time
 debugging and manually testing their code.
 Fig \ref{fig:development_time} demonstrates that debugging makes up the
@@ -32,12 +32,10 @@ With special concentration on novice and beginner developers in an educational
 environment, this research implements and evaluates a tool focused on helping
 developers find bugs in their code.
 
-% TODO: check all citations
-% TODO: create citation
 \begin{figure}[!htb]
 	\begin{center}
 		\includegraphics[width=\textwidth]{dev_time_stat.png}
-		\caption{\label{fig:development_time} API Developers Time Allocation}
+		\caption{\label{fig:development_time} API Developers Time Allocation\cite{2020_state_of_api_report}}
 	\end{center}
 \end{figure}
 
@@ -69,7 +67,6 @@ feasible. With these drawbacks in mind, several automated fault localization (AF
 algorithms and approaches have been studied to increase the
 efficiency of the debugging process.
 
-% TODO: find the sources that explores different types of AFL
 Automated Fault Localization approaches perform different types of analysis to
 the code and attempt to find the location of existing faults. Some approaches
 use trained artificial intelligence models to assess the code and make
@@ -213,13 +210,12 @@ while evaluating the outcome of this research.
 \section{Main Aims}
 \label{sec:aims}
 
-% TODO: maybe talk about the other existing python tool?
 With the demonstrated importance of debugging tools and strategies that increase
 developer efficiency, this research implements and evaluates an AFL tool to
 assist in debugging code. AFLuent is built using  Python programming
 language and uses SBFL approach to identify faults in a
-% TODO: create citation
-program. Stack Overflow 2021 Developer Survey identified Python as the third
+program. Stack Overflow 2021 Developer Survey \cite{2021_stackoverflow_survey} 
+identified Python as the third
 most used programming/markup language used by developers worldwide. With that in
 mind, an automated fault localization tool in Python can reach a wide audience
 in various fields such as data science and AI who may have various levels of
