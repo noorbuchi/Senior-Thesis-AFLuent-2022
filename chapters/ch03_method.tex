@@ -1,6 +1,238 @@
-\chapter{Method of Approach} 
+\chapter{Method of Approach}
 \label{ch:method}
 
-This chapter should answer the ``how'' question - how did you complete your project, including the overall design of your study, details of the algorithms and tools you have used, etc.  
- Use technical diagrams, equations, algorithms, and paragraphs of text to
-describe the research that you have completed. Be sure to number all figures and tables and to explicitly refer to them in your text.
+This chapter describes the implementation of AFLuent and the experiment setup and
+execution process. More specifically, the reasoning behind design decisions and
+the result are the main focus. Additionally, the algorithms, structure, and
+flow of execution is demonstrated in meaningful charts and diagrams that allow
+this process to be easily reproducible and validated.
+
+\section{Development Environment and Toolset}
+\label{sec:DevEnviron}
+
+Prior to explain how implementation was completed, a ground-up overview of the
+tools used and their roles is necessary to establish definitions and facilitate
+the understanding of how dependencies they are connected. AFLuent being a Python
+tool allows its development to rely on a wide variety of helpful and popular
+tools. Some of the most important tools and dependencies are discussed below.
+
+\subsection{Poetry}
+\label{subsec:poetry}
+
+Poetry is a Python virtual environment management tool that allows developers to
+set up an isolated environment for their projects. Furthermore, it manges the
+installation of Python dependencies on the virtualenv and updates them when
+necessary. Poetry has a crucial role in the implementation of AFLuent since it's
+used to make the development process simpler, its role also goes beyond
+that to the packaging and publishing of AFLuent to the Python Package Index
+(PyPI). Poetry's ability to abstract and simplify all the details in creating a
+Python package, makes it essential for development. However, from a user's
+perspective, Poetry is not necessary to run or use the tool for fault localization.
+
+\subsection{Pytest}
+\label{subsec:pytest}
+
+Pytest is a Python testing framework used to write and execute a variety of
+tests, especially unit tests. Many developers in the community have contributed
+to Pytest through plugins that extend Pytest's functionality and allow it to
+accomplish new beneficial tasks. As mentioned previously, AFLuent is a Pytest
+plugin that adds automated fault localization features. By definition, AFLuent
+relies on Pytest in order to function properly. More details on how AFLuet is
+integrated with pytest can be found in Section \ref{sec:makingPytestPlugin}.
+
+\subsection{Coverage.py}
+\label{subsec:coverage}
+
+Spectrum based fault localization requires data on code coverage and test
+results in order to calculate and rank suspicious of elements in the code.
+Coverage.py is a Python tool that provides an easy to use application
+programming interface to collect that data. The tool also provides various
+configuration for the user to skip certain file or directories from being
+considered. Overall, AFLuent relies on this tool to calculate per-test
+coverage.
+
+\subsection{Radon}
+\label{subsec:radon}
+
+% TODO: not sure if this will be kept in
+Radon is a Python tool used to calculate metrics of code complexity.
+Specifically, it's used in AFLuent to calculate cyclomatic complexity of some
+elements to break ties in rankings.
+
+\subsection{Libcst}
+\label{subsec:libcst}
+
+\emph{TODO: will be discussed further after implementation}
+
+% TODO: should a subsection on AFLuent installation be added here?
+
+\section{AFLuent as a Pytest Plugin}
+\label{sec:makingPytestPlugin}
+
+\begin{figure}[!htb]
+	\begin{center}
+		\includegraphics[width=11.9cm]{pytest_flowfchart.png}
+		\caption{\label{fig:pytest_flow} Pytest Tasks Flowchart}
+	\end{center}
+\end{figure}
+
+Pytest provides simple and intuitive ways of extending its functionality through
+hooks. These hooks break up the standard Pytest execution steps and allow
+external code to run at these points. A plugin is essentially a collection of
+packaged hooks that fit in the workflow of Pytest. AFLuent makes use of five
+different hooks to implement automated fault localization.
+Fig.\ref{fig:pytest_flow} shows a general overview of the steps changed in the
+workflow of Pytest. Additionally, the section below describes in details how each
+step was modified.
+
+\subsection{Adding Command Line Arguments}
+\label{subsec:pytest_cli}
+
+Pytest already supports a multitude of command line arguments that allow the
+user to pass configuration that change how the test suite is executed and
+reported. Similarly, AFLuent requires user passed arguments to complete a
+variety of tasks. The hook \code{pytest\_addoption} allows adding new
+arguments in a fashion similar to the \code{argparse} Python library.
+The added arguments accept values that specify the following:
+\begin{itemize}
+    \item If AFLuent should be enabled for the current Pytest session
+    \item The techniques for suspiciousness score calculations
+    \item The number of results to display in the report
+    \item The directories and files to be ignored while calculating coverage
+    \item The types of file reports to created after the Pytest session is over
+    \item If complexity metrics should be used in breaking ties of ranked elements
+\end{itemize}
+
+\subsection{Activating AFLuent}
+\label{subsec:activate_afluent}
+
+After arguments are passed, the next steps parses through some of them to check
+if AFLuent was enabled and to validate some of their values. Pytest hook
+\code{pytest\_cmdline\_main} gives access to the collected configuration. In
+this hook, checks are conducted to see if there are other active plugins that
+utilize Coverage.py. These checks are necessary due to conflicts in collecting
+data when multiple plugins use Coverage.py simultaneously. The problem is
+resolved through warnings to the user that ask to disable these plugins in order
+for AFLuent to run properly. Lastly, if AFLuent is enabled, an \code{Afluent} object is initialized
+with the passed configuration and registered as a plugin for the current Pytest session.
+
+\subsection{Calculating Per-test Coverage and Test Result}
+\label{subsec:calculate_coverage}
+
+Per-test coverage is defined here as the collection of lines executed by
+each individual test case. In order to collect this data, AFLuent adds a wrapper
+that executes code before and after each test case function is called. The
+\code{pytest\_pyfunc\_call} hook is used in this scenario. The execution steps
+are as follows:
+
+\begin{enumerate}
+    \item \code{cov.start()} begins recording coverage
+    \item the hook yields back control to Pytest which calls the individual test case
+    \item \code{cov.stop()} stops recording coverage
+    \item The collected data is then organized in a simpler structure defined as
+    the program specta
+    \item The process repeats for every test case
+\end{enumerate}
+
+Once per-test coverage is completed, the \code{pytest\_runtest\_makereport} hook
+is used to get the outcome of each test case and add it to the program spectra
+structure. There are three possible test outcome in Pytest, `Passed', `Failed',
+and `Skipped'.
+
+\subsection{Reporting Results}
+\label{subsec:report_results}
+
+The last step in AFLuent execution as part of Pytest is to report the fault
+localization outcome. The \code{pytest\_sessionfinish} hook is used to detect the
+exit code of the session and display output on the console accordingly. An exist
+code of 0 means that all tests have passed and there is no need to perform fault
+localization, therefore, a message would display that to the user before
+finishing the Pytest run. On the other hand an exit code of 1, would indicate
+that at least one test case failed during the pytest session. In this scenario,
+AFLuent initializes a \code{Spectrum} object, which is responsible for parsing
+through the program spectra structure, ranking elements based on suspiciousness,
+and producing an output to the console.
+
+% TODO: add example of AFLuent output here
+
+\section{AFLuent's Components}
+\label{sec:components}
+
+Considering all the steps involved in calculating and reporting suspiciousness
+of elements, AFLuent is implemented in an object oriented style that focuses on
+the readability and maintainability of the code. By splitting up AFLuent to a
+collection of objects organized in a hexarchy, the testing approach becomes more
+clear and debugging becomes easier. This section discusses the objects oriented
+structure starting with the least complex.
+
+\subsection{Line Object}
+\label{subsec:line_obj}
+
+A line is the simplest unit in a large project or program. With that in mind, a
+\code{Line} object describes the attributes and implements the functionalities
+associated with a single line in the context of automated fault localization.
+Important attributes of a line include identifiers such as the line number and
+file path it belongs to. Other line-specific information include a list of
+failed test cases that executed this line, and another for tests that passed.
+This information is crucial in calculating the one of the main focuses of
+AFLuent, which is suspiciousness scores. These scores are also stored as
+attributes of each Line object. Another stored attribute is complexity,
+which is a metric associated with each line and used to break ties in rankings.
+% TODO: requires elaboration
+
+As for functions, a Line object contains an implementation of the three
+equations, Tarantula shown in Fig.\ref{fig:tarantulaEquation}, Ochiai shown in
+Fig.\ref{fig:ochiaiEquation}, and DStar shown in Fig.\ref{fig:dstarEquation},
+where suspiciousness scores are calculated and rounded up to four decimal places.
+The mathematical implementations of these functions also handle and account for
+division by zero. Depending on the equation, there could be multiple instances
+where division by zero is possible. The following subsections discuss how this
+issue was handled for each equation.
+
+% TODO: the number of equations should be updated once new ones are added
+
+\subsubsection{Division by Zero: Tarantula}
+\label{subsubsec:div_by_zero_taran}
+
+In the Tarantula equation, division by zero occurs if either the number of
+total passing tests or number of total failing tests is zero. In the case that
+there are no failing test-cases in the whole test suite, then the suspiciousness
+of all covered statements is zero (not suspicious) since there was no fault. The
+other edge case occurs when there are no passing tests in the whole test suite,
+in which every covered line has the maximum suspiciousness of 1. It is important
+to acknowledge that the outcomes reached here only apply to code that has been
+covered by the test suite. Faulty lines, which are not covered by any test case
+will not be investigated since there is no data to calculate their suspiciousness.
+
+\subsubsection{Division by Zero: Ochiai}
+\label{subsubsec:div_by_zero_ochiai}
+
+Division by zero occurs in the Ochiai formula when the number of failed tests
+that cover the line is zero or when the total number of failed tests is zero.
+Both of these cases indicate that the line is not suspicious since it did not
+cause any failures, therefore, zero is returned as the suspiciousness score.
+
+\subsubsection{Division by Zero: DStar}
+\label{subsubsec:div_by_zero_dstar}
+
+In the DStar equation, division by zero takes place only in one case. When the
+number of passing test cases that cover the line AND the number of failed test
+cases that do not cover the line are both zero, the denominator evaluates to
+zero. This translates to the following: if there is no passing tests executing
+this line and no failing test executing other lines only, then this line should
+have the maximum suspiciousness score possible. However, since DStar has a
+numerator raised to a power set by the user, it has no numerical upper limit on
+the resulting score. To resolve this issue, the maximum integer value is
+assigned as the suspiciousness score of this line.
+
+\subsection{ProjFile Object}
+\label{subsec:projfile_obj}
+
+\subsection{Spectrum Object}
+\label{subsec:spectrum_obj}
+
+\subsection{Afluent Object}
+\label{subsec:afluent_obj}
+
+\subsection{Objects Overview}
+\label{subsec:obj_overview}

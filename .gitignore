@@ -230,3 +230,7 @@ tags.tmp
 .gradle/
 build/
 .ipython/
+
+# VSCode #
+######################
+.vscode/

@@ -27,7 +27,6 @@
 \usepackage{longtable} % tables that can span several pages
 \usepackage[bf]{caption} % caption: FIG in bold
 \usepackage{fancyhdr} % For the headers
-\usepackage{listings}
 
 \newcommand{\numberedchapter}{ % Preparation for numbered chapters
 	\cleardoublepage % To make sure the previous headers are passed
@@ -38,6 +37,8 @@
 	\addcontentsline{toc}{chapter}{#1} % Also adds the chapter name to the Contents
 	\fancyhead[RE]{{\bfseries #1}} % Headers for left pages
 	\fancyhead[LO]{}}%Headers for right pages
+
+\def\code#1{\texttt{#1}}
 
 \usepackage{emptypage} % No headers on an empty page
 
