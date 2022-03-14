@@ -3,9 +3,8 @@
 
 This chapter describes the implementation of AFLuent and the experiment setup and
 execution process. More specifically, the reasoning behind design decisions and
-the result are the main focus. Additionally, the algorithms, structure, and
-flow of execution is demonstrated in meaningful charts and diagrams that allow
-this process to be easily reproducible and validated.
+the result are the main focus. Additionally, charts and diagrams  are used to
+demonstrate the the algorithms, structure, and flow of execution.
 
 \section{Development Environment and Toolset}
 \label{sec:DevEnviron}
@@ -45,11 +44,15 @@ integrated with pytest can be found in Section \ref{sec:makingPytestPlugin}.
 
 Spectrum based fault localization requires data on code coverage and test
 results in order to calculate and rank suspicious of elements in the code.
-Coverage.py is a Python tool that provides an easy to use application
+Coverage.py\cite{coverage_py_website} is a Python tool that provides an easy to use application
 programming interface to collect that data. The tool also provides various
 configuration for the user to skip certain file or directories from being
-considered. Overall, AFLuent relies on this tool to calculate per-test
-coverage.
+considered. AFLuent relies on this tool to calculate what's known as per-test
+coverage. This data describes the lines of code covered by a single test case
+and organized in an accessible way to find out the number of passing and failing
+test cases that executed each line. Automated fault localization approaches
+require this information in order to calculate suspiciousness scores and
+Coverage.py can provide that relatively easily.
 
 \subsection{Radon}
 \label{subsec:radon}
@@ -85,7 +88,7 @@ Fig.\ref{fig:pytest_flow} shows a general overview of the steps changed in the
 workflow of Pytest. Additionally, the section below describes in details how each
 step was modified.
 
-\subsection{Adding Command Line Arguments}
+\subsection{Adding Command-Line Arguments}
 \label{subsec:pytest_cli}
 
 Pytest already supports a multitude of command line arguments that allow the
@@ -93,21 +96,58 @@ user to pass configuration that change how the test suite is executed and
 reported. Similarly, AFLuent requires user passed arguments to complete a
 variety of tasks. The hook \code{pytest\_addoption} allows adding new
 arguments in a fashion similar to the \code{argparse} Python library.
+The \code{argparse} library supports features that allow easy parsing and validation of
+command-line arguments. Furthermore, it facilitates working with input with
+various data types.
 The added arguments accept values that specify the following:
 \begin{itemize}
-    \item If AFLuent should be enabled for the current Pytest session
+    \item If AFLuent should be enabled for the current Pytest session.
+    \begin{itemize}
+        \item Flags: \code{---afl-debug} or \code{---afl}
+    \end{itemize}
     \item The techniques for suspiciousness score calculations
+%    TODO: add approaches to the list after implementation
+    \begin{itemize}
+        \item \code{---tarantula}: enable fault localization using Tarantula approach
+        \item \code{---ochiai}: enable fault localization using Ochiai approach
+        \item \code{---dstar}: enable fault localization using DStar approach
+        \item \code{---dstar-pow}: used to set the power to use in the DStar
+        approach. Defaults to 3
+        \item Multiple approaches can be used at the same time, however, results
+        will be sorted by the approach passed first.
+    \end{itemize}
     \item The number of results to display in the report
+    \begin{itemize}
+        \item \code{---afl-results}: number of top results to show in the
+        terminal window. Defaults to 20
+    \end{itemize}
     \item The directories and files to be ignored while calculating coverage
+    \begin{itemize}
+        \item \code{---afl-ignore}: Used to pass directories and files to
+        ignore. Example: \code{tests/*} will ignore all files and directories
+        inside the \code{tests} folder.
+    \end{itemize}
     \item The types of file reports to created after the Pytest session is over
+    \begin{itemize}
+        \item \code{---report}: accepts \code{json} or \code{csv} and generate
+        reports with the passed format.
+        \item \code{---per-test-report}: requires that a per-test coverage
+        report is produced. This report is only generated in JSON format.
+    \end{itemize}
     \item If complexity metrics should be used in breaking ties of ranked elements
+    \begin{itemize}
+        \item \code{---cyclomatic-complexity}: use cyclomatic complexity metrics
+        in breaking ties found in suspiciousness scores
+        \item \code{---syntax-complexity}: use syntax complexity metrics
+        in breaking ties found in suspiciousness scores
+    \end{itemize}
 \end{itemize}
 
 \subsection{Activating AFLuent}
 \label{subsec:activate_afluent}
 
 After arguments are passed, the next steps parses through some of them to check
-if AFLuent was enabled and to validate some of their values. Pytest hook
+if AFLuent was enabled and to validate some of their values. The Pytest hook
 \code{pytest\_cmdline\_main} gives access to the collected configuration. In
 this hook, checks are conducted to see if there are other active plugins that
 utilize Coverage.py. These checks are necessary due to conflicts in collecting
@@ -161,7 +201,7 @@ and producing an output to the console.
 Considering all the steps involved in calculating and reporting suspiciousness
 of elements, AFLuent is implemented in an object oriented style that focuses on
 the readability and maintainability of the code. By splitting up AFLuent to a
-collection of objects organized in a hexarchy, the testing approach becomes more
+collection of objects organized in a hierarchy, the testing approach becomes more
 clear and debugging becomes easier. This section discusses the objects oriented
 structure starting with the least complex.
 
@@ -178,6 +218,7 @@ This information is crucial in calculating the one of the main focuses of
 AFLuent, which is suspiciousness scores. These scores are also stored as
 attributes of each Line object. Another stored attribute is complexity,
 which is a metric associated with each line and used to break ties in rankings.
+Further reading on complexity metrics can be found in REFERENCE TO BE DETERMINED
 % TODO: requires elaboration
 
 As for functions, a Line object contains an implementation of the three
@@ -191,9 +232,9 @@ issue was handled for each equation.
 
 % TODO: the number of equations should be updated once new ones are added
 
+% TODO: provide example figures
 \subsubsection{Division by Zero: Tarantula}
 \label{subsubsec:div_by_zero_taran}
-
 In the Tarantula equation, division by zero occurs if either the number of
 total passing tests or number of total failing tests is zero. In the case that
 there are no failing test-cases in the whole test suite, then the suspiciousness
@@ -228,11 +269,60 @@ assigned as the suspiciousness score of this line.
 \subsection{ProjFile Object}
 \label{subsec:projfile_obj}
 
+ProjFile objects are designed to contain attributes that describe whole files.
+Additionally, they support functionality that apply to these files. The most
+important attributes of these objects is the \code{lines} instance variable,
+which stores a dictionary of contents of the file. Specifically, the keys in
+this dictionary are line numbers in the file and the values are the Line objects
+discussed previously. In addition to storing this data, ProjFile implements an
+intuitive way to update it with a new result of a test case. \code{update\_file}
+function takes in a list of numbers of covered lines executed by a test case as well as the
+result and the name of that test case. Following that, it iterates through the
+covered line numbers and updates the Line objects stored in the ProjFile
+dictionary. This approach creates a hierarchy between the objects by nesting
+Line objects inside of ProjFile objects.
+
 \subsection{Spectrum Object}
 \label{subsec:spectrum_obj}
+
+This object contains some of the core functionalities that organizes the
+collected data and displays it to the console. Similar to how a ProjFile object
+stores a dictionary of line number and Line object pairs, Spectrum takes nesting
+a step further and stores a dictionary of file paths and ProjFile objects as
+key-value pairs. Additionally, it keeps track of running totals of passed,
+failed, and skipped test cases, which are used to calculate suspiciousness
+scores. Lastly, it's responsible for sorting Line objects in a descending order
+from highest suspiciousness scores. Once this task is completed, the Spectrum
+object produces a table formatted report with color coded results that
+demonstrate to the user the outcome of fault localization.
+% TODO: discuss more about the report structure and colors and give figure example
 
 \subsection{Afluent Object}
 \label{subsec:afluent_obj}
 
+While this Object does not implement any functionality regarding the calculation
+or sorting of suspiciousness scores, it plays an important role in integrating
+this tool with Pytest. By containing several of the Pytest hooks mentioned
+prior, this object is registered as the plugin when AFLuent is enabled through
+command line arguments. Following the end of the Pytest session, the AFluent
+object initializes a Spectrum Object and forwards the arguments collected from
+the console command. Following that, it calls the Spectrum object to produce and
+print its report. Overall, this object acts as a pipeline that passes coverage
+information and command line arguments collected from the Pytest session to the
+infrastructure responsible for performing fault localization.
+
 \subsection{Objects Overview}
 \label{subsec:obj_overview}
+
+\begin{figure}[!htb]
+	\begin{center}
+		\includegraphics[width=15.5cm]{object_oriented_structure.png}
+		\caption{\label{fig:oop_structure} AFLuent Object Structure}
+	\end{center}
+\end{figure}
+
+Fig\ref{fig:oop_structure} provides a visual simplification of the different
+components of AFluent and an overview of their roles in the functioning of the
+tool. Overall the nested structure creates several layers that facilitate
+development by isolating the different components and hiding unnecessary
+information from other objects in the hierarchy.
