@@ -57,17 +57,24 @@ Coverage.py can provide that relatively easily.
 \subsection{Radon}
 \label{subsec:radon}
 
-% TODO: not sure if this will be kept in
 Radon is a Python tool used to calculate metrics of code complexity.
 Specifically, it's used in AFLuent to calculate cyclomatic complexity of some
-elements to break ties in rankings.
+elements to break ties in rankings. When the user requests that AFLuent
+considers cyclomatic complexity to be considered when ranking lines, Radon is
+used to create a dataset of complexity scores. Since single lines cannot have a
+cyclomatic complexity score, they are assigned the score of the function they're
+a part of. Furthermore, the dataset is organized to facilitate efficient
+searching by the line number in question.
 
 \subsection{Libcst}
 \label{subsec:libcst}
 
-\emph{TODO: will be discussed further after implementation}
-
-% TODO: should a subsection on AFLuent installation be added here?
+In order to provide additional methods to breaking ties between element
+rankings, Libcst is used to create and abstract syntax tree of the code in
+question. This approach allows AFLuent to assess code complexity using the
+code's syntax. Additional details on the use of Libcst are discussed in (planning
+to add reference to a section.)
+% TODO: add reference to the section discussing this
 
 \section{AFLuent as a Pytest Plugin}
 \label{sec:makingPytestPlugin}
@@ -87,6 +94,26 @@ different hooks to implement automated fault localization.
 Fig.\ref{fig:pytest_flow} shows a general overview of the steps changed in the
 workflow of Pytest. Additionally, the section below describes in details how each
 step was modified.
+
+\section{Installing AFLuent}
+\label{subsec:afluent_install}
+
+As part of the goal of creating a novice friendly tool, it's very important that
+AFLuent can be installed and set up easily on any system with little to no
+complications. To achieve that, AFLuent is published to the Python Package Index
+(PyPI), which makes it installable through the \code{pip install afluent}
+command. Once this command runs successfully, AFLuent is automatically
+integrated with Pytest as a plugin and will be ran with every pytest session
+unless otherwise disabled intentionally. AFLuent's dependency on Coverage.py
+creates a small but avoidable conflict. In the case that AFluent and another plugin that
+utilizes Coverage.py is active in the same Pytest session, various errors might
+occur where coverage information is not calculated correctly, thus affecting the
+automated fault localization process. This issue was prevalent when specifically
+using \code{pytest-cov} plugin, which produces a coverage report at the end of a
+Pytest session. AFLuent handles this problem by checking for the presence of
+other Coverage.py reliant plugins and warns the user. Due to this issue,
+AFLuent will not run in the session unless specified specifically using the
+command-line arguments discussed in the following section.
 
 \subsection{Adding Command-Line Arguments}
 \label{subsec:pytest_cli}
@@ -170,7 +197,7 @@ are as follows:
     \item the hook yields back control to Pytest which calls the individual test case
     \item \code{cov.stop()} stops recording coverage
     \item The collected data is then organized in a simpler structure defined as
-    the program specta
+    the program spectra
     \item The process repeats for every test case
 \end{enumerate}
 
@@ -192,8 +219,6 @@ that at least one test case failed during the pytest session. In this scenario,
 AFLuent initializes a \code{Spectrum} object, which is responsible for parsing
 through the program spectra structure, ranking elements based on suspiciousness,
 and producing an output to the console.
-
-% TODO: add example of AFLuent output here
 
 \section{AFLuent's Components}
 \label{sec:components}
@@ -232,7 +257,6 @@ issue was handled for each equation.
 
 % TODO: the number of equations should be updated once new ones are added
 
-% TODO: provide example figures
 \subsubsection{Division by Zero: Tarantula}
 \label{subsubsec:div_by_zero_taran}
 In the Tarantula equation, division by zero occurs if either the number of
@@ -243,15 +267,77 @@ other edge case occurs when there are no passing tests in the whole test suite,
 in which every covered line has the maximum suspiciousness of 1. It is important
 to acknowledge that the outcomes reached here only apply to code that has been
 covered by the test suite. Faulty lines, which are not covered by any test case
-will not be investigated since there is no data to calculate their suspiciousness.
+will not be investigated since there is no data to calculate their
+suspiciousness. Using values plugged in to Fig.\ref{fig:tarantulaEquation}, the
+examples in Fig.\ref{fig:taran_div_by_zero_1} and Fig.\ref{fig:taran_div_by_zero_2} show
+the two possible cases where division by zero might occur in the Tarantula
+equation.
+
+\begin{figure}[!htb]
+	\begin{center}
+        When \textbf{N$_{CF}$ = 0} and \textbf{N$_{UF}$ = 0 }
+		\begin{equation}
+			Tarantula(element) = \frac{\frac{\textbf{0}}{\textbf{0}}}{\frac{\textbf{N$_{CS}$}}{\textbf{N$_{CS}$}+\textbf{N$_{US}$}} + \frac{\textbf{0}}{\textbf{0}}}
+		\end{equation}
+		\caption{\label{fig:taran_div_by_zero_1} Tarantula Division by Zero Example 1}
+	\end{center}
+\end{figure}
+
+\begin{figure}[!htb]
+	\begin{center}
+        When \textbf{N$_{CS}$ = 0} and \textbf{N$_{US}$ = 0 }
+		\begin{equation}
+			Tarantula(element) = \frac{\frac{\textbf{N$_{CF}$}}{\textbf{N$_{CF}$} + \textbf{N$_{UF}$}}}{\frac{\textbf{0}}{\textbf{0}} + \frac{\textbf{N$_{CF}$}}{\textbf{N$_{CF}$}+\textbf{N$_{UF}$}}}
+		\end{equation}
+		\caption{\label{fig:taran_div_by_zero_2} Tarantula Division by Zero Example 2}
+	\end{center}
+\end{figure}
+
+Fig.\ref{fig:taran_div_by_zero_1} shows the case where there is a total of zero
+failed test cases, covering AND not covering the element, in which a score
+of 0 is assigned to the element. On the other hand,
+Fig.\ref{fig:taran_div_by_zero_2} shows the case where there is a total of zero
+passing test cases, in which a maximum score of 1 is assigned to the element.
 
 \subsubsection{Division by Zero: Ochiai}
 \label{subsubsec:div_by_zero_ochiai}
 
-Division by zero occurs in the Ochiai formula when the number of failed tests
-that cover the line is zero or when the total number of failed tests is zero.
-Both of these cases indicate that the line is not suspicious since it did not
+Division by zero occurs in the Ochiai formula when there is not test coverage
+information for a line or when the total number of failed tests is zero.
+The latter case indicates that the line is not suspicious since it did not
 cause any failures, therefore, zero is returned as the suspiciousness score.
+However, the former case is not considered at all since AFLuent does not include
+lines with no coverage information.
+Fig.\ref{fig:ochiai_div_by_zero_1} and Fig.\ref{fig:ochiai_div_by_zero_2}
+demonstrates that equation after plugging in
+the zero values from \ref{fig:ochiaiEquation}
+
+\begin{figure}[!htb]
+	\begin{center}
+        When \textbf{N$_{CF}$ = 0} and \textbf{N$_{UF}$ = 0 }
+		\begin{equation}
+			Ochiai(element) = \frac{\textbf{0}}{\sqrt{(\textbf{0}) \cdot (\textbf{0}  + \textbf{N$_{CS}$})}}
+		\end{equation}
+		\caption{\label{fig:ochiai_div_by_zero_1} Ochiai Division by Zero Example 1}
+	\end{center}
+\end{figure}
+
+\begin{figure}[!htb]
+	\begin{center}
+        When \textbf{N$_{CF}$ = 0} and \textbf{N$_{CS}$ = 0 }
+		\begin{equation}
+			Ochiai(element) = \frac{\textbf{0}}{\sqrt{(\textbf{0}  + \textbf{N$_{UF}$}) \cdot (\textbf{0})}}
+		\end{equation}
+		\caption{\label{fig:ochiai_div_by_zero_2} Ochiai Division by Zero Example 2}
+	\end{center}
+\end{figure}
+
+Fig.\ref{fig:ochiai_div_by_zero_1} is an example of when there is zero total
+failed test cases, resulting in a zero suspiciousness score.
+However Fig\ref{fig:ochiai_div_by_zero_2} shows an example where there is no
+failed or successful tests that cover the line. This scenario does not
+occur in AFLuent, which only looks at lines that have some coverage data through
+passing or failing tests. Therefore, it wasn't necessary to handle this possibility.
 
 \subsubsection{Division by Zero: DStar}
 \label{subsubsec:div_by_zero_dstar}
@@ -265,6 +351,18 @@ have the maximum suspiciousness score possible. However, since DStar has a
 numerator raised to a power set by the user, it has no numerical upper limit on
 the resulting score. To resolve this issue, the maximum integer value is
 assigned as the suspiciousness score of this line.
+Fig.\ref{fig:dstar_div_by_zero} shows and example of this scenario after
+plugging in values from Fig.\ref{fig:dstarEquation}
+
+\begin{figure}[!htb]
+	\begin{center}
+        When \textbf{N$_{CS}$ = 0} and \textbf{N$_{UF}$ = 0 }
+		\begin{equation}
+			Dstar(element) = \frac{(\textbf{N$_{CF}$})^{\ast}}{\textbf{0}}
+		\end{equation}
+		\caption{\label{fig:dstar_div_by_zero} DStar Division by Zero Example}
+	\end{center}
+\end{figure}
 
 \subsection{ProjFile Object}
 \label{subsec:projfile_obj}
