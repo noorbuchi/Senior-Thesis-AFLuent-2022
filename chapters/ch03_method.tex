@@ -72,9 +72,8 @@ searching by the line number in question.
 In order to provide additional methods to breaking ties between element
 rankings, Libcst is used to create and abstract syntax tree of the code in
 question. This approach allows AFLuent to assess code complexity using the
-code's syntax. Additional details on the use of Libcst are discussed in (planning
-to add reference to a section.)
-% TODO: add reference to the section discussing this
+code's syntax. Additional details on the use of Libcst are discussed in section \ref{sec:complexity}:
+Complexity and Tie Breaking.
 
 \section{AFLuent as a Pytest Plugin}
 \label{sec:makingPytestPlugin}
@@ -243,8 +242,7 @@ This information is crucial in calculating the one of the main focuses of
 AFLuent, which is suspiciousness scores. These scores are also stored as
 attributes of each Line object. Another stored attribute is complexity,
 which is a metric associated with each line and used to break ties in rankings.
-Further reading on complexity metrics can be found in REFERENCE TO BE DETERMINED
-% TODO: requires elaboration
+Further reading on complexity metrics can be found in section \ref{sec:complexity}.
 
 As for functions, a Line object contains an implementation of the three
 equations, Tarantula shown in Fig.\ref{fig:tarantulaEquation}, Ochiai shown in
@@ -393,7 +391,6 @@ scores. Lastly, it's responsible for sorting Line objects in a descending order
 from highest suspiciousness scores. Once this task is completed, the Spectrum
 object produces a table formatted report with color coded results that
 demonstrate to the user the outcome of fault localization.
-% TODO: discuss more about the report structure and colors and give figure example
 
 \subsection{Afluent Object}
 \label{subsec:afluent_obj}
@@ -423,4 +420,174 @@ Fig\ref{fig:oop_structure} provides a visual simplification of the different
 components of AFluent and an overview of their roles in the functioning of the
 tool. Overall the nested structure creates several layers that facilitate
 development by isolating the different components and hiding unnecessary
-information from other objects in the hierarchy.
+information from other objects in the hierarchy. By following this structures,
+unit tests can be written much easier and debugging becomes a simpler task.
+
+\section{AFLuent's Output}
+\label{sec:afluent_output}
+
+While the main purpose of AFLuent is to produce a report of the most suspicious
+statements, there are many additional features that can increase the readability
+and user friendliness of the report. The input and workflow of AFLuent was
+discussed in the previous sections, this section focuses on the outcome and
+discusses how the user should interact with it.
+
+\subsection{Feedback Messages}
+\label{subsec:feedback_messages}
+
+Throughout the execution of AFLuent, unexpected things can occur. And while
+Python and Pytest error messages can be produced, AFLuent also shows console
+output that gives a hint regarding what went wrong. There are three tiers of
+messages produced by AFLuent, Error, Warning, and Success messages, each color
+coded using red, orange, and green respectively. Each one is designed to stand
+out to the user and provide a clear and concise description of the scenario.
+
+\subsubsection{Success Messages}
+\label{subsubsec:success_message}
+
+This message is produced in the case that the test suite passes with no
+error or failures. Using bright green highlighted message with bold white
+letters, the message displays: \code{All tests passed, no need to diagnose using
+AFLuent}. Fig\ref{fig:success_message} demonstrates the success message output
+when AFLuent is ran on the project's test suite.
+
+\begin{figure}[!htb]
+	\begin{center}
+		\includegraphics[width=15.5cm]{success_message.png}
+		\caption{\label{fig:success_message} Example of Success Message}
+	\end{center}
+\end{figure}
+
+
+\subsubsection{Error Messages}
+\label{subsubsec:error_message}
+
+Unlike success messages, error messages are produced when things aren't going as
+expected. However, in this case, they aren't meant to denote complete failure of
+AFLuent, but rather to communicate a major alert to the user. This type of
+message is produced when the Pytest session exists with status code 1, which
+occurs when at least one test fails. Fig.\ref{fig:error_message} shows the
+console output when a test failure was purposefully introduced. A bright red
+highlighted message with bold white letters indicate that fault localization
+using AFLuent is underway.
+
+\begin{figure}[!htb]
+	\begin{center}
+		\includegraphics[width=15.5cm]{error_message.png}
+		\caption{\label{fig:error_message} Example of Error Message}
+	\end{center}
+\end{figure}
+
+\subsubsection{Warning Messages}
+\label{subsubsec:warning_message}
+
+The last type of messages produced during the runtime of AFLuent are warning
+messages. They communicate important information to the user but do not signify
+a major problem. Warning messages are displayed in three possible scenarios. In
+the case that the user passes the \code{-x} or \code{---maxfail} command line
+arguments to Pytest, the session can stop at the first test failure. This is
+problematic from a fault localization standpoint because it prevents further
+collection of coverage information and test outcomes from the rest of the test
+suite. In order to let the user be aware of this issue, the warning message
+shown in Fig.\ref{fig:warning_message_1} is displayed. Regardless, AFLuent will
+continue running with standard behavior, however, results are very likely to be
+inaccurate.
+
+\begin{figure}[!htb]
+	\begin{center}
+		\includegraphics[width=15.5cm]{warning_message_1.png}
+		\caption{\label{fig:warning_message_1} Maxfail Warning Message}
+	\end{center}
+\end{figure}
+
+Another warning message is displayed when AFLuent is installed to the current
+Python environment but not enabled by the user through the \code{---afl} or
+\code{---afl-debug} flags. This message serves as a reminder to the user to
+enable the plugin if they're interested in utilizing fault localization. The
+message is shown in Fig\ref{fig:warning_message_2}.
+
+\begin{figure}[!htb]
+	\begin{center}
+		\includegraphics[width=15.5cm]{warning_message_2.png}
+		\caption{\label{fig:warning_message_2} AFLuent Disabled Warning Message}
+	\end{center}
+\end{figure}
+
+The third and last case that causes a warning message takes place when a potential
+conflict with Coverage.py is detected. In the possibility that another coverage
+collecting Pytest plugin is enabled in the same session as AFLuent, coverage
+data could be mixed up leading to inaccurate results or internal errors in
+Pytest. To avoid that, AFLuent scans the enabled plugins for the current session
+and checks if \code{pytest-cov} is running. If so, a warning message is
+displayed but the session continues as expected.
+
+\emph{TODO: add the figure showing the warning message once the feature is implemented}
+
+\subsection{Console Report}
+\label{subsec:console_output}
+
+In the case that AFLuent was enabled for the Pytest session and at least one
+failure occurred, a report is generated and printed to the console to help the
+user look for the error. Based on the inputs passed in the command-line
+arguments, this report can be structured in many different ways. Generally, the
+report is a table with rows containing the path to the file, the line number,
+and suspiciousness score(s). The number of rows depends on the value of
+\code{---afl-results} argument, which is set to 20 by default. Additionally, the
+user can determine one or many equations to use for suspiciousness score
+calculations, where the results will be sorted using the first one mentioned in
+the command. For example, the command \code{poetry run pytest --afl --afl-ignore
+tests/* --ochiai --dstar --afl-results 10} will display the top 10 results
+sorted by the most suspicious using the Ochiai equation. However, the
+DStar suspiciousness will also be displayed. Fig.\ref{fig:report_1} shows an
+example of the report when running the AFLuent test suite after introducing a
+bug in the code.
+
+\begin{figure}[!htb]
+	\begin{center}
+		\includegraphics[width=15.5cm]{report_1.png}
+		\caption{\label{fig:report_1} Example Report Using Ochiai and DStar}
+	\end{center}
+\end{figure}
+
+In addition to printing the report, AFLuent color codes elements based on their
+rankings. The four possible colors are green, yellow, orange, and red, where
+each one represents the likelihood of finding the fault at that line.
+Suspiciousness scores highlighted using green signify that the corresponding
+element is safe and has a zero suspiciousness score. On the opposite end of the
+spectrum, scores are highlighted with red when they equal the maximum
+suspiciousness score possible (usually 1), the color indicates that these
+elements are extremely likely to be the ones causing the fault. For the
+remaining results, the top 20\% are highlighted using orange to show that they
+are risky of being faulty. The remaining non-zero elements are highlighted using
+yellow. Fig.\ref{fig:report_2} shows an example of how safe statements are
+displayed in the report.
+
+\begin{figure}[!htb]
+	\begin{center}
+		\includegraphics[width=15.5cm]{report_2.png}
+		\caption{\label{fig:report_2} Example Report With Safe Statements}
+	\end{center}
+\end{figure}
+
+\subsection{File Report}
+\label{subsec:file_output}
+
+Aside from the reports produced in the console, AFLuent can create report files
+of the rankings in both JSON and CSV formats. Additional reporting of per-test
+coverage is also possible. The command line arguments \code{–-report} and
+\code{–-per-test-report} enable this feature. Producing these reports facilitates
+the evaluation of AFLuent by allowing the storage of rankings in a file for
+further analysis later on.
+
+\emph{TODO: include further discussion on the file reports and their contents}
+
+\section{Complexity Metrics and Tie Breaking}
+\label{sec:complexity}
+
+\emph{TODO: begin writing once implementation is completed}
+
+\subsection{Cyclomatic Complexity}
+\label{subsec:c_complexity}
+
+\subsection{Syntax Complexity}
+\label{subsec:s_complexity}
