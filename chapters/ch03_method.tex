@@ -60,7 +60,7 @@ Coverage.py can provide that relatively easily.
 Radon is a Python tool used to calculate metrics of code complexity.
 Specifically, it's used in AFLuent to calculate cyclomatic complexity of some
 elements to break ties in rankings. When the user requests that AFLuent
-considers cyclomatic complexity to be considered when ranking lines, Radon is
+considers cyclomatic complexity to be considered when breaking ties, Radon is
 used to create a dataset of complexity scores. Since single lines cannot have a
 cyclomatic complexity score, they are assigned the score of the function they're
 a part of. Furthermore, the dataset is organized to facilitate efficient
@@ -70,10 +70,11 @@ searching by the line number in question.
 \label{subsec:libcst}
 
 In order to provide additional methods to breaking ties between element
-rankings, Libcst is used to create and abstract syntax tree of the code in
-question. This approach allows AFLuent to assess code complexity using the
-code's syntax. Additional details on the use of Libcst are discussed in section \ref{sec:complexity}:
-Complexity and Tie Breaking.
+rankings, Libcst is used to create an abstract syntax tree of the code in
+question. This approach allows AFLuent to detect error prone syntax and
+formulate a score to use to break ties between lines if the need arises.
+Additional details on the use of Libcst are discussed in section
+\ref{sec:tiebreaking}: Tie Breaking.
 
 \section{AFLuent as a Pytest Plugin}
 \label{sec:makingPytestPlugin}
@@ -132,10 +133,10 @@ The added arguments accept values that specify the following:
         \item Flags: \code{---afl-debug} or \code{---afl}
     \end{itemize}
     \item The techniques for suspiciousness score calculations
-%    TODO: add approaches to the list after implementation
     \begin{itemize}
         \item \code{---tarantula}: enable fault localization using Tarantula approach
         \item \code{---ochiai}: enable fault localization using Ochiai approach
+        \item \code{---ochiai2}: enable fault localization using Ochiai2 approach
         \item \code{---dstar}: enable fault localization using DStar approach
         \item \code{---dstar-pow}: used to set the power to use in the DStar
         approach. Defaults to 3
@@ -160,12 +161,13 @@ The added arguments accept values that specify the following:
         \item \code{---per-test-report}: requires that a per-test coverage
         report is produced. This report is only generated in JSON format.
     \end{itemize}
-    \item If complexity metrics should be used in breaking ties of ranked elements
+    \item The tiebreaking approaches to resolve ties in rankings
     \begin{itemize}
-        \item \code{---cyclomatic-complexity}: use cyclomatic complexity metrics
-        in breaking ties found in suspiciousness scores
-        \item \code{---syntax-complexity}: use syntax complexity metrics
-        in breaking ties found in suspiciousness scores
+        \item \code{---tiebreaker}: allowed values are \code{random},
+        \code{cyclomatic}, \code{logical},
+
+		or \code{enhanced}
+		\item Defaults to \code{random} if no approach is passed.
     \end{itemize}
 \end{itemize}
 
@@ -238,22 +240,22 @@ associated with a single line in the context of automated fault localization.
 Important attributes of a line include identifiers such as the line number and
 file path it belongs to. Other line-specific information include a list of
 failed test cases that executed this line, and another for tests that passed.
-This information is crucial in calculating the one of the main focuses of
-AFLuent, which is suspiciousness scores. These scores are also stored as
-attributes of each Line object. Another stored attribute is complexity,
-which is a metric associated with each line and used to break ties in rankings.
-Further reading on complexity metrics can be found in section \ref{sec:complexity}.
+This information is crucial in calculating suspiciousness scores. These scores are also stored as
+attributes of each Line object. Another stored attribute is a collection of
+scores used to break ties between lines when their suspiciousness is the same.
+In general, these scores measure how error prone is the code with the current
+syntax structure. Further discussion on breaking ties using these scores can be
+found in Section \ref{sec:tiebreaking} Tie breaking.
 
-As for functions, a Line object contains an implementation of the three
+As for functions, a Line object contains an implementation of the four
 equations, Tarantula shown in Fig.\ref{fig:tarantulaEquation}, Ochiai shown in
-Fig.\ref{fig:ochiaiEquation}, and DStar shown in Fig.\ref{fig:dstarEquation},
+Fig.\ref{fig:ochiaiEquation}, Ochiai2 shown in Fig.\ref{fig:ochiai2Equation},
+and DStar shown in Fig.\ref{fig:dstarEquation},
 where suspiciousness scores are calculated and rounded up to four decimal places.
 The mathematical implementations of these functions also handle and account for
 division by zero. Depending on the equation, there could be multiple instances
 where division by zero is possible. The following subsections discuss how this
 issue was handled for each equation.
-
-% TODO: the number of equations should be updated once new ones are added
 
 \subsubsection{Division by Zero: Tarantula}
 \label{subsubsec:div_by_zero_taran}
@@ -336,6 +338,77 @@ However Fig\ref{fig:ochiai_div_by_zero_2} shows an example where there is no
 failed or successful tests that cover the line. This scenario does not
 occur in AFLuent, which only looks at lines that have some coverage data through
 passing or failing tests. Therefore, it wasn't necessary to handle this possibility.
+
+\subsubsection{Division by Zero: Ochiai2}
+\label{subsubsec:div_by_zero_ochiai2}
+
+Considering the number of terms in the denominator of the formula to calculate
+score using Ochiai2, there are technically four instances where the denominator
+can be zero. In the first case, no tests, failing or passing, cover the
+statement. More formally when \textbf{N$_{CF}$ + N$_{CS}$ = 0}.
+Fig.\ref{fig:ochiai2_div_by_zero_1} shows the equation with the zero plugged in.
+While this is an issue mathematically, it does not occur in AFLuent because the
+tool only analyzes elements that have been covered at least once by a failing or
+a passing test. Therefore, there is no need to handle this possibility.
+
+\begin{figure}[!htb]
+	\begin{center}
+		\begin{equation}
+			Ochiai2(element) = \frac{\textbf{N$_{CF}$}\cdot{\textbf{N$_{US}$}}}{\sqrt{(\textbf{0}) \cdot (\textbf{N$_{US}$}  + \textbf{N$_{UF}$}) \cdot (\textbf{N$_{CF}$}  + \textbf{N$_{UF}$}) \cdot (\textbf{N$_{CS}$}  + \textbf{N$_{US}$})}}
+		\end{equation}
+		\caption{\label{fig:ochiai2_div_by_zero_1} Ochiai2 Division by Zero
+		Example 1}
+	\end{center}
+\end{figure}
+
+Moving on to the next possibility of division by zero, which occurs when
+\textbf{N$_{US}$ + N$_{UF}$ = 0}. In this case, there are no tests that do not
+cover the element being inspected, or in other words, all the tests (both
+failing and passing) do cover this element. % TODO: what should be done here?
+
+\begin{figure}[!htb]
+	\begin{center}
+		\begin{equation}
+			Ochiai2(element) = \frac{\textbf{N$_{CF}$}\cdot{\textbf{N$_{US}$}}}{\sqrt{(\textbf{N$_{CF}$}  + \textbf{N$_{CS}$}) \cdot (\textbf{0}) \cdot (\textbf{N$_{CF}$}  + \textbf{N$_{UF}$}) \cdot (\textbf{N$_{CS}$}  + \textbf{N$_{US}$})}}
+		\end{equation}
+		\caption{\label{fig:ochiai2_div_by_zero_2}  Ochiai2 Division by Zero
+		Example 2}
+	\end{center}
+\end{figure}
+
+In the third possibility where a division by zero could happen, the third term
+\textbf{N$_{CF}$ + N$_{UF}$ = 0}. This would mean that there are a total of zero
+failed tests that both cover and not cover the element. Since AFLuent will only
+run when there is at least one failure, this situation is not possible during
+the tool's runtime. Fig. \ref{fig:ochiai2_div_by_zero_3} shows the zero as part
+of the full equation.
+
+\begin{figure}[!htb]
+	\begin{center}
+		\begin{equation}
+			Ochiai2(element) = \frac{\textbf{N$_{CF}$}\cdot{\textbf{N$_{US}$}}}{\sqrt{(\textbf{N$_{CF}$}  + \textbf{N$_{CS}$}) \cdot (\textbf{N$_{US}$}  + \textbf{N$_{UF}$}) \cdot (\textbf{0}) \cdot (\textbf{N$_{CS}$}  + \textbf{N$_{US}$})}}
+		\end{equation}
+		\caption{\label{fig:ochiai2_div_by_zero_3} Ochiai2 Division by Zero
+		Example 3}
+	\end{center}
+\end{figure}
+
+The last possibility where division by zero in Ochiai2 can occur is when
+\textbf{N$_{CS}$ + N$_{US}$ = 0}, in which there are zero total successful test
+cases. In this situation, there is no indicator of correct functionality and
+therefore every element is highly suspicious. A score of 1.0 will always be
+returned in this scenario. Fig. \ref{fig:ochiai2_div_by_zero_4} shows the
+equation with the zero in the denominator.
+
+\begin{figure}[!htb]
+	\begin{center}
+		\begin{equation}
+			Ochiai2(element) = \frac{\textbf{N$_{CF}$}\cdot{\textbf{N$_{US}$}}}{\sqrt{(\textbf{N$_{CF}$}  + \textbf{N$_{CS}$}) \cdot (\textbf{N$_{US}$}  + \textbf{N$_{UF}$}) \cdot (\textbf{N$_{CF}$}  + \textbf{N$_{UF}$}) \cdot (\textbf{0})}}
+		\end{equation}
+		\caption{\label{fig:ochiai2_div_by_zero_4} Ochiai2 Division by Zero
+		Example 4}
+	\end{center}
+\end{figure}
 
 \subsubsection{Division by Zero: DStar}
 \label{subsubsec:div_by_zero_dstar}
@@ -519,9 +592,16 @@ collecting Pytest plugin is enabled in the same session as AFLuent, coverage
 data could be mixed up leading to inaccurate results or internal errors in
 Pytest. To avoid that, AFLuent scans the enabled plugins for the current session
 and checks if \code{pytest-cov} is running. If so, a warning message is
-displayed but the session continues as expected.
+displayed but the session continues as expected. There could potentially be many
+other Pytest plugins that conflict with AFLuent, however, \code{pytest-cov} is
+the only known one.
 
-\emph{TODO: add the figure showing the warning message once the feature is implemented}
+\begin{figure}[!htb]
+	\begin{center}
+		\includegraphics[width=15.5cm]{warning_message_3.png}
+		\caption{\label{fig:warning_message_3} Conflicting Plugin Warning Message}
+	\end{center}
+\end{figure}
 
 \subsection{Console Report}
 \label{subsec:console_output}
@@ -577,17 +657,101 @@ of the rankings in both JSON and CSV formats. Additional reporting of per-test
 coverage is also possible. The command line arguments \code{–-report} and
 \code{–-per-test-report} enable this feature. Producing these reports facilitates
 the evaluation of AFLuent by allowing the storage of rankings in a file for
-further analysis later on.
+further analysis later on. In general, the standard report contains the rankings
+of the lines using the approach requested by the user. Additionally, other
+columns in the report contain the scores of all the other approaches for
+comparison. On the other hand, the per-test report is a dictionary structured
+such that the main keys are the names of the different test cases in the test
+suite and the value is an object that stores the lines executed by that test
+case as well as the outcome of the test.
 
-\emph{TODO: include further discussion on the file reports and their contents}
+\section{Tie Breaking}
+\label{sec:tiebreaking}
 
-\section{Complexity Metrics and Tie Breaking}
-\label{sec:complexity}
+Ties are a frequent issue in spectrum based fault localization. They often cause
+issues in identifying the source of the fault and render the scores useless. To
+mitigate this problem, AFLuent implements three different approaches to resolve
+the inevitable ties in suspiciousness scores. These techniques can hopefully
+provide another metric to break the tie between two elements.
 
-\emph{TODO: begin writing once implementation is completed}
+\subsection{Random}
+\label{subsec:tiebreak_random}
+
+Random tie breaking is the baseline approach for dealing with ties in
+suspiciousness scores. It's the method to compare other approaches to in order
+to detect if there are any improvements. In random tie breaking, statements are
+ranked in a descending order by the chosen suspiciousness score first, however,
+the order between tied elements is random. This could lead to different rankings
+for each run of the tool.
 
 \subsection{Cyclomatic Complexity}
 \label{subsec:c_complexity}
 
-\subsection{Syntax Complexity}
-\label{subsec:s_complexity}
+One of the available ways to break ties between elements is to use cyclomatic
+complexity as a secondary score to consider when sorting. This score is provided
+by the Radon library and it measure the number of available paths that execution
+cold go through in a function. Since this type of score only applies to whole
+functions and not to individual elements, lines inherit the cyclomatic
+complexity score of the function they live in when being ranked.Essentially, if
+a function has a cyclomatic complexity score of 7, then all statements within
+the function also have that score. While this can help break many ties, it's not
+effective in breaking ties when the tied elements exist in the same function.
+However, further empirical evaluation of its performance will be discussed in
+the evaluation section.
+
+\subsection{Mutant Density: Logical Set}
+\label{subsec:tiebreak_mutant_density_logical}
+
+Another metric used to break ties between suspicious statements is mutant
+density. More specifically, this score indicates how error prone the statement
+is by calculating the number of all possible mutants. For example, a statement
+that has many mathematical and logical operators to perform a calculation is
+more error prone that a statement that only has one or two of these operations.
+With that in mind, AFLuent uses this information to break ties between
+statements that have the same suspiciousness score but are syntactically
+different.
+
+In the implementation of this approach, the focus was on mutants in logical
+operations such as arithmetic, boolean, comparison operators, and others.
+Table \ref{table:logical_set_mutants} includes all the possible mutants which
+are considered with support from Libcst.
+
+\begin{table}[!htb]
+	\centering
+	\begin{tabular}{|c|c|c|c|c|}
+	 \hline
+	 Unary & Boolean
+	 & Binary  & Comparison & Augmented Assignment \\
+	 \hline
+	 BitInvert & And & Add & Equal & AddAssign\\
+	 Not & Or & BitAnd & GreaterThan & BitAndAssign \\
+	 Minus &  & BitOr & GreaterThanEqual & BitOrAssign \\
+	 Plus &  & BitXor & In & BitXorAssign \\
+	  &  & Divide & Is & DivideAssign \\
+	  &  & FloorDivide & LessThan & FloorDivideAssign \\
+	  &  & LeftShift & LessThanEqual & LeftShiftAssign \\
+	  &  & MatrixMultiply & NotEqual & MatrixMultiplyAssign \\
+	  &  & Modulo & IsNot & ModuloAssign \\
+	  &  & Multiply & NotIn & MultiplyAssign \\
+	  &  & Power &  & PowerAssign \\
+	  &  & RightShift &  & RightShiftAssign \\
+	  &  & Subtract &  & SubtractAssign \\
+	 \hline
+	\end{tabular}
+	\caption{Mutants in the Logical Set}
+	\label{table:logical_set_mutants}
+	\end{table}
+
+
+\subsection{Mutant Density: Enhanced Set}
+\label{subsec:tiebreak_mutant_density_enhanced}
+
+This approach to tie breaking also uses mutant density evaluate how error prone
+a statement is. However, it seeks to provide a more wholistic metric that also
+considers how error prone the constructs that an a statement is nested in. For
+example, a statement inside a multi-level if statement, which is also nested in
+a loop, is more error prone than a statement which is outside these constructs.
+Since there is more room for errors in loops and if statement conditions, a
+statement nested in them takes on this risk of error.
+
+% TODO: finish this
