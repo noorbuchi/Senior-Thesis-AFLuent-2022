@@ -592,9 +592,13 @@ collecting Pytest plugin is enabled in the same session as AFLuent, coverage
 data could be mixed up leading to inaccurate results or internal errors in
 Pytest. To avoid that, AFLuent scans the enabled plugins for the current session
 and checks if \code{pytest-cov} is running. If so, a warning message is
-displayed but the session continues as expected. There could potentially be many
+displayed but the session continues as expected. It's recommended that when running
+AFLuent, that \code{pytest-cov} is disabled from the command line. Moreover, when
+running \code{pytest-cov}, it's safer to disable AFLuent. This can be done by
+adding \code{-p no:pytest-cov} to disable \code{pytest-cov} or \code{-p
+no:afluent} to disable AFLuent. There could potentially be many
 other Pytest plugins that conflict with AFLuent, however, \code{pytest-cov} is
-the only known one.
+the only known one thus far.
 
 \begin{figure}[!htb]
 	\begin{center}
