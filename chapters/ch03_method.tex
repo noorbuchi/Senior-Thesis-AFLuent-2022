@@ -364,7 +364,10 @@ a passing test. Therefore, there is no need to handle this possibility.
 Moving on to the next possibility of division by zero, which occurs when
 \textbf{N$_{US}$ + N$_{UF}$ = 0}. In this case, there are no tests that do not
 cover the element being inspected, or in other words, all the tests (both
-failing and passing) do cover this element. % TODO: what should be done here?
+failing and passing) do cover this element. Considering that \textbf{N$_{US}$}
+is a zero in this case, it would cause the numerator to be a zero and result in
+a zero divided by zero. Due to both numerator and denominator being zero, the
+suspiciousness score output is also returned as zero.
 
 \begin{figure}[!htb]
 	\begin{center}
@@ -744,18 +747,80 @@ are considered with support from Libcst.
 	\end{tabular}
 	\caption{Mutants in the Logical Set}
 	\label{table:logical_set_mutants}
-	\end{table}
+\end{table}
 
 
 \subsection{Mutant Density: Enhanced Set}
 \label{subsec:tiebreak_mutant_density_enhanced}
 
 This approach to tie breaking also uses mutant density evaluate how error prone
-a statement is. However, it seeks to provide a more wholistic metric that also
+a statement is. However, it seeks to provide a more holistic metric that also
 considers how error prone the constructs that an a statement is nested in. For
 example, a statement inside a multi-level if statement, which is also nested in
 a loop, is more error prone than a statement which is outside these constructs.
 Since there is more room for errors in loops and if statement conditions, a
-statement nested in them takes on this risk of error.
+statement nested in them takes on this risk of error. In order to measure this
+score, the list of mutant used in the logical set was extended to include
+additional constructs that might contain the error. Additionally, the tiebreaker
+looks through and scores each block that the statement is nested in.
+Table\ref{table:enhanced_set_mutants} shows the additional mutants that are
+looked for in the enhanced set. Additionally, Table\ref{table:construct_scoring}
+discusses how a score is assigned to each construct while parsing through the
+syntax tree and assessing how error prone a statement is. All of these
+approaches are used to calculate a score that gets used in breaking ties of
+suspicious statements while ranking. Figure\ref{fig:enhanced_score_equation}
+shows how each construct score is used in generating the final score of a statement.
+
+\begin{table}[!htb]
+	\centering
+	\begin{tabular}{|c|c|}
+	 \hline
+	 Mutant & Description \\
+	 \hline
+	 Annotated Assign & Assignment to a variable that contains type hints \\
+	 Assign & Simple assignment to a variable using the single equal sign  \\
+	 Function Call & A call to any function \\
+	 Subscript & Indexing a list, dictionary, tuple or an object using brackets \\
+	 Literal Tuple & Literal constructed tuple using parenthesis \\
+	 Literal List & Literal constructed list using brackets \\
+	 Literal String &  Literal constructed string using quotation marks \\
+	 Literal Dictionary &  Literal constructed tuple using curly braces \\
+	 Literal Integer &  Literal integer (not a variable that stores one) \\
+	 Literal Float &  Literal float (not a variable that stores one) \\
+
+	 \hline
+	\end{tabular}
+	\caption{Mutants in the Enhanced Set}
+	\label{table:enhanced_set_mutants}
+\end{table}
+
+\begin{table}[!htb]
+	\centering
+	\begin{tabular}{|c|c|}
+	 \hline
+	 Construct & Scored Using \\
+	 \hline
+	 Function Definition & Number of arguments in the function signature \\
+	 If statement & Number of enhanced list mutants in the test condition  \\
+	 Simple statement & Number of the enhanced list mutants in the statement \\
+	 While loop & Number of enhanced list mutants in the test condition \\
+	 For loop & Number of enhanced list mutants in the iterator and iterable \\
+	 With statement & Number of the enhanced list mutants in the statement \\
+
+	 \hline
+	\end{tabular}
+	\caption{Construct Scoring in Enhanced Set}
+	\label{table:construct_scoring}
+\end{table}
+
+
+\begin{figure}[!htb]
+	\begin{center}
+		\begin{equation}
+			Score(statement) = \frac{\textbf{M$_{statement}$ + avg(M$_{c1}$ + M$_{c2}$ + ... + M$_{ci}$)}}{2}
+		\end{equation}
+		\caption{\label{fig:enhanced_score_equation} Enhanced Score Equation}
+	\end{center}
+\end{figure}
 
 % TODO: finish this
