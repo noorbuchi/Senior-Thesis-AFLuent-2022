@@ -721,7 +721,9 @@ different.
 In the implementation of this approach, the focus was on mutants in logical
 operations such as arithmetic, boolean, comparison operators, and others.
 Table \ref{table:logical_set_mutants} includes all the possible mutants which
-are considered with support from Libcst.
+are considered with support from Libcst. The number of these operators is
+calculated only for simple statements as defined by Libcst, therefore, it does
+not include if statements, function definition, while loops and so on.
 
 \begin{table}[!htb]
 	\centering
@@ -817,10 +819,53 @@ shows how each construct score is used in generating the final score of a statem
 \begin{figure}[!htb]
 	\begin{center}
 		\begin{equation}
-			Score(statement) = \frac{\textbf{M$_{statement}$ + avg(M$_{c1}$ + M$_{c2}$ + ... + M$_{ci}$)}}{2}
+			Score(statement) = \frac{\textbf{M$_{statement}$} + \frac{\textbf{M$_{c1}$ + M$_{c2}$ + ... + M$_{ci}$}}{\textbf{i}}}{2}
 		\end{equation}
 		\caption{\label{fig:enhanced_score_equation} Enhanced Score Equation}
 	\end{center}
 \end{figure}
+
+\subsection{Tiebreaking Overview}
+\label{subsec:tiebreak_overview}
+
+Using all the tiebreaking approaches discussed previously, this subsection
+provides an overview and an example that demonstrates tiebreaking on a sample
+program. Table\ref{table:scoring_examples} shows a sample program that implement
+two functions with some conditional logic and simple arithmetic. It also
+contains three columns with each scoring approach.
+
+\begin{table}[!htb]
+	\begin{tabular}{|c|l|c|c|c|}
+	 \hline
+	 & Line
+	 & Cyclomatic  & Logical & Enhanced \\
+	 \hline
+	 1: & \code{def some\_func(arg1, arg2, arg3, arg4: str):} & 3 & 0 & 2.0\\
+	 2: & \qquad\code{int1 = arg1 * arg2 / arg3} & 3 & 2 & 3.5 \\
+	 3: & \qquad\code{int2: str = arg4 + "hello world"} & 3 & 1 & 3.5 \\
+	 4: & \qquad\code{my\_list = ["some item"]} & 3 & 0 & 3.5 \\
+	 5: & \qquad\code{while int1 < 30:} & 3 & 0 & 1.5 \\
+	 6: & \qquad\qquad\code{my\_list.append(int2)} & 3 & 0 & 2.0 \\
+	 7: & \qquad\qquad\code{if len(my\_list) > 15:} & 3 & 0 & 1.5 \\
+	 8: & \qquad\qquad\qquad\code{print("done")} & 3 & 0 & 2.5 \\
+	 9: & \qquad\qquad\qquad\code{break} & 3 & 0 & 1.5 \\
+	 10: & \qquad\code{with open("my\_file.txt", "w+") as outfile:} & 3 & 0 & 1.0 \\
+	 11: & \qquad\qquad\code{outfile.write(str(my\_list))} & 3 & 0 & 2.0 \\
+	 12: &  & 0 & 0 & 0 \\
+	 13: &  & 0 & 0 & 0 \\
+	 14: & \code{def some\_other\_func(arg1, arg2):} & 4 & 0 & 1 \\
+	 15: & \qquad\code{if arg1 > arg2:} & 4 & 0 & 0.75 \\
+	 16: & \qquad\qquad\code{if 2 * arg2 > arg1:} & 4 & 0 & 1 \\
+	 17: & \qquad\qquad\qquad\code{print(arg1)} & 4 & 0 & 1.5 \\
+	 18: & \qquad\qquad\code{elif 3 * arg2 > arg1:} & 4 & 0 & 1.125 \\
+	 19: & \qquad\qquad\qquad\code{print(arg2)} & 4 & 0 & 1.625 \\
+	 20: & \qquad\code{else:} & 4 & 0 & 0.75 \\
+	 21: & \qquad\qquad\code{print(arg1 * 3.5)} & 4 & 1 & 2.25 \\
+	 \hline
+	\end{tabular}
+	\caption{Tiebreaking Score Examples}
+	\label{table:scoring_examples}
+\end{table}
+
 
 % TODO: finish this
