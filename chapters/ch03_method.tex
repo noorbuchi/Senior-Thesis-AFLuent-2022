@@ -828,12 +828,6 @@ shows how each construct score is used in generating the final score of a statem
 \subsection{Tiebreaking Overview}
 \label{subsec:tiebreak_overview}
 
-Using all the tiebreaking approaches discussed previously, this subsection
-provides an overview and an example that demonstrates tiebreaking on a sample
-program. Table\ref{table:scoring_examples} shows a sample program that implement
-two functions with some conditional logic and simple arithmetic. It also
-contains three columns with each scoring approach.
-
 \begin{table}[!htb]
 	\begin{tabular}{|c|l|c|c|c|}
 	 \hline
@@ -867,5 +861,38 @@ contains three columns with each scoring approach.
 	\label{table:scoring_examples}
 \end{table}
 
-
-% TODO: finish this
+Using all the tiebreaking approaches discussed previously, this subsection
+provides an overview and an example that demonstrates tiebreaking on a sample
+program. Table\ref{table:scoring_examples} shows a sample program that implement
+two functions with some conditional logic and simple mathematical operations. It also
+contains three columns with each scoring approach. Starting with the cyclomatic
+scores, one can see that all statements in a function contain the same score.
+This number represents the cyclomatic complexity of the function resulting from
+using Radon. While this approach is expected to break ties, it could potentially
+fail at doing so if the tied statements are in the same function. As for the
+logical approach scoring, it only applies to simple statements such as lines
+2,3,4,6,8,11,17,19, and 21. Using this approach, mutant density is calculated
+using logical mutants only. For example, since line 2 contains the two binary
+operators \code{*} and \code{/} for multiplication and division, the mutant
+density of the statement is 2, which is also its tiebreaking score. Note that
+variable assignment and literals do not affect logical tiebreaking scores.
+Lastly, enhanced tiebreaking takes into consideration a more extensive list of
+possible mutants. Additionally, it analyzes a wider range of statements that
+include if statements, while and for loops, as well as function definitions.
+Using some examples from the sample program in
+Table\ref{table:scoring_examples}, the enhanced score for line 3 would be
+calculated as follows:
+$$\frac{\textbf{3 + (4 / 1)}}{2}$$
+Where 3 is the number
+of enhanced list mutants in the line (annotated assign, plus, literal string), 4
+is the total number of enhanced list mutants the statement is nested in, and 1
+is the total number of constructs that the statement is nested in. Using another
+example on line 8, the score would be calculated as follows:
+$$\frac{\textbf{2 + (9 / 3)}}{2}$$
+Where 2 is the number of possible mutants in the statement itself (function
+call, and literal string), 9 is the total number of possible mutants in
+constructs that the statement is nested in (len() , >, 15, <, 30, four function
+arguments) and 3 is the number of constructs that the statement is nested in (if
+statement, while loop, and function). Using the same process the enhanced score
+is calculated for all the lines in the program and used for breaking ties in
+suspiciousness scores.
