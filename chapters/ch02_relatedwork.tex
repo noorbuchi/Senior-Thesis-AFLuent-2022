@@ -1,7 +1,7 @@
 \chapter{Related Work}
 \label{ch:relatedwork}
 
-Automated fault localization in general and more specifically spectrum based
+Automated fault localization in general and more specifically spectrum-based
 fault localization have extensive literature exploring the different approaches
 to facilitate debugging and increase developer efficiency. Considering that
 AFLuent relies on many concepts developed by this literature, this section will
@@ -17,6 +17,7 @@ literature surrounding automated fault localization (AFL).
 Wong et al. \cite{wong2016survey} explores the variety of AFL approaches and
 surveys research completed in that area between 1977 and 2014. The survey paper finds and
 discusses more than 334 different papers in many approaches in AFL.
+% TODO: remove the graph or make own less blurry
 \begin{figure}[!htb]
 	\begin{center}
 		\includegraphics[width=10cm]{wong_pie_chart.png}
@@ -24,7 +25,7 @@ discusses more than 334 different papers in many approaches in AFL.
 	\end{center}
 \end{figure}
 
-A breakdown of the found research is shown in Fig. \ref{fig:wong_breakdown}, where the
+A breakdown of the found research is shown in Figure \ref{fig:wong_breakdown}, where the
 majority of found papers are focused on Spectrum-Based Fault Localization (SBFL).
 Overall this research provides a great
 starting point to find and compare the different types and approaches of AFL.
@@ -45,7 +46,7 @@ seek to quantify how close ``the execution pattern of a statement is to the
 failure pattern of all test cases'', where the the closer they are the more
 likely that this statement to contain the error. In order to create a
 measurement of closeness, several equations have been developed and evaluated by
-past literature. Fig. \ref{fig:sbfl_eq} shows some of the equations reviewed by
+past literature. Figure \ref{fig:sbfl_eq} shows some of the equations reviewed by
 Wong et al in, however, more popular formulas have been developed that
 required the developer to analyze less code before finding the fault. Despite
 the existence of many Similarity Coefficient formulas, Yoo et al.
@@ -64,7 +65,7 @@ a performance evaluation of each.
 \subsubsection{Tarantula}
 \label{subsubsec:tarantula_lit}
 
-Starting off with the Tarantula formula (fig. \ref{fig:tarantulaEquation}), it's
+Starting off with the Tarantula formula (figure \ref{fig:tarantulaEquation}), it's
 one of the foundational equations that was introduced to attempt to visualize
 suspicious statements using color ranges \cite{jones2002viz,
 Jones2005TarantulaEval}. A tool using this equation was also implemented in Java
@@ -75,7 +76,7 @@ number of failed tests (\(\frac{\textbf{N$_{CF}$}}{\textbf{N$_{CF}$ +
 \textbf{N$_{UF}$}}}\)). The other ratio used is number of passing tests that
 cover the element divided by total number of passing tests
 (\(\frac{\textbf{N$_{CS}$}}{\textbf{N$_{CS}$}+\textbf{N$_{US}$}}\)).
-The equation is then assembled as seen in fig. \ref{fig:tarantulaEquation}.
+The equation is then assembled as seen in figure \ref{fig:tarantulaEquation}.
 To better understand how the equation works, we can look at the important terms
 that have the largest influence in changing the output.The number of failed
 tests that cover the element is clearly the main influencer here because it's
@@ -145,7 +146,7 @@ it offers.
 	\end{center}
 \end{figure}
 
-In addition to the Ochiai formula in fig.\ref{fig:ochiaiEquation}, another
+In addition to the Ochiai formula in figure \ref{fig:ochiaiEquation}, another
 variation of Ochiai is identified and evaluated by \cite{naish2011model}. The
 formula for Ochiai2 is shown in \ref{fig:ochiai2Equation} and it takes into
 consideration all the possible outcomes of unit test coverage. Overall, this
@@ -160,7 +161,7 @@ that takes in many different approaches..
 
 DStar (also written as D*) is another SPFL technique that utilizes code coverage
 information of a program to locate and rank faults. The equation for this
-approach can be found in fig.\ref{fig:dstarEquation}. Wong et al.
+approach can be found in figure \ref{fig:dstarEquation}. Wong et al.
 \cite{Wong2014DStar} introduce and extensively evaluate this approach in a 2014
 paper that demonstrate it's effectiveness compared to other formulas. In the
 process of constructing D*, the paper lists the factors involved in determining

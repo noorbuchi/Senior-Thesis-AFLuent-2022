@@ -35,7 +35,7 @@ developers find bugs in their code.
 \begin{figure}[!htb]
 	\begin{center}
 		\includegraphics[width=\textwidth]{dev_time_stat.png}
-		\caption{\label{fig:development_time} API Developers Time Allocation\cite{2020_state_of_api_report}}
+		\caption{\label{fig:development_time} API Developers Time Allocation \cite{2020_state_of_api_report}}
 	\end{center}
 \end{figure}
 
@@ -79,10 +79,10 @@ More specifically, the results of the program's test suite are used to find this
 correlation. This latter approach is the focus of this research, where a
 spectrum-based automated fault localization tool is implemented.
 
-\subsection{Spectrum Based Fault Localization}
+\subsection{Spectrum-Based Fault Localization}
 \label{subsec:SpectrumBased}
 
-The reliance of spectrum based fault localization (SBFL) on data already
+The reliance of spectrum-based fault localization (SBFL) on data already
 collected during running and testing reduces the overall cost of debugging since
 there is no need to rerun the code. When focusing on collected test suite data,
 SBFL becomes even more applicable since it can be integrated with many unit test
@@ -96,7 +96,7 @@ uses various equations to calculate and quantify the
 suspiciousness of blocks of code. The equations are expressed as functions of
 elements, where each element is the line or block of code under inspection. The
 functions typically include the variables shown in
-Fig.\ref{fig:contingency_table}. The figure also provides a table to visualize
+Figure \ref{fig:contingency_table}. The figure also provides a table to visualize
 the relationship of the variables \cite{Wong2014DStar}.
 
 \begin{figure}[!htb]
@@ -170,6 +170,7 @@ a new variable represented as the * symbol. This variable can give more
 weight to \textbf{N$_{CF}$} and can be set to any number. However, the
 researchers suggested that * is set to 2 or 3.
 
+% TODO: create personal example and develop an explanation for it
 \subsection{SBFL in Action}
 \label{subsec:SBFLinAction}
 
@@ -183,7 +184,7 @@ researchers suggested that * is set to 2 or 3.
 With the discussed equations and techniques to calculate suspiciousness in mind,
 the following example will demonstrate and discuss how AFLuent will utilize unit
 test and coverage data to locate faults in a program.
-Fig.\ref{fig:sbfl_example}
+Figure \ref{fig:sbfl_example}
 shows a sample python program to find the middle value
 from three integers. The program contains a bug on line 9 where the wrong middle
 number is detected. The figure also shows six different test cases that pass
@@ -251,6 +252,7 @@ AFLuent. Each one is further split into sub-questions to facilitate organization
 	fault localization using test coverage data?
 	}
 \end{center}
+\label{para:RQ1}
 
 This general research question focuses on the core implementation and
 evaluation of AFLuent. Considering that many SBFL strategies and formulas can be
@@ -267,6 +269,7 @@ smaller sub-questions discussed below.
 	created and evaluated by past literature?
 	}
 \end{center}
+\label{para:RQ1.1}
 
 Available literature surrounding SBFL is reviewed to identify four
 different formulas used to calculate suspiciousness scores using test coverage
@@ -281,6 +284,7 @@ formulas.
 	formulas when applied to Python projects?
 	}
 \end{center}
+\label{para:RQ1.2}
 
 To ensure correctness and effectiveness, the implemented formulas in AFLuent are
 evaluated through experiments that measure their accuracy in sorting suspicious
@@ -300,6 +304,8 @@ output, as well as error messages and warnings.
 	Python as a novice developer friendly tool?
 	}
 \end{center}
+\label{para:RQ2}
+
 
 In addition to ensuring a smooth user experience while utilizing AFLuent
 functionalities, setup process and usage of the tool AFLuent is simplified to

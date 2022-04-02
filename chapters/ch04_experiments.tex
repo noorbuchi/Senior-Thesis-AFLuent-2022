@@ -42,8 +42,8 @@ prerequisites are met and describe the systematic and automated approach in eval
 Before discussing the evaluation process, it's important to clearly state the
 questions to answer. Previously, Section\ref{sec:researchq} brought up few
 research question concerning the implementation and evaluation of AFL in Python.
-Related Work and Methods section addressed \emph{RQ1.1} as well as
-\emph{RQ2}, however, the answer \emph{RQ1.2} remains unclear. While \emph{RQ1.2}
+Related Work and Methods section addressed \hyperref[para:RQ1.1]{\emph{RQ1.1}} as well as
+\hyperref[para:RQ2]{\emph{RQ2}}, however, the answer \hyperref[para:RQ1.2]{\emph{RQ1.2}} remains unclear. While \hyperref[para:RQ1.2]{\emph{RQ1.2}}
 generally involved the efficiency and accuracy of AFLuent, there was no mention
 of the metrics or the comparisons needed to achieve an answer. In general, there
 are sixteen different approaches that will be evaluated and compared. For every AFL
@@ -251,17 +251,19 @@ additional filtering to be done. The new content was filtered as follows:
 
 After the second filtering step SLOCcount statistics were collected again to get
 information on the sample, the output from the tool is shown in
-Fig.\ref{fig:SLOCcount_phase2}. While the codebase was significantly reduced in
+Figure\ref{fig:SLOCcount_phase2}. While the codebase was significantly reduced in
 size, the resulting test suite contains 1105 test cases with 99\% coverage.
 In order to get a better understanding of the remaining sample, additional data
 was collected on the cyclomatic complexity the functions in the code. This
 information would give some ideas on the structure of the code regarding if
 statements, loops and other constructs. The cyclomatic complexity of the
-remaining 516 functions was calculated and plotted as shown on
-\ref{fig:cyclomatic_complexity_of_sample}. The plot shows a median cyclomatic
-complexity of 3 for most functions with few outliers ranging to 24. While these
-results mean that the code is very linear, they also suggest that it resembles
-what novice developers write.
+remaining 516 functions was calculated and plotted as shown on Figure
+\ref{fig:cyclomatic_complexity_of_sample}. The figure shows a box and whiskers
+plot of this data, where the lower quartile and the minimum are equal causing a
+lower whisker of zero length. Additionally, the plot shows a median cyclomaticc
+complexity score of 3 and a maximum of 8. Lastly, few data outliers go beyond
+and up to a score of 24. These results mean that the code is very linear, they also suggest that it resembles
+what novice developers write as simple only block function and minimal branching.
 
 \section{Evaluation}
 

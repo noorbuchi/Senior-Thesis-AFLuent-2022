@@ -42,7 +42,7 @@ integrated with pytest can be found in Section \ref{sec:makingPytestPlugin}.
 \subsection{Coverage.py}
 \label{subsec:coverage}
 
-Spectrum based fault localization requires data on code coverage and test
+Spectrum-based fault localization requires data on code coverage and test
 results in order to calculate and rank suspicious of elements in the code.
 Coverage.py\cite{coverage_py_website} is a Python tool that provides an easy to use application
 programming interface to collect that data. The tool also provides various
@@ -91,7 +91,7 @@ hooks. These hooks break up the standard Pytest execution steps and allow
 external code to run at these points. A plugin is essentially a collection of
 packaged hooks that fit in the workflow of Pytest. AFLuent makes use of five
 different hooks to implement automated fault localization.
-Fig.\ref{fig:pytest_flow} shows a general overview of the steps changed in the
+Figure \ref{fig:pytest_flow} shows a general overview of the steps changed in the
 workflow of Pytest. Additionally, the section below describes in details how each
 step was modified.
 
@@ -248,9 +248,9 @@ syntax structure. Further discussion on breaking ties using these scores can be
 found in Section \ref{sec:tiebreaking} Tie breaking.
 
 As for functions, a Line object contains an implementation of the four
-equations, Tarantula shown in Fig.\ref{fig:tarantulaEquation}, Ochiai shown in
-Fig.\ref{fig:ochiaiEquation}, Ochiai2 shown in Fig.\ref{fig:ochiai2Equation},
-and DStar shown in Fig.\ref{fig:dstarEquation},
+equations, Tarantula shown in Figure \ref{fig:tarantulaEquation}, Ochiai shown in
+Figure \ref{fig:ochiaiEquation}, Ochiai2 shown in Figure \ref{fig:ochiai2Equation},
+and DStar shown in Figure \ref{fig:dstarEquation},
 where suspiciousness scores are calculated and rounded up to four decimal places.
 The mathematical implementations of these functions also handle and account for
 division by zero. Depending on the equation, there could be multiple instances
@@ -268,8 +268,8 @@ in which every covered line has the maximum suspiciousness of 1. It is important
 to acknowledge that the outcomes reached here only apply to code that has been
 covered by the test suite. Faulty lines, which are not covered by any test case
 will not be investigated since there is no data to calculate their
-suspiciousness. Using values plugged in to Fig.\ref{fig:tarantulaEquation}, the
-examples in Fig.\ref{fig:taran_div_by_zero_1} and Fig.\ref{fig:taran_div_by_zero_2} show
+suspiciousness. Using values plugged in to Figure \ref{fig:tarantulaEquation}, the
+examples in Figure \ref{fig:taran_div_by_zero_1} and Figure \ref{fig:taran_div_by_zero_2} show
 the two possible cases where division by zero might occur in the Tarantula
 equation.
 
@@ -293,10 +293,10 @@ equation.
 	\end{center}
 \end{figure}
 
-Fig.\ref{fig:taran_div_by_zero_1} shows the case where there is a total of zero
+Figure \ref{fig:taran_div_by_zero_1} shows the case where there is a total of zero
 failed test cases, covering AND not covering the element, in which a score
 of 0 is assigned to the element. On the other hand,
-Fig.\ref{fig:taran_div_by_zero_2} shows the case where there is a total of zero
+Figure \ref{fig:taran_div_by_zero_2} shows the case where there is a total of zero
 passing test cases, in which a maximum score of 1 is assigned to the element.
 
 \subsubsection{Division by Zero: Ochiai}
@@ -308,7 +308,7 @@ The latter case indicates that the line is not suspicious since it did not
 cause any failures, therefore, zero is returned as the suspiciousness score.
 However, the former case is not considered at all since AFLuent does not include
 lines with no coverage information.
-Fig.\ref{fig:ochiai_div_by_zero_1} and Fig.\ref{fig:ochiai_div_by_zero_2}
+Figure \ref{fig:ochiai_div_by_zero_1} and Figure \ref{fig:ochiai_div_by_zero_2}
 demonstrates that equation after plugging in
 the zero values from \ref{fig:ochiaiEquation}
 
@@ -332,7 +332,7 @@ the zero values from \ref{fig:ochiaiEquation}
 	\end{center}
 \end{figure}
 
-Fig.\ref{fig:ochiai_div_by_zero_1} is an example of when there is zero total
+Figure \ref{fig:ochiai_div_by_zero_1} is an example of when there is zero total
 failed test cases, resulting in a zero suspiciousness score.
 However Fig\ref{fig:ochiai_div_by_zero_2} shows an example where there is no
 failed or successful tests that cover the line. This scenario does not
@@ -346,7 +346,7 @@ Considering the number of terms in the denominator of the formula to calculate
 score using Ochiai2, there are technically four instances where the denominator
 can be zero. In the first case, no tests, failing or passing, cover the
 statement. More formally when \textbf{N$_{CF}$ + N$_{CS}$ = 0}.
-Fig.\ref{fig:ochiai2_div_by_zero_1} shows the equation with the zero plugged in.
+Figure \ref{fig:ochiai2_div_by_zero_1} shows the equation with the zero plugged in.
 While this is an issue mathematically, it does not occur in AFLuent because the
 tool only analyzes elements that have been covered at least once by a failing or
 a passing test. Therefore, there is no need to handle this possibility.
@@ -383,7 +383,7 @@ In the third possibility where a division by zero could happen, the third term
 \textbf{N$_{CF}$ + N$_{UF}$ = 0}. This would mean that there are a total of zero
 failed tests that both cover and not cover the element. Since AFLuent will only
 run when there is at least one failure, this situation is not possible during
-the tool's runtime. Fig. \ref{fig:ochiai2_div_by_zero_3} shows the zero as part
+the tool's runtime. Figure  \ref{fig:ochiai2_div_by_zero_3} shows the zero as part
 of the full equation.
 
 \begin{figure}[!htb]
@@ -400,7 +400,7 @@ The last possibility where division by zero in Ochiai2 can occur is when
 \textbf{N$_{CS}$ + N$_{US}$ = 0}, in which there are zero total successful test
 cases. In this situation, there is no indicator of correct functionality and
 therefore every element is highly suspicious. A score of 1.0 will always be
-returned in this scenario. Fig. \ref{fig:ochiai2_div_by_zero_4} shows the
+returned in this scenario. Figure  \ref{fig:ochiai2_div_by_zero_4} shows the
 equation with the zero in the denominator.
 
 \begin{figure}[!htb]
@@ -425,8 +425,8 @@ have the maximum suspiciousness score possible. However, since DStar has a
 numerator raised to a power set by the user, it has no numerical upper limit on
 the resulting score. To resolve this issue, the maximum integer value is
 assigned as the suspiciousness score of this line.
-Fig.\ref{fig:dstar_div_by_zero} shows and example of this scenario after
-plugging in values from Fig.\ref{fig:dstarEquation}
+Figure \ref{fig:dstar_div_by_zero} shows and example of this scenario after
+plugging in values from Figure \ref{fig:dstarEquation}
 
 \begin{figure}[!htb]
 	\begin{center}
@@ -542,7 +542,7 @@ Unlike success messages, error messages are produced when things aren't going as
 expected. However, in this case, they aren't meant to denote complete failure of
 AFLuent, but rather to communicate a major alert to the user. This type of
 message is produced when the Pytest session exists with status code 1, which
-occurs when at least one test fails. Fig.\ref{fig:error_message} shows the
+occurs when at least one test fails. Figure \ref{fig:error_message} shows the
 console output when a test failure was purposefully introduced. A bright red
 highlighted message with bold white letters indicate that fault localization
 using AFLuent is underway.
@@ -565,7 +565,7 @@ arguments to Pytest, the session can stop at the first test failure. This is
 problematic from a fault localization standpoint because it prevents further
 collection of coverage information and test outcomes from the rest of the test
 suite. In order to let the user be aware of this issue, the warning message
-shown in Fig.\ref{fig:warning_message_1} is displayed. Regardless, AFLuent will
+shown in Figure \ref{fig:warning_message_1} is displayed. Regardless, AFLuent will
 continue running with standard behavior, however, results are very likely to be
 inaccurate.
 
@@ -625,7 +625,7 @@ calculations, where the results will be sorted using the first one mentioned in
 the command. For example, the command \code{poetry run pytest --afl --afl-ignore
 tests/* --ochiai --dstar --afl-results 10} will display the top 10 results
 sorted by the most suspicious using the Ochiai equation. However, the
-DStar suspiciousness will also be displayed. Fig.\ref{fig:report_1} shows an
+DStar suspiciousness will also be displayed. Figure \ref{fig:report_1} shows an
 example of the report when running the AFLuent test suite after introducing a
 bug in the code.
 
@@ -646,7 +646,7 @@ suspiciousness score possible (usually 1), the color indicates that these
 elements are extremely likely to be the ones causing the fault. For the
 remaining results, the top 20\% are highlighted using orange to show that they
 are risky of being faulty. The remaining non-zero elements are highlighted using
-yellow. Fig.\ref{fig:report_2} shows an example of how safe statements are
+yellow. Figure \ref{fig:report_2} shows an example of how safe statements are
 displayed in the report.
 
 \begin{figure}[!htb]
@@ -675,7 +675,7 @@ case as well as the outcome of the test.
 \section{Tie Breaking}
 \label{sec:tiebreaking}
 
-Ties are a frequent issue in spectrum based fault localization. They often cause
+Ties are a frequent issue in spectrum-based fault localization. They often cause
 issues in identifying the source of the fault and render the scores useless. To
 mitigate this problem, AFLuent implements three different approaches to resolve
 the inevitable ties in suspiciousness scores. These techniques can hopefully
@@ -694,6 +694,7 @@ for each run of the tool.
 \subsection{Cyclomatic Complexity}
 \label{subsec:c_complexity}
 
+% TODO: add cyclomatic complexity citation
 One of the available ways to break ties between elements is to use cyclomatic
 complexity as a secondary score to consider when sorting. This score is provided
 by the Radon library and it measure the number of available paths that execution
@@ -723,7 +724,7 @@ operations such as arithmetic, boolean, comparison operators, and others.
 Table \ref{table:logical_set_mutants} includes all the possible mutants which
 are considered with support from Libcst. The number of these operators is
 calculated only for simple statements as defined by Libcst, therefore, it does
-not include if statements, function definition, while loops and so on.
+not include \code{if} statements, function definition, \code{while} loops and so on.
 
 \begin{table}[!htb]
 	\centering
