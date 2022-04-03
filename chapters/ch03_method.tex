@@ -161,7 +161,7 @@ The added arguments accept values that specify the following:
         \item \code{---per-test-report}: requires that a per-test coverage
         report is produced. This report is only generated in JSON format.
     \end{itemize}
-    \item The tiebreaking approaches to resolve ties in rankings
+    \item The tie breaking approaches to resolve ties in rankings
     \begin{itemize}
         \item \code{---tiebreaker}: allowed values are \code{random},
         \code{cyclomatic}, \code{logical},
@@ -862,8 +862,8 @@ shows how each construct score is used in generating the final score of a statem
 	\label{table:scoring_examples}
 \end{table}
 
-Using all the tiebreaking approaches discussed previously, this subsection
-provides an overview and an example that demonstrates tiebreaking on a sample
+Using all the tie breaking approaches discussed previously, this subsection
+provides an overview and an example that demonstrates tie breaking on a sample
 program. Table\ref{table:scoring_examples} shows a sample program that implement
 two functions with some conditional logic and simple mathematical operations. It also
 contains three columns with each scoring approach. Starting with the cyclomatic
@@ -875,9 +875,9 @@ logical approach scoring, it only applies to simple statements such as lines
 2,3,4,6,8,11,17,19, and 21. Using this approach, mutant density is calculated
 using logical mutants only. For example, since line 2 contains the two binary
 operators \code{*} and \code{/} for multiplication and division, the mutant
-density of the statement is 2, which is also its tiebreaking score. Note that
-variable assignment and literals do not affect logical tiebreaking scores.
-Lastly, enhanced tiebreaking takes into consideration a more extensive list of
+density of the statement is 2, which is also its   score. Note that
+variable assignment and literals do not affect logical tie breaking scores.
+Lastly, enhanced tie breaking takes into consideration a more extensive list of
 possible mutants. Additionally, it analyzes a wider range of statements that
 include if statements, while and for loops, as well as function definitions.
 Using some examples from the sample program in

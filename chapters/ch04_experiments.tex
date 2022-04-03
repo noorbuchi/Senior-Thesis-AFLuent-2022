@@ -33,8 +33,8 @@ by these four main steps:
 
 While these steps are great for planning and describing the intention in evaluating
 AFLuent, they fall short of providing a clear and detailed plan. The sections
-below will expand on the points discussed here and elaborate on how the
-prerequisites are met and describe the systematic and automated approach in evaluation.
+below will expand on the points discussed here, elaborate on how the
+prerequisites are met, and describe the systematic and automated approach in evaluation.
 
 \subsection{Research Questions}
 \label{subsec:research_questions_eval}
@@ -47,7 +47,7 @@ Related Work and Methods section addressed \hyperref[para:RQ1.1]{\emph{RQ1.1}} a
 generally involved the efficiency and accuracy of AFLuent, there was no mention
 of the metrics or the comparisons needed to achieve an answer. In general, there
 are sixteen different approaches that will be evaluated and compared. For every AFL
-equation used, Tarantula, Ochiai, Ochiai2, and Dstar, there are four tiebreaking
+equation used, Tarantula, Ochiai, Ochiai2, and Dstar, there are four tie breaking
 approaches. Each equation-tieberaker pair will be evaluated on the same dataset,
 where the resulting rankings will be used to produce a score to assess how
 close the produced ranking are to localizing the fault correctly. In addition to
@@ -260,15 +260,155 @@ statements, loops and other constructs. The cyclomatic complexity of the
 remaining 516 functions was calculated and plotted as shown on Figure
 \ref{fig:cyclomatic_complexity_of_sample}. The figure shows a box and whiskers
 plot of this data, where the lower quartile and the minimum are equal causing a
-lower whisker of zero length. Additionally, the plot shows a median cyclomaticc
+lower whisker of zero length. Additionally, the plot shows a median cyclomatic
 complexity score of 3 and a maximum of 8. Lastly, few data outliers go beyond
 and up to a score of 24. These results mean that the code is very linear, they also suggest that it resembles
 what novice developers write as simple only block function and minimal branching.
 
 \section{Evaluation}
+\label{sec:evaluation}
 
-\emph{TODO: add information}
+\subsection{Data Collection}
+\label{subsec:data_collection}
 
-% !Single mutation evaluation
+After choosing and filtering the sample, the evaluation of AFLuent would be
+conducted by repeating three main steps: (1) Introduce a single bug in the codebase,
+(2) Run AFLuent expecting the tests to fail, and (3) collect the reports
+produced by AFLuent for analysis later on. With the large sample and the
+possibility of inserting bugs in many possible locations, there was a need for
+an automated approach to collect this data. Some existing tools such as
+\emph{mutmut}\cite{mutmut} already perform similar steps for
+mutation testing and it could be easily repurposed to generate the bugs/mutants and run
+AFLuent after inserting a mutant into the codebase. Futhermore, \emph{mutmut}
+supports a hook function that facilitates collecting results after each run and
+before the next mutant is applied. Lastly the test suite run command can be
+modified to run AFLuent in evaluation mode and collect fault localization data.
+Overall, for each bug/mutant, the following data would be collected to use for
+evaluation:
+\begin{itemize}
+    \item Statement rankings produced by AFLuent for each 16
+    approach-tiebreaker combination
+    \item Per-test coverage report
+    \item Timing report containing the time taken to run the test suite befor
+    fault localization and the time to perform fault localization and get
+    rankings.
+    \item Information about the mutant such as the file and line number it was
+    added to as well as the mutated code.
+\end{itemize}
+
+AFLuent ranking and timing data was collected on five different machines each with
+Ubuntu operating system, \code{Intel Xeon E3-12xx} CPU, and 2GB of memory. Docker containers were created
+on each machine, where Python 3.10.2 was installed along with AFLuent and
+\code{mutmut}. After running \emph{mutmut} on the filtered algorithms, it was able
+to generate 7767 mutants in which 4123 were killed, 3490 survived, and 154 were
+timed out by \code{mutmut}. The mutants were classified using the following criteria:
+
+\begin{itemize}
+    \item Killed mutants: cases where the mutated code caused a failure in the
+    test suite, as expected, prompting AFLuent to localize the fault and
+    generate ranking reports.
+    Every mutant that generated the ranking reports is
+    considered killed.
+    \item Survived: cases where the mutation did not cause a failure in the test
+    suite. AFLuent was not run in these cases since no test case failed. Runs
+    that generated per-test coverage and timing reports but no ranking reports
+    are for mutants that survived.
+    However, per-test coverage and timing reports were generated.
+    \item Timed out: special cases where \emph{mutmut} reported to run a mutant
+    but no report was produced by AFLuent. The log produced by \code{mutmut}
+    confirms that these mutants were timed out after taking too long to complete
+    the test run.
+\end{itemize}
+
+When evaluating AFLuent's effectiveness in ranking lines of code, only the
+results from killed mutants are relevant since that's when reports were
+generated. As for efficiency evaluation, data can be split up to two categories,
+time taken by AFLuent to execute tests while calculating per-test coverage, and
+time taken to produce rankings to find faults. Both types of mutants, killed and
+survived, produced data points on the time taken to run the tests. However, only
+killed mutants can produce data points on the time taken to perform
+localization. Therefore, a different number of data points will be used for each
+category.
+
+\subsection{Results}
+\label{subsec:eval_results}
+
+The collected data is visualized in this subsection to compare the different
+equations to each other, additionally, tie breaking techniques are compared to
+determine the most effective. In order to quantify the effectiveness of each
+approach, an \emph{EXAM} %TODO: add citation
+score is calculated for each report produced from a killed mutant. This score
+represents the percentage of reported statements that a developer must parse
+through before reaching the correct line where the bug exists. To produce this
+score, the reported results were filtered by project so that the reported
+results only include lines from that project. For example, when the \emph{EXAM}
+score is calculated for a fault in the \code{bit\_manipulation} project, the
+percentage of lines belonging to that project that a developer must read before
+finding the fault is the score. To visualize the data, box and whisker plots are
+used to show the scores of each equation-tiebreaker combination. This form of
+visualizing the data allows each point to be represented in the graph and gives
+a clear indicator of where outliers are.
+
+\subsubsection{Comparison by Equation}
+\label{subsubsec:comparison_by_equation}
+
+\subsubsection{Comparison by Tiebreaker}
+\label{subsubsec:comparison_by_tiebreaker}
+
+\subsubsection{Time Efficiency}
+\label{subsubsec:time_Efficiency}
+
+In order to provide a time comparison that accounts for the different cases of
+AFLuent runs, three different categories of time data are included: (I) Time to
+execute tests without AFLuent, (II) Time to execute tests with AFLuent enabled,
+(III) Time to locate faults and perform tie breaking using all
+equation-tiebreaker combinations. Generally all these times were calculated when
+all 1105 test cases in the project's suite were ran.
+
+\begin{figure}[!htb]
+	\begin{center}
+		\includegraphics[width=15.5cm]{test_timings.png}
+		\caption{\label{fig:test_timings} Test Execution Time}
+	\end{center}
+\end{figure}
+
+Figure \ref{fig:test_timings} compares the time taken to execute all test
+functions with and without using AFLuent. The baseline includes
+4000 data points where the tests were ran without AFLuent. On the other hand
+7613 data points are plotted for when AFLuent generated a timing report. The
+figure shows a clear difference between the two boxplots, where the median run with
+AFLuent took longer time to complete than the median run for the baseline.
+Additionally, the long upper whisker indicates that
+including AFLuent increases the chances that the tests could take substantially
+longer to run. This increase is somewhat expected since AFLuent introduces
+wrapper functions around each test execution to calculate per-test coverage. And
+while this increase is quite small,considering the large size of the test suite,
+minimizing the additional time cannot be done through AFLuent since the tool
+relies on Coverage.py to calculate per-test coverage. After performing the The
+Wilcoxon Rank-Sum Test on both sets, the resulting p-value of
+\code{8.035528e-157} confirms that there is statistically significant difference
+between the two sets.
+
+\begin{figure}[!htb]
+	\begin{center}
+		\includegraphics[width=15.5cm]{localization_timings.png}
+		\caption{\label{fig:localization_timings} Fault Localization Time}
+	\end{center}
+\end{figure}
+
+Another useful time metric for developers hoping to use AFLuent is the time the
+took takes to locate faults. And while
+comprehensive time data for each equation and tie breaking approach was not
+collected, some conclusions can be drawn from the most time consuming case.
+Figure \ref{fig:localization_timings} shows the time taken to generate a
+statement ranking following a test failure. This includes the time to calculate
+suspiciousness scores using all equations and to retrieve and evaluate tie
+breaking values using all approaches. In general, this is the worst possible
+scenario for AFLuent localization time. While the median time is quite large,
+around 115 second, so is the test suite. For every run, AFLuent generates and parses
+abstract syntax trees using libcst and calculates cyclomatic complexity fo all
+files covered in the suite. In the case of this evaluation, this includes all
+files in the codebase. Further discussion on how this time can be minimize is
+found in Section \ref{sec:future_work}: Future Work.
 
 \section{Threats to Validity}
