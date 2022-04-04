@@ -1,16 +1,78 @@
-\chapter{Discussion and Future Work}  
+\chapter{Discussion and Future Work}
 \label{ch:conclusion}
 
-This is the conclusion. You might want to leave it unnumbered, as it is now. If you want to number it, treat it like any other chapter.
-
-This chapter usually contains the following items, although not
-necessarily in this order or sectioned this way in particular.
-
 \section{Summary of Results}
-A discussion of the significance of the results
-and a review of claims and contributions.
+
+The results of this study can be split up into two main contributions, as the
+title suggests, implementation and evaluation. AFLuent represents a first of a
+kind SBFL tool directly integrated to the Pytest framework. Furthermore, its
+emphasis on ease of use and readability makes it a great fit for beginner and
+novice developers. AFLuent as a tool is maintainable, readable, and extendable
+in several ways that can potentially serve for more thorough evaluations
+of SBFL algorithms in the future. In addition to implementation technical
+details, an evaluation of AFLuent on two main metrics, effectiveness and
+efficiency, is presented. After a visual and statistical analysis of \emph{EXAM} scores for each equation
+and tie breaker pair implemented in AFLuent, much was revealed regarding the
+best and worst performances. One observation that stood out
+is the significant underperformance of Tarantula when compared to all other
+equations. Additionally, the statistically significant edge that logical tie
+breaking achieve to outperform it's random and cyclomatic counterparts was
+surprising. Overall, Ochiai, Ochiai2 and DStar had very similar performances
+when the same tie breaker was used across all of them, therefore, the null
+hypothesis must be accepted for this evaluation, but additional experiments may
+yield different results. As for the most effective tie breaking technique, the
+logical approach emerged as the most successful in creating a statistically
+significant difference followed by the enhanced tie breaker.
+Additionally, the presented time data demonstrate the
+time overhead that developers need to take on if they choose to use
+AFLuent. While further evaluation is needed to determine the time efficiency of
+each approach indeterminately from other, the worst case time data suggest that
+calculating per test coverage and performing fault localization will lead to a
+significant increase in runtime.
 
 \section{Future Work}
 \label{sec:future_work}
 
+Further extensions can be added to AFLuent to explore more approaches in the
+SBFL field as well as increase the tool's ability to find faults. These
+types of additional work can be split up to three main sub-categories:
+effectiveness, efficiency, and evaluation.
+
+\subsubsection{Effectiveness}
+
+Many SBFL equations have been studied and evaluated in previous literature,
+however, AFLuent's inclusion of only the four, Tarantula, Ochiai, Ochiai2, and
+DStar is only the first step in analyzing how fault localization can perform in
+Python projects. Additionally, setting a limit is needed due to time
+constraints. Possible extensions of this work can implement more SBFL equation
+options for developers to utilize, which could be especially helpful if new
+techniques prove to be more effective than those currently implemented. Another
+feature of AFLuent that significantly influenced the collected performance
+metrics is the approach used for tie breaking. Additional enhancements and
+techniques can be added to improve existing ones, especially the `enhanced' tie
+breaker. This could be completed by expanding the list of possible mutants and
+improving the analysis of the abstract syntax trees.
+
+\subsubsection{Efficiency}
+
+One of the concerning outcomes of this study is the long time AFLuent takes to
+produce fault localization output. Developer usually want fast and optimized
+tools, which could render AFLuent unusable in the eyes of many. And while
+AFLuent's reliance on several tools reduce the ability to control the time it
+takes to run, there are some measures that could mitigate this problem.
+Throughout manual testing of the tool, it was generally observed that the most
+time consuming feature of AFLuent involves generating the tie breaker datasets.
+In oder for AFLuent to adequately understand the code under test, it must
+generate abstract syntax tree for every file covered in the test suite. Since
+the debugging process usually involves making small changes at a time and
+rerunning the tests, a time improvement is possible be caching all generated
+syntax trees and only re-generating ones for files that have been edited since
+the last run. This solution will not reduce the runtime for the first time but
+it could have a significant effect on the runs that follow. Overall, this change
+introduces a quality of life improvement by reducing the time developers need to
+wait before receiving the report from AFLuent.
+
+\subsubsection{Evaluation}
+
+% TODO: should this stay here?
 \section{Conclusion}
