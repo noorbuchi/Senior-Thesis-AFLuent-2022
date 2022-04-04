@@ -287,7 +287,8 @@ Overall, for each bug/mutant, the following data would be collected to use for
 evaluation:
 \begin{itemize}
     \item Statement rankings produced by AFLuent for each 16
-    approach-tiebreaker combination
+    approach-tiebreaker combination. Note that a value of 3 was used for * in
+    the DStar equation.
     \item Per-test coverage report
     \item Timing report containing the time taken to run the test suite befor
     fault localization and the time to perform fault localization and get
@@ -344,16 +345,162 @@ score, the reported results were filtered by project so that the reported
 results only include lines from that project. For example, when the \emph{EXAM}
 score is calculated for a fault in the \code{bit\_manipulation} project, the
 percentage of lines belonging to that project that a developer must read before
-finding the fault is the score. To visualize the data, box and whisker plots are
-used to show the scores of each equation-tiebreaker combination. This form of
-visualizing the data allows each point to be represented in the graph and gives
-a clear indicator of where outliers are.
+finding the fault is the score. The lower the exam score for an approach, to
+more effective it is because the developer would have to analyze less lines
+before finding the fault.
 
-\subsubsection{Comparison by Equation}
-\label{subsubsec:comparison_by_equation}
+To visualize the data, box plots are
+used to show the distribution of scores for each equation-tiebreaker
+combination. This form of visualizing the data allows each point to be
+represented in the graph and gives a clear indicator of where outliers are.
+Additionally, heat maps are used to compare each pair to the other fifteen after
+completing statistical tests.
 
-\subsubsection{Comparison by Tiebreaker}
-\label{subsubsec:comparison_by_tiebreaker}
+\subsubsection{Data Vizualization}
+\label{subsubsec:data_vizualization}
+
+To compare suspiciousness score equations when the tie breaking approach is the
+same, Figures \ref{fig:random_tiebreak_boxplot},
+\ref{fig:cyclomatic_tiebreak_boxplot}, \ref{fig:logical_tiebreak_boxplot}, \ref{fig:enhanced_tiebreak_boxplot}
+group \emph{EXAM} scores by tie breaking technique for each killed mutant. On
+each plot, the y-axis contains the name of the approach and the x-axis the
+percentage of score to be analyzed before finding the mutant (also referred to
+as the \emph{EXAM} score). Additionally, the value of the median is labeled on
+each boxplot. Lastly, outliers are shown using the black circles that go beyond
+the limit of the upper whisker on each plot.
+
+\begin{figure}[!htb]
+	\begin{center}
+		\includegraphics[width=15.5cm]{random_tiebreak_boxplot.png}
+		\caption{\label{fig:random_tiebreak_boxplot} \emph{EXAM} Scores Using
+		Random Tiebreaking}
+	\end{center}
+\end{figure}
+
+\begin{figure}[!htb]
+	\begin{center}
+		\includegraphics[width=15.5cm]{cyclomatic_tiebreak_boxplot.png}
+		\caption{\label{fig:cyclomatic_tiebreak_boxplot} \emph{EXAM} Scores Using
+		Cyclomatic Tiebreaking}
+	\end{center}
+\end{figure}
+
+\begin{figure}[!htb]
+	\begin{center}
+		\includegraphics[width=15.5cm]{logical_tiebreak_boxplot.png}
+		\caption{\label{fig:logical_tiebreak_boxplot} \emph{EXAM} Scores Using
+		Logical Tiebreaking}
+	\end{center}
+\end{figure}
+
+\begin{figure}[!htb]
+	\begin{center}
+		\includegraphics[width=15.5cm]{enhanced_tiebreak_boxplot.png}
+		\caption{\label{fig:enhanced_tiebreak_boxplot} \emph{EXAM} Scores Using
+		Enhanced Tiebreaking}
+	\end{center}
+\end{figure}
+
+In Figure \ref{fig:random_tiebreak_boxplot}, which compares the four
+equations using random tie breaking, one noticeable difference between the
+equations is in the Tarantula approach which has the highest median of 1.9531.
+Additionally, it has the highest maximum \emph{EXAM} score around 26\%.
+Out of the remaining equations in the plot, DStar and Ochiai have the same
+median, however, DStar has a lower maximum making it slightly the better
+equation. From visually inspecting the data in Figure
+\ref{fig:random_tiebreak_boxplot}, DStar appears to be the most effective, while
+Tarantula is the least effective in fault localization. So far, this only
+applies when ties are handled randomly.
+
+Moving on to Figure \ref{fig:cyclomatic_tiebreak_boxplot}, improvements in the
+median are not noticeable. In fact, the median for DStar and Ochiai is higher
+using cyclomatic tie breaking when compared to random tie breaking. The general
+trend in the effectiveness of the equation stays the same from the previous
+figure, where DStar was the most effective and Tarantula was the least
+effective. However, Figure \ref{fig:cyclomatic_tiebreak_boxplot} could suggest
+that breaking ties using cyclomatic complexity is no better than randomly doing
+so. But, further statistical analysis is needed to come to that conclusion.
+
+When analyzing Figure \ref{fig:logical_tiebreak_boxplot}, there is a noticeable
+visual difference to the previous plots. Specifically, the the median
+\emph{EXAM} score for all approaches using logical tie breaking is smaller when
+compared to random and cyclomatic tie breaking. While this implies an
+improvement, it's still unclear if it's statistically significant. In addition
+to smaller score medians, approaches using logical tie breaking have smaller
+maximums. As for outliers, some differences are present, where there are small
+shifts downwards in their values, further implying the improvement that logical
+tie breaking provides. As for the rankings between the equations, Tarantula
+still appears to be the worst performing while DStar has the lower scores
+overall.
+
+Lastly, \emph{EXAM} score while using enhanced tie breaking are shown in Figure
+\ref{fig:enhanced_tiebreak_boxplot}. When comparing the results of this figure
+to those in Figure \ref{fig:logical_tiebreak_boxplot}, the median values as well
+as maximums appear to be higher. This indicates that enhanced tie breaking might
+not be as effective as logical tie breaking. However the enhanced approach still
+seems as an improvement to the random and cyclomatic ones. The rankings of the
+approaches remains the same as the previous three figures, where DStar has the
+lowest overall scores and Tarantula has the highest.
+
+% TODO: talk about why that is somewhat surprising in the results
+
+Throughout the last four figures, it appears that Ochiai and Ochiai2 have
+generally performed the same, with Ochiai2 having slightly higher median in some
+cases. This is quite surprising considering that Ochiai2 is considered an
+improvement on Ochiai. Overall, both of them have had the same maximum abd
+similar distribution in outliers. From visual analysis of the plots, it's
+unclear which is more effective.
+
+In addition to the box plots that showcase the medians, and the quartiles, it's
+worth looking at the average exam score for each approach. Figure
+\ref{fig:averages_barplot} plots the \emph{EXAM} score averages for all
+categories. This barplot further demonstrates the low performance of Tarantula,
+in which it has the highest averages out of all other equations. Based on the
+averages in the plot, the best performing approach is DStar with logical tie
+breaking with an average of 18.27\% \emph{EXAM} score. It's followed by Ochiai
+logical and Ochiai2 logical with very close averages.
+
+\begin{figure}[!htb]
+	\begin{center}
+		\includegraphics[width=15.5cm]{averages_barplot.png}
+        \caption{\label{fig:averages_barplot} Average \emph{EXAM} Scores for all
+        Approaches}
+	\end{center}
+\end{figure}
+
+\subsubsection{Statistical Tests}
+\label{subsubsec:statistical_test}
+
+Simple visual analysis of the data is not enough to reach a justifiable results
+regarding the most effective approach. Therefore, this subsection discusses how
+two statistical tests were conducted to compare all 16 different approaches to
+each other. Starting with the Mann-Whitney U Test, it is used to test whether
+the distributions of two independent samples are equal or not. In the two-sided
+Mann-Whitney test, the hypotheses are as follow:
+\begin{center}
+    Null hypotheses \textbf{H$_{0}$}: \textbf{A$_{x}$} = \textbf{A$_{y}$}
+
+    Alternative hypotheses: \textbf{H$_{1}$}: \textbf{A$_{x}$} $\neq$
+    \textbf{A$_{y}$}
+
+    Where \textbf{A$_{x}$} is the approach on the x-axis and \textbf{A$_{y}$} is
+    the approach on the y-axis
+\end{center}
+
+The generated p-values from the test represent the probability that
+\textbf{H$_{0}$} is true. Therefore, when p-values are less than or equal to the statistically
+significant level of 0.05, the test indicates that the two approaches are
+statistically different. However, it does not conclude which approach had the
+higher or lower exam scores. Figure \ref{fig:two_sided_mw_test} plots a heat map
+of the resulting p-values from the two sided Mann-Whitney test. It compares each
+approach to the fifteen remaining ones.
+
+\begin{figure}[!htb]
+	\begin{center}
+		\includegraphics[width=15.5cm]{two_sided_mw_test.png}
+        \caption{\label{fig:two_sided_mw_test} P-values of Two Sided Mann-Whitney Test}
+	\end{center}
+\end{figure}
 
 \subsubsection{Time Efficiency}
 \label{subsubsec:time_Efficiency}
@@ -367,7 +514,7 @@ all 1105 test cases in the project's suite were ran.
 
 \begin{figure}[!htb]
 	\begin{center}
-		\includegraphics[width=15.5cm]{test_timings.png}
+		\includegraphics[width=7cm]{test_timings.png}
 		\caption{\label{fig:test_timings} Test Execution Time}
 	\end{center}
 \end{figure}
@@ -376,18 +523,18 @@ Figure \ref{fig:test_timings} compares the time taken to execute all test
 functions with and without using AFLuent. The baseline includes
 4000 data points where the tests were ran without AFLuent. On the other hand
 7613 data points are plotted for when AFLuent generated a timing report. The
-figure shows a clear difference between the two boxplots, where the median run with
+figure shows a clear difference between the two box plots, where the median run with
 AFLuent took longer time to complete than the median run for the baseline.
 Additionally, the long upper whisker indicates that
 including AFLuent increases the chances that the tests could take substantially
 longer to run. This increase is somewhat expected since AFLuent introduces
 wrapper functions around each test execution to calculate per-test coverage. And
-while this increase is quite small,considering the large size of the test suite,
+while this increase is quite small, considering the large size of the test suite,
 minimizing the additional time cannot be done through AFLuent since the tool
-relies on Coverage.py to calculate per-test coverage. After performing the The
-Wilcoxon Rank-Sum Test on both sets, the resulting p-value of
+relies on Coverage.py to calculate per-test coverage. After performing a two-sided
+Mann-Whitney Test on both sets, the resulting p-value of
 \code{8.035528e-157} confirms that there is statistically significant difference
-between the two sets.
+between the two sets, where the null hypothesis is rejected.
 
 \begin{figure}[!htb]
 	\begin{center}
