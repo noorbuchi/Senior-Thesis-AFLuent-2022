@@ -442,8 +442,6 @@ seems as an improvement to the random and cyclomatic ones. The rankings of the
 approaches remains the same as the previous three figures, where DStar has the
 lowest overall scores and Tarantula has the highest.
 
-% TODO: talk about why that is somewhat surprising in the results
-
 Throughout the last four figures, it appears that Ochiai and Ochiai2 have
 generally performed the same, with Ochiai2 having slightly higher median in some
 cases. This is quite surprising considering that Ochiai2 is considered an
@@ -476,12 +474,13 @@ regarding the most effective approach. Therefore, this subsection discusses how
 two statistical tests were conducted to compare all 16 different approaches to
 each other. Starting with the Mann-Whitney U Test, it is used to test whether
 the distributions of two independent samples are equal or not. In the two-sided
-Mann-Whitney test, the hypotheses are as follow:
+Mann-Whitney test, the hypotheses are as follows:
 \begin{center}
-    Null hypotheses \textbf{H$_{0}$}: \textbf{A$_{x}$} = \textbf{A$_{y}$}
+    Null hypotheses: \textbf{H$_{0}$}: \textbf{A$_{x}$} = \textbf{A$_{y}$}
 
     Alternative hypotheses: \textbf{H$_{1}$}: \textbf{A$_{x}$} $\neq$
     \textbf{A$_{y}$}
+    for \emph{p} $\leq$  0.05
 
     Where \textbf{A$_{x}$} is the approach on the x-axis and \textbf{A$_{y}$} is
     the approach on the y-axis
@@ -501,6 +500,99 @@ approach to the fifteen remaining ones.
         \caption{\label{fig:two_sided_mw_test} P-values of Two Sided Mann-Whitney Test}
 	\end{center}
 \end{figure}
+
+Many conclusions can be reached from the p-values displayed in the heat map,
+some of which further affirm the observations made earlier from the plots, and
+others show a completely different result. Starting with the Tarantula
+approaches, the p-values for Tarantula clearly
+show that these sets are different from all non-Tarantula approaches to a very
+statistically significant level.
+Therefore, the null hypothesis is rejected
+here. There are only few exceptions, where Tarantula Enhanced and Tarantula
+Logical are not different from the random and cyclomatic variants of Ochiai,
+Ochiai2, and DStar, so the null hypotheses is accepted for these exceptions.
+These cases represent an interesting case where using the logical and enhanced
+tiebreakers was a significant enough improvement to bring Tarantula in line with
+the random and cyclomatic variants of other equations.
+When comparing Tarantula variants amongst each other, they aren't statistically
+different, therefore, the null hypothesis is
+accepted in this case.
+
+For the Ochiai, Ochiai2, and Dstar equations, the heat map shows an interesting
+relationship between them. The Random and Cyclomatic variants were very similar,
+both across and among each other. For all 15 of these pairs shown in the light
+squares in the center of the plot,
+\emph{p} was above 0.85 suggesting that the null hypothesis should be accepted.
+This result suggests that the different tie breaking techniques were not
+effective in giving an equation the edge over another.
+As for the remaining variants of Ochiai, Ochiai2, and DStar, namely logical and
+enhanced, they are not different from each other on a statistically significant
+level. Therefore, the null hypothesis is accepted for these combinations.
+
+While the results of this test are helpful to show if statistically significant
+differences exists between the different approaches, it does not clarity which
+one is better than the other. To have a better understanding of that
+relationship, a one sided \code{less} Mann-Whitney test is performed with the
+hypotheses are as follows:
+
+\begin{center}
+    Null hypotheses: \textbf{H$_{0}$}: \textbf{A$_{x}$} = \textbf{A$_{y}$}
+
+    Alternative hypotheses: \textbf{H$_{1}$}: \textbf{A$_{x}$} $<$
+    \textbf{A$_{y}$}
+    for \emph{p} $\leq$  0.05
+
+    Where \textbf{A$_{x}$} is the approach on the x-axis and \textbf{A$_{y}$} is
+    the approach on the y-axis
+\end{center}
+
+In contrast to the two-sided test, this one gives a more clear idea on which
+approaches has a lower \emph{EXAM} scores when compared to others. A \emph{p}
+value less than or equal to 0.05 suggests that the approach on the x-axis is
+significantly more effective than it's counterpart on the y-axis. On the other
+hand, a \emph{p} value greater than 0.95 indicates the opposite, where the
+approach on the y-axis is significantly more effective than the one on the x-axis. Figure
+\ref{fig:one_sided_mw_test} plots a heat map of the resulting \emph{p} values
+from this test.
+
+\begin{figure}[!htb]
+	\begin{center}
+		\includegraphics[width=15.5cm]{less_sided_mw_test.png}
+        \caption{\label{fig:one_sided_mw_test} P-values of One Sided Mann-Whitney Test}
+	\end{center}
+\end{figure}
+
+Starting with the Tarantula variants, none of them resulted in a statistically
+significant \emph{p} value to suggest that they are more effective than the
+other non-Tarantula approaches, thus, the null hypothesis is accepted. However,
+among Tarantula variants, the logical tie breakers has the lowest \emph{p}
+value, suggesting that it was the most effective but not to a significant level.
+To further illustrate how Tarantula falls behind the other equations, every
+non-Tarantula approach significantly outperformed the random and cyclomatic
+variants of Tarantula. The logical and enhanced variants were also outperformed
+by others, however, it was less frequently.
+
+As for other equations, the Random and Cyclomatic variants of Ochiai, Ochiai2,
+and DStar all had similar results between each other, where non of them
+outperformed another on a significant level. Therefore, for these approaches,
+the null hypotheses is accepted. This result matches the outcome of the
+two-sided test where these approaches were very similar.
+
+Some notable large differences in performance can be seen in the logical variant
+of Ochiai, Ochiai2, and DStar. Theses three significantly outperformed every
+random and cyclomatic variant of all other equations. On the other hand, the
+enhanced variant of these slightly outperformed the cyclomatic and random ones,
+but not on a statistically significant degree. This result suggests that the
+logical tie breaker is the most effective in assisting equations to produce the
+lowest \emph{EXAM} scores. Furthermore, it demonstrates that while Ochiai and
+Ochiai2 do not outperform each other, both show a significant improvement to
+almost every other combination.
+
+One of the surprising outcomes of this data is the performance of enhanced tie
+breaking. Despite the fact that it adds on the mutant density metric provided by
+logical, and considers wider possibility while generating it's score, it did not
+outperform the logical tie breaker. In fact, the \emph{p} value was leaning more
+to the other outcome, but not in any significant way.
 
 \subsubsection{Time Efficiency}
 \label{subsubsec:time_Efficiency}
@@ -559,3 +651,21 @@ files in the codebase. Further discussion on how this time can be minimize is
 found in Section \ref{sec:future_work}: Future Work.
 
 \section{Threats to Validity}
+
+There are some aspects of this study where the method of collecting data and
+performing evaluation could be criticized. In this relatively small scale
+evaluation of SBFL equations, the sample chosen to test AFLuent might not
+adequately represent code written by novice developers. And while this brings up
+the question of how would AFLuent perform on a different type of code base, it
+does not completely invalidate the results reached here. The repeated shrinking of the
+sample from the original \code{TheAlgorithms/Python} to a very filtered version
+can raise several red flags and questions regarding why specific code was
+removed. Given the constraints of this study, however, and the intention to
+use Pynguin to generate unit automatically, some code had to be removed in order
+for Pynguin to run in a timely fashion and produce appropriate tests. It could
+be argued that the tests generated by Pynguin were not very thorough, especially
+that almost 50\% of the mutants survived while running \code{mutmut}. This
+argument brings up a valid criticism and suggests that a well rounded evaluation
+of AFLuent requires that the sample be more representative by ensuring that it
+was developed by novice developers. Additionally, it indicates that an automatically generated
+test suite does not adequately mimics one written by novice developers.
