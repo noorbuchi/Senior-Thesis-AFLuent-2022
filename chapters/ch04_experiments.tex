@@ -337,7 +337,7 @@ category.
 The collected data is visualized in this subsection to compare the different
 equations to each other, additionally, tie breaking techniques are compared to
 determine the most effective. In order to quantify the effectiveness of each
-approach, an \emph{EXAM} %TODO: add citation
+approach, an \emph{EXAM} \cite{exam_scores}
 score is calculated for each report produced from a killed mutant. This score
 represents the percentage of reported statements that a developer must parse
 through before reaching the correct line where the bug exists. To produce this
@@ -594,9 +594,42 @@ logical, and considers wider possibility while generating it's score, it did not
 outperform the logical tie breaker. In fact, the \emph{p} value was leaning more
 to the other outcome, but not in any significant way.
 
-% TODO: should this stay here?
 \subsubsection{Statistical Tests: Cohen's D Effect Size}
 \label{subsubsec:statistical_test_cohen}
+
+While the Mann-Whitney test checks if the distributions of the approaches is
+different to others on a statistically significant level, it does not give an
+idea of the magnitude of this difference. In order to get that information, the
+non-parametric Cohen's D effect size is calculated for each pair of approaches
+to understand the difference between their average \emph{EXAM} score. Figure
+\ref{fig:cohen_d} shows the heat map of the results of this calculation. The
+values in each square represent the difference between the approach on the
+x-axis and the one on the y-axis, where negative values would indicate that the
+approach from the x-axis had, on average, a lower \emph{EXAM} score than its
+counterpart. The opposite is also true, where positive values indicate that the
+approach on the y-axis was more effective.
+
+\begin{figure}[!htb]
+	\begin{center}
+		\includegraphics[width=15.5cm]{cohen_d.png}
+        \caption{\label{fig:cohen_d} Results of the non-parametric Cohen D
+        Effect Size}
+	\end{center}
+\end{figure}
+
+The general trend in this plot further confirms what was discussed in the
+Mann-Whitney test. The logical variant of Ochiai, Ochiai2, and DStar remains as
+the most effective out of all others, however, this plot can help in deciding
+which of these three was the best. At the intersections of Ochiai logical and
+Ochiai2 logical with DStar logical, the values 0.0013 and 0.0021 respectively
+show that DStar had an improvement over the other two. This improvement is very
+small and, as established in the previous test, not statistically significant.
+As for the comparison between Ochiai logical and Ochiai2 logical, and even
+smaller value indicate a very small difference in favor of Ochiai logical.
+Again, this difference is not statistically significant to reach a conclusion of
+which is the better approach. Overall, the performed statistical tests allowed
+the filtering of 16 different approaches to determine the top 3 ones that
+yielded the lowest \emph{EXAM} scores.
 
 \subsubsection{Time Efficiency}
 \label{subsubsec:time_Efficiency}

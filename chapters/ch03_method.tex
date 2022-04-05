@@ -694,10 +694,9 @@ for each run of the tool.
 \subsection{Cyclomatic Complexity}
 \label{subsec:c_complexity}
 
-% TODO: add cyclomatic complexity citation
 One of the available ways to break ties between elements is to use cyclomatic
-complexity as a secondary score to consider when sorting. This score is provided
-by the Radon library and it measure the number of available paths that execution
+complexity as a secondary score to consider when sorting. This score is proposed
+by McCabe \cite{cyclomatic_complexity} and can be easily calculated using the Radon library. It measures the number of available paths that execution
 cold go through in a function. Since this type of score only applies to whole
 functions and not to individual elements, lines inherit the cyclomatic
 complexity score of the function they live in when being ranked.Essentially, if

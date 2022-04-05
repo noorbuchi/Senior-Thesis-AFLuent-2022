@@ -1,5 +1,27 @@
-\unnumberedchapter{Abstract} 
-\chapter*{Abstract} 
-% TODO: add abstract
-Provide a concise summary of your  research project of approximately 250 words. 
-Remember that the abstract is {\it not\/} an introduction, it is a {\it summary\/} of the entire document, including the results and future direction of the project.
+\unnumberedchapter{Abstract}
+\chapter*{Abstract}
+
+Debugging code is one of the most time consuming and costly tasks for
+developers. To reduce the time spent on debugging code, many efforts have been
+focused to automate this process. Spectrum-Based fault localization is one of
+the ways developers can rank statement based on their potential of being faulty.
+This research proposes \href{https://github.com/noorbuchi/AFLuent}{\emph{AFLuent}},an easy to use Spectrum-Based
+fault localization tool integrated directly into Python's testing framework,
+Pytest, making it user friendly for installation and usage. The
+tool implements four main SBFL equations, Tarantula, Ochiai, Ochiai2, and DStar,
+which are evaluated in this research. Additionally, several fixes are
+proposed and evaluated in aims to reduce the frequency of ties when ranking
+statements. By parsing the syntax tree of the code, several indicators can be
+analyzed to determine error prone statements and create a metric that breaks
+the ties produced by the SBFL equations. While the results of this research do
+not declare a clear winner, a new understanding of the effectiveness of
+tie breaking approaches is achieved. The study concludes that the logical
+variants of Ochiai, Ochiai2, and DStar, while very similar to each other,
+outperformed the rest of the approaches. Lastly, the study evaluates the time
+overhead introduced by AFLuent and the cost developers must pay if they choose
+to use the tool. Integrating AFLuent into small scale projects brings very
+little increase in the time taken to run the test, however, the performance
+becomes worse as the codebase increases in size. There are many possibilities of extending
+and improving on this work, improving effectiveness, efficiency, and performing
+a more thorough evaluation can significantly increase confidence in AFLuent's
+ability to locate faults.
