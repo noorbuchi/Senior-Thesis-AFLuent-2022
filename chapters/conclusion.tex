@@ -4,9 +4,8 @@
 \section{Summary of Results}
 
 The results of this study can be split up into two main contributions, as the
-title suggests, implementation and evaluation. AFLuent represents a first of a
-kind SBFL tool directly integrated to the Pytest framework. Furthermore, its
-emphasis on ease of use and readability makes it a great fit for beginner and
+title suggests, implementation and evaluation. AFLuent represents a first-of-a-kind SBFL tool directly integrated to the Pytest framework. Furthermore, its
+emphasis on ease of use and readability makes it a great fit for
 novice developers. AFLuent as a tool is maintainable, readable, and extendable
 in several ways that can potentially serve for more thorough evaluations
 of SBFL algorithms in the future. In addition to implementation technical
@@ -17,16 +16,16 @@ best and worst performances. One observation that stood out
 is the significant underperformance of Tarantula when compared to all other
 equations. Additionally, the statistically significant edge that logical tie
 breaking achieve to outperform it's random and cyclomatic counterparts was
-surprising. Overall, Ochiai, Ochiai2 and DStar had very similar performances
-when the same tie breaker was used across all of them, therefore, the null
-hypothesis must be accepted for this evaluation, but additional experiments may
-yield different results. As for the most effective tie breaking technique, the
+surprising. Overall, Ochiai, Ochiai2 and DStar had very strong performances
+when the same tie breaker was used across all of them, however, the data did not
+suggest that one outperformed the other significantly. Additional experiments may
+yield different results and uncover new information about these equations. As for the most effective tie breaking technique, the
 logical approach emerged as the most successful in creating a statistically
 significant difference followed by the enhanced tie breaker.
 Additionally, the presented time data demonstrate the
 time overhead that developers need to take on if they choose to use
 AFLuent. While further evaluation is needed to determine the time efficiency of
-each approach indeterminately from other, the worst case time data suggest that
+each approach independently from others, the worst case time data suggest that
 calculating per test coverage and performing fault localization will lead to a
 significant increase in runtime.
 
@@ -74,12 +73,38 @@ wait before receiving the report from AFLuent.
 
 \subsubsection{Evaluation}
 
-While the evaluation section of this study was effective in filtering out many
+While the evaluation section of this study managed to filter out many
 ineffective combinations of equations and tie breakers, it could not reach a
 definite conclusion on the best approach to perform SBFL. Furthermore, the
 evaluation was conducted on a small scale by focusing on small projects with low
-complexity. To improve on the current understanding of AFLuent's performance,
+complexity. Time and feasibility constraints were very prevalent, which led to
+adopting a strategy to simulate novice written code and unit tests rather than
+including human subjects to write, test, and debug the code. Even though
+the used strategy has some flaws, it is justifiable considering the scope of this
+study. To improve on
+the current understanding of AFLuent's performance,
 additional experiments are needed on a larger sample. Furthermore, extending the
 study to include novice developers by asking them to write and debug their code
 using AFLuent would provide great insight on their perspective on the tool
 and how they plan to use it.
+
+\section{Ethical Implications}
+
+Aside from answering research questions in the form of implementation and
+evaluation, this study includes an interesting ethical question regarding the
+potential misuse of a tool such as AFLuent. One major difference between AFLuent
+and a traditional debugger is the way a developer interacts with each. In order
+to use a traditional debugger, the developer must be well versed in the code
+base and understand where breakpoints should be placed. Additionally, they must
+be able to identify what suspicious behavior looks like. On the other hand,
+AFLuent simplifies this process and provides a statement ranking for the
+developer to parse through and check. By doing so, AFLuent serves its goal in
+making the debugging process simpler and more efficient, but it could lead to
+over reliance, especially from novice developers. If developers become too
+dependent on AFLuent, or any automated fault localization tool, it could
+negatively impact their development skills by taking away the experience of
+manually analyzing the code and understanding its expected behavior and why
+failures occur. This could be especially harmful if AFLuent was overused in
+educational environments since students could utilize it's functionality without
+fully understanding how to fix the code themselves, and thus negatively impact
+their learning process.

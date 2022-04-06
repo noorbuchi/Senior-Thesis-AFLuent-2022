@@ -874,13 +874,13 @@ logical approach scoring, it only applies to simple statements such as lines
 2,3,4,6,8,11,17,19, and 21. Using this approach, mutant density is calculated
 using logical mutants only. For example, since line 2 contains the two binary
 operators \code{*} and \code{/} for multiplication and division, the mutant
-density of the statement is 2, which is also its   score. Note that
+density of the statement is 2, which is also its score. Note that
 variable assignment and literals do not affect logical tie breaking scores.
 Lastly, enhanced tie breaking takes into consideration a more extensive list of
 possible mutants. Additionally, it analyzes a wider range of statements that
-include if statements, while and for loops, as well as function definitions.
+includes \code{if} statements, \code{while} and \code{for} loops, as well as function definitions.
 Using some examples from the sample program in
-Table\ref{table:scoring_examples}, the enhanced score for line 3 would be
+Table \ref{table:scoring_examples}, the enhanced score for line 3 would be
 calculated as follows:
 $$\frac{\textbf{3 + (4 / 1)}}{2}$$
 Where 3 is the number

@@ -1,10 +1,24 @@
 \unnumberedchapter{Glossary} 
 \chapter*{Glossary} 
-% TODO:
-% Break up this table into several ones if it takes up more than one page
 \begin{center}
 \begin{longtable}{r p{0.58 \textwidth}}
-% Dipole Blockade & Phenomenon in which the simultaneous excitation of two atoms is inhibited by their dipolar interaction. \\
-% Cavity Induced Transparency & Phenomenon in which a cavity containing two atoms excited with light at a frequency halfway between the atomic frequencies contains the number of photons an empty cavity would contain.  \\ 
+Spectrum Based Fault Localization & The automated approach to rank statements
+based on a measure of how suspicious they are of being faulty.\\
+Suspiciousness Score & A numerical score that indicates the likelihood of a
+statement being faulty.\\
+Pytest & An extendable Python tool for automated tests.\\
+Per-test Coverage & The lines of code under test executed by each test case.\\
+Mutant Density & The number of possible mutants that could be added to a statement.\\
+Random Tie Breaking & The randomization of ranks between tied statements with
+the same suspiciousness scores.\\
+Cyclomatic Tie Breaking & The reliance on the cyclomatic complexity score of a
+function to resolved ties between ranked statements.\\
+Logical Tie Breaking & A metric used to break ties by measuring the mutant
+density of a statement.\\
+Enhanced Tie Breaking & A holistic metric used to break ranking ties by
+including mutant density of a statement and its parent nodes.\\
+\emph{EXAM} Score & The percentage of results that a developer must parse before
+finding the correct location of the fault.\\
+
 \end{longtable}
 \end{center}
