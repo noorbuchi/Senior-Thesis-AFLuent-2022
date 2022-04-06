@@ -9,10 +9,10 @@ demonstrate the the algorithms, structure, and flow of execution.
 \section{Development Environment and Toolset}
 \label{sec:DevEnviron}
 
-Prior to explain how implementation was completed, a ground-up overview of the
+In order to begin discussing how AFLuent is implemented, a ground-up overview of the
 tools used and their roles is necessary to establish definitions and facilitate
-the understanding of how dependencies they are connected. AFLuent being a Python
-tool allows its development to rely on a wide variety of helpful and popular
+the understanding of how dependencies they are connected. By being a Python
+package AFLuent can rely on a wide variety of helpful and popular
 tools. Some of the most important tools and dependencies are discussed below.
 
 \subsection{Poetry}
@@ -33,7 +33,7 @@ perspective, Poetry is not necessary to run or use the tool for fault localizati
 
 Pytest is a Python testing framework used to write and execute a variety of
 tests, especially unit tests. Many developers in the community have contributed
-to Pytest through plugins that extend Pytest's functionality and allow it to
+to Pytest through plugins that extend its functionality and allow it to
 accomplish new beneficial tasks. As mentioned previously, AFLuent is a Pytest
 plugin that adds automated fault localization features. By definition, AFLuent
 relies on Pytest in order to function properly. More details on how AFLuet is
@@ -46,7 +46,7 @@ Spectrum-based fault localization requires data on code coverage and test
 results in order to calculate and rank suspicious of elements in the code.
 Coverage.py\cite{coverage_py_website} is a Python tool that provides an easy to use application
 programming interface to collect that data. The tool also provides various
-configuration for the user to skip certain file or directories from being
+configuration for the user to skip certain files or directories from being
 considered. AFLuent relies on this tool to calculate what's known as per-test
 coverage. This data describes the lines of code covered by a single test case
 and organized in an accessible way to find out the number of passing and failing
@@ -60,7 +60,7 @@ Coverage.py can provide that relatively easily.
 Radon is a Python tool used to calculate metrics of code complexity.
 Specifically, it's used in AFLuent to calculate cyclomatic complexity of some
 elements to break ties in rankings. When the user requests that AFLuent
-considers cyclomatic complexity to be considered when breaking ties, Radon is
+utilizes cyclomatic complexity to break ties, Radon is
 used to create a dataset of complexity scores. Since single lines cannot have a
 cyclomatic complexity score, they are assigned the score of the function they're
 a part of. Furthermore, the dataset is organized to facilitate efficient
@@ -104,7 +104,7 @@ complications. To achieve that, AFLuent is published to the Python Package Index
 (PyPI), which makes it installable through the \code{pip install afluent}
 command. Once this command runs successfully, AFLuent is automatically
 integrated with Pytest as a plugin and will be ran with every pytest session
-unless otherwise disabled intentionally. AFLuent's dependency on Coverage.py
+when the user specifies. AFLuent's dependency on Coverage.py
 creates a small but avoidable conflict. In the case that AFluent and another plugin that
 utilizes Coverage.py is active in the same Pytest session, various errors might
 occur where coverage information is not calculated correctly, thus affecting the
@@ -112,7 +112,7 @@ automated fault localization process. This issue was prevalent when specifically
 using \code{pytest-cov} plugin, which produces a coverage report at the end of a
 Pytest session. AFLuent handles this problem by checking for the presence of
 other Coverage.py reliant plugins and warns the user. Due to this issue,
-AFLuent will not run in the session unless specified specifically using the
+AFLuent will not run in the session unless specified using the
 command-line arguments discussed in the following section.
 
 \subsection{Adding Command-Line Arguments}
@@ -154,7 +154,7 @@ The added arguments accept values that specify the following:
         ignore. Example: \code{tests/*} will ignore all files and directories
         inside the \code{tests} folder.
     \end{itemize}
-    \item The types of file reports to created after the Pytest session is over
+    \item The types of file reports to create after the Pytest session is over
     \begin{itemize}
         \item \code{---report}: accepts \code{json} or \code{csv} and generate
         reports with the passed format.

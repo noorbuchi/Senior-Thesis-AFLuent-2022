@@ -14,12 +14,12 @@ test AFLuent on.
 
 In order to evaluate AFLuent, several prerequisites are needed that enable
 collecting data for analysis. The primary requirement is a collection of Python
-program, which are susceptible of becoming faulty. Additionally, this
+programs, which are susceptible of becoming faulty. Additionally, this
 collection's complexity must be comparable to code typically written by novice
 developers, which AFLuent targets. Another crucial requirement before evaluation
 can begin is a test suite for the selected code python code. The test suite must
-be executable by Pytest and covers as much as possible of the code under test to
-maximize the ability to localize faults. Assuming that these prerequisites are
+be executable by Pytest and covers as much as possible of the code to
+maximize the ability to locate faults. Assuming that these prerequisites are
 met and are available, the evaluation of AFLuent can then be generally described
 by these four main steps:
 
@@ -286,8 +286,8 @@ modified to run AFLuent in evaluation mode and collect fault localization data.
 Overall, for each bug/mutant, the following data would be collected to use for
 evaluation:
 \begin{itemize}
-    \item Statement rankings produced by AFLuent for each 16
-    approach-tiebreaker combination. Note that a value of 3 was used for * in
+    \item Statement rankings produced by AFLuent for the 16
+    approach-tiebreaker combination. Note that a value of 3 was used for \code{*} in
     the DStar equation.
     \item Per-test coverage report
     \item Timing report containing the time taken to run the test suite befor
@@ -312,9 +312,8 @@ timed out by \code{mutmut}. The mutants were classified using the following crit
     considered killed.
     \item Survived: cases where the mutation did not cause a failure in the test
     suite. AFLuent was not run in these cases since no test case failed. Runs
-    that generated per-test coverage and timing reports but no ranking reports
+    that only generated per-test coverage and timing reports but no ranking reports
     are for mutants that survived.
-    However, per-test coverage and timing reports were generated.
     \item Timed out: special cases where \emph{mutmut} reported to run a mutant
     but no report was produced by AFLuent. The log produced by \code{mutmut}
     confirms that these mutants were timed out after taking too long to complete
@@ -341,8 +340,8 @@ approach, an \emph{EXAM} \cite{exam_scores}
 score is calculated for each report produced from a killed mutant. This score
 represents the percentage of reported statements that a developer must parse
 through before reaching the correct line where the bug exists. To produce this
-score, the reported results were filtered by project so that the reported
-results only include lines from that project. For example, when the \emph{EXAM}
+score, the reported results were filtered by project so that they
+only include lines from that project. For example, when the \emph{EXAM}
 score is calculated for a fault in the \code{bit\_manipulation} project, the
 percentage of lines belonging to that project that a developer must read before
 finding the fault is the score. The lower the exam score for an approach, to
@@ -363,7 +362,7 @@ To compare suspiciousness score equations when the tie breaking approach is the
 same, Figures \ref{fig:random_tiebreak_boxplot},
 \ref{fig:cyclomatic_tiebreak_boxplot}, \ref{fig:logical_tiebreak_boxplot}, \ref{fig:enhanced_tiebreak_boxplot}
 group \emph{EXAM} scores by tie breaking technique for each killed mutant. On
-each plot, the y-axis contains the name of the approach and the x-axis the
+each plot, the x-axis contains the name of the approach and the y-axis the
 percentage of score to be analyzed before finding the mutant (also referred to
 as the \emph{EXAM} score). Additionally, the value of the median is labeled on
 each boxplot. Lastly, outliers are shown using the black circles that go beyond
@@ -445,7 +444,7 @@ lowest overall scores and Tarantula has the highest.
 Throughout the last four figures, it appears that Ochiai and Ochiai2 have
 generally performed the same, with Ochiai2 having slightly higher median in some
 cases. This is quite surprising considering that Ochiai2 is considered an
-improvement on Ochiai. Overall, both of them have had the same maximum abd
+improvement on Ochiai. Overall, both of them have had the same maximum and
 similar distribution in outliers. From visual analysis of the plots, it's
 unclear which is more effective.
 
@@ -469,9 +468,9 @@ logical and Ochiai2 logical with very close averages.
 \subsubsection{Statistical Tests: Mann-Whitney}
 \label{subsubsec:statistical_test_mann_whitney}
 
-Simple visual analysis of the data is not enough to reach a justifiable results
+Simple visual analysis of the data is not enough to reach a justifiable result
 regarding the most effective approach. Therefore, this subsection discusses how
-two statistical tests were conducted to compare all 16 different approaches to
+two statistical tests were conducted to compare all sixteen different approaches to
 each other. Starting with the Mann-Whitney U Test, it is used to test whether
 the distributions of two independent samples are equal or not. In the two-sided
 Mann-Whitney test, the hypotheses are as follows:
@@ -530,7 +529,7 @@ enhanced, they are not different from each other on a statistically significant
 level. Therefore, the null hypothesis is accepted for these combinations.
 
 While the results of this test are helpful to show if statistically significant
-differences exists between the different approaches, it does not clarity which
+differences exists between the different approaches, it does not clarify which
 one is better than the other. To have a better understanding of that
 relationship, a one sided \code{less} Mann-Whitney test is performed with the
 hypotheses are as follows:
