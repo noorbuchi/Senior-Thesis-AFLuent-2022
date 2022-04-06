@@ -661,8 +661,8 @@ displayed in the report.
 
 Aside from the reports produced in the console, AFLuent can create report files
 of the rankings in both JSON and CSV formats. Additional reporting of per-test
-coverage is also possible. The command line arguments \code{–-report} and
-\code{–-per-test-report} enable this feature. Producing these reports facilitates
+coverage is also possible. The command line arguments \code{--report} and
+\code{--per-test-report} enable this feature. Producing these reports facilitates
 the evaluation of AFLuent by allowing the storage of rankings in a file for
 further analysis later on. In general, the standard report contains the rankings
 of the lines using the approach requested by the user. Additionally, other
@@ -696,7 +696,8 @@ for each run of the tool.
 
 One of the available ways to break ties between elements is to use cyclomatic
 complexity as a secondary score to consider when sorting. This score is proposed
-by McCabe \cite{cyclomatic_complexity} and can be easily calculated using the Radon library. It measures the number of available paths that execution
+by McCabe \cite{cyclomatic_complexity} and can be easily calculated using the Radon library.
+It measures the number of available paths that execution
 cold go through in a function. Since this type of score only applies to whole
 functions and not to individual elements, lines inherit the cyclomatic
 complexity score of the function they live in when being ranked.Essentially, if
@@ -710,7 +711,7 @@ the evaluation section.
 \label{subsec:tiebreak_mutant_density_logical}
 
 Another metric used to break ties between suspicious statements is mutant
-density. More specifically, this score indicates how error prone the statement
+density \cite{Parsai_2020}. More specifically, this score indicates how error prone the statement
 is by calculating the number of all possible mutants. For example, a statement
 that has many mathematical and logical operators to perform a calculation is
 more error prone that a statement that only has one or two of these operations.

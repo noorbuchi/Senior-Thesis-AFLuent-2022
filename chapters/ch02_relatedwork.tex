@@ -34,7 +34,12 @@ Wong et al. \cite{wong2016survey} expands on the types of SBFL
 and reviews key literature that contributes show the benefits and drawbacks of
 each approach.
 
-% TODO: talk about the other lit review
+Another insightful survey paper is by Idrees Sarhan et. al \cite{sarhan2022Challenges}
+where he analyzes the main challenges in SBFL and some of
+the major obstacles that other literature attempts to tackle. AFLuent addresses
+two of the issues listed in this survey study, specifically element ties and
+division by zero. But many other challenges such as test flakiness, single vs.
+multiple bugs, and many others remain unaddressed.
 
 \subsection{SBFL Approaches}
 \label{subsec:sbfl}
@@ -320,7 +325,6 @@ short.
 	\end{center}
 \end{figure}
 
-% TODO: requires more expansion
 \section{Usability and Accessibility}
 \label{sec:usability_accessibility}
 
@@ -358,6 +362,3 @@ high-accuracy fault localization that implicates the correct terms
 very valuable to incorporate in AFLuent, especially that AFLuent is only able to
 conclude that there is an error and where it's possibly located. PABLO provides
 another layer of fault localization that can only enhance the user experience.
-
-% TODO: section about complexity metrics and tie breaking is needed with
-% extensive literature review

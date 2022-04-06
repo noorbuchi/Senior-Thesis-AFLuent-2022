@@ -107,7 +107,10 @@ the relationship of the variables \cite{Wong2014DStar}.
 
 		\textbf{N$_{CS}$}: number of passed test cases that execute/cover the element
 
-		\textbf{N$_{US}$}: number of passed test cases that do not execute/cover the element
+		\textbf{N$_{US}$}: number of passed test cases that do not execute/cover
+		the element
+
+		Where an element is a unit of code such as a statement or a block.
 		\includegraphics[width=7cm]{contingency_table.png}
 		\caption{\label{fig:contingency_table} Variables in SBFL}
 	\end{center}
@@ -118,8 +121,6 @@ calculate elements' suspiciousness scores. This research focuses on four main
 popular equations and adds support for them in AFLuent. The reasoning behind the
 equation choices is further discussed in Related Works, however, this section
 will give an overview of how each looks like.
-
-% TODO: clearly define element here
 
 \subsubsection{Tarantula}
 \label{subsubsec:Tarantula}
@@ -170,8 +171,6 @@ a new variable represented as the * symbol. This variable can give more
 weight to \textbf{N$_{CF}$} and can be set to any number. However, the
 researchers suggested that * is set to 2 or 3.
 
-% TODO: create personal example and develop an explanation for it with
-% individual examples of plugging in data
 \subsection{SBFL in Action}
 \label{subsec:SBFLinAction}
 
@@ -183,12 +182,12 @@ researchers suggested that * is set to 2 or 3.
 \end{figure}
 
 With the discussed equations and techniques to calculate suspiciousness in mind,
-the following example will demonstrate and discuss how AFLuent will utilize unit
+the following example demonstrates and discusses how AFLuent utilizes unit
 test and coverage data to locate faults in a program.
 Figure \ref{fig:sbfl_example}
 shows a sample python program to find the middle value
-from three integers. The program contains a bug on line 9 where the wrong middle
-number is detected. The figure also shows six different test cases that pass
+from three integers. The program contains a bug on line 6 where the wrong maximum
+value is detected. The figure also shows seven different test cases that send
 various inputs to the function and check whether the actual output matches the
 expected. The results of each test is found on the last row of the table.
 Additionally, the large dots under the Input Tests column illustrate the concept
@@ -198,6 +197,19 @@ of the table, suspiciousness scores for each line are calculated using the three
 formulas (Tarantula, Ochiai, and DStar). High suspiciousness scores are also
 highlighted in warmer colors. Overall, all three equations are able to detect
 that line 9 is the most suspicious and is likely the cause of the test failure.
+
+The suspiciousness were calculated for each line by plugging values into the
+equations shown on Figures \ref{fig:tarantulaEquation},
+\ref{fig:ochiaiEquation}, and \ref{fig:dstarEquation}. For example, the scores
+for line 5 were calculated as follows:
+
+\begin{center}
+	\textbf{$Tarantula(5) = \frac{\frac{1}{1}}{\frac{6}{6} + \frac{1}{1}}$}
+
+	\textbf{$Ochiai(5) = \frac{1}{\sqrt{(1 + 0) \cdot (1 + 6)}} = \frac{1}{\sqrt{7}}$}
+
+	\textbf{$DStar(5) = \frac{1^3}{6 + 0}$}
+\end{center}
 
 \subsection{SBFL Criticism}
 \label{subsec:Criticism}
