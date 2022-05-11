@@ -360,7 +360,8 @@ completing statistical tests.
 
 To compare suspiciousness score equations when the tie breaking approach is the
 same, Figures \ref{fig:random_tiebreak_boxplot},
-\ref{fig:cyclomatic_tiebreak_boxplot}, \ref{fig:logical_tiebreak_boxplot}, \ref{fig:enhanced_tiebreak_boxplot}
+\ref{fig:cyclomatic_tiebreak_boxplot}, \ref{fig:logical_tiebreak_boxplot},
+\ref{fig:enhanced_tiebreak_boxplot}
 group \emph{EXAM} scores by tie breaking technique for each killed mutant. On
 each plot, the x-axis contains the name of the approach and the y-axis the
 percentage of score to be analyzed before finding the mutant (also referred to
@@ -485,25 +486,25 @@ Mann-Whitney test, the hypotheses are as follows:
     the approach on the y-axis
 \end{center}
 
-The generated p-values from the test represent the probability that
-\textbf{H$_{0}$} is true. Therefore, when p-values are less than or equal to the statistically
+The generated \emph{p-value}s from the test represent the probability that
+\textbf{H$_{0}$} is true. Therefore, when \emph{p-value}s are less than or equal to the statistically
 significant level of 0.05, the test indicates that the two approaches are
 statistically different. However, it does not conclude which approach had the
 higher or lower exam scores. Figure \ref{fig:two_sided_mw_test} plots a heat map
-of the resulting p-values from the two sided Mann-Whitney test. It compares each
+of the resulting \emph{p-value}s from the two sided Mann-Whitney test. It compares each
 approach to the fifteen remaining ones.
 
 \begin{figure}[!htb]
 	\begin{center}
 		\includegraphics[width=15.5cm]{two_sided_mw_test.png}
-        \caption{\label{fig:two_sided_mw_test} P-values of Two Sided Mann-Whitney Test}
+        \caption{\label{fig:two_sided_mw_test} \emph{p-value}s of Two Sided Mann-Whitney Test}
 	\end{center}
 \end{figure}
 
-Many conclusions can be reached from the p-values displayed in the heat map,
+Many conclusions can be reached from the \emph{p-value}s displayed in the heat map,
 some of which further affirm the observations made earlier from the plots, and
 others show a completely different result. Starting with the Tarantula
-approaches, the p-values for Tarantula clearly
+approaches, the \emph{p-value}s for Tarantula clearly
 show that these sets are different from all non-Tarantula approaches to a very
 statistically significant level.
 Therefore, the null hypothesis is rejected
@@ -546,26 +547,26 @@ hypotheses are as follows:
 \end{center}
 
 In contrast to the two-sided test, this one gives a more clear idea on which
-approaches has a lower \emph{EXAM} scores when compared to others. A \emph{p}
-value less than or equal to 0.05 suggests that the approach on the x-axis is
+approaches has a lower \emph{EXAM} scores when compared to others. A \emph{p-value}
+less than or equal to 0.05 suggests that the approach on the x-axis is
 significantly more effective than it's counterpart on the y-axis. On the other
-hand, a \emph{p} value greater than 0.95 indicates the opposite, where the
+hand, a \emph{p-value} greater than 0.95 indicates the opposite, where the
 approach on the y-axis is significantly more effective than the one on the x-axis. Figure
-\ref{fig:one_sided_mw_test} plots a heat map of the resulting \emph{p} values
+\ref{fig:one_sided_mw_test} plots a heat map of the resulting \emph{p-value}s
 from this test.
 
 \begin{figure}[!htb]
 	\begin{center}
 		\includegraphics[width=15.5cm]{less_sided_mw_test.png}
-        \caption{\label{fig:one_sided_mw_test} P-values of One Sided Mann-Whitney Test}
+        \caption{\label{fig:one_sided_mw_test} \emph{p-value}s of One Sided Mann-Whitney Test}
 	\end{center}
 \end{figure}
 
 Starting with the Tarantula variants, none of them resulted in a statistically
-significant \emph{p} value to suggest that they are more effective than the
+significant \emph{p-value} to suggest that they are more effective than the
 other non-Tarantula approaches, thus, the null hypothesis is accepted. However,
-among Tarantula variants, the logical tie breakers has the lowest \emph{p}
-value, suggesting that it was the most effective but not to a significant level.
+among Tarantula variants, the logical tie breakers has the lowest \emph{p-value},
+suggesting that it was the most effective but not to a significant level.
 To further illustrate how Tarantula falls behind the other equations, every
 non-Tarantula approach significantly outperformed the random and cyclomatic
 variants of Tarantula. The logical and enhanced variants were also outperformed
@@ -590,7 +591,7 @@ almost every other combination.
 One of the surprising outcomes of this data is the performance of enhanced tie
 breaking. Despite the fact that it adds on the mutant density metric provided by
 logical, and considers wider possibility while generating it's score, it did not
-outperform the logical tie breaker. In fact, the \emph{p} value was leaning more
+outperform the logical tie breaker. In fact, the \emph{p-value} was leaning more
 to the other outcome, but not in any significant way.
 
 \subsubsection{Statistical Tests: Cohen's D Effect Size}
@@ -650,8 +651,12 @@ all 1105 test cases in the project's suite were ran.
 Figure \ref{fig:test_timings} compares the time taken to execute all test
 functions with and without using AFLuent. The baseline includes
 4000 data points where the tests were ran without AFLuent. On the other hand
-7613 data points are plotted for when AFLuent generated a timing report. The
-figure shows a clear difference between the two box plots, where the median run with
+7613 data points are plotted for when AFLuent generated a timing report. It's
+important to mention that every point in the boxplot on the right represents the
+combined time to run all equation-tiebreaker combinations after one another.
+While this creates an unfair comparison, limitations of the experiment prevented
+the collection of more detailed data.
+In general, the figure shows a clear difference between the two box plots, where the median run with
 AFLuent took longer time to complete than the median run for the baseline.
 Additionally, the long upper whisker indicates that
 including AFLuent increases the chances that the tests could take substantially
@@ -660,7 +665,7 @@ wrapper functions around each test execution to calculate per-test coverage. And
 while this increase is quite small, considering the large size of the test suite,
 minimizing the additional time cannot be done through AFLuent since the tool
 relies on Coverage.py to calculate per-test coverage. After performing a two-sided
-Mann-Whitney Test on both sets, the resulting p-value of
+Mann-Whitney Test on both sets, the resulting \emph{p-value} of
 \code{8.035528e-157} confirms that there is statistically significant difference
 between the two sets, where the null hypothesis is rejected.
 
@@ -702,7 +707,8 @@ for Pynguin to run in a timely fashion and produce appropriate tests. It could
 be argued that the tests generated by Pynguin were not very thorough, especially
 that almost 50\% of the mutants survived while running \code{mutmut}. This
 argument brings up a valid criticism and suggests that a well rounded evaluation
-of AFLuent requires that the sample be developed and tested by novice developers. Additionally, it indicates that an automatically generated
+of AFLuent requires that the sample be developed and tested by novice developers.
+Additionally, it indicates that an automatically generated
 test suite does not adequately mimic one written by novice developers.
 Lastly, one possible concern could be brought up regarding the calculation of th
 \emph{EXAM} scores. Since mutant information was collected from \code{mutmut},

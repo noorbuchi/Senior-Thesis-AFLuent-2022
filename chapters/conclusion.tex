@@ -50,7 +50,10 @@ feature of AFLuent that significantly influenced the collected performance
 metrics is the approach used for tie breaking. Additional enhancements and
 techniques can be added to improve existing ones, especially the `enhanced' tie
 breaker. This could be completed by expanding the list of possible mutants and
-improving the analysis of the abstract syntax trees.
+improving the analysis of the abstract syntax trees. These potential improvements
+can be easily added to the existing code by implementing new functions to calculate suspiciousness
+or break ties in the object oriented structure. This extension would allow developers
+to add their favorite SBFL equation into AFLuent easily.
 
 \subsubsection{Efficiency}
 
@@ -69,7 +72,11 @@ syntax trees and only re-generating ones for files that have been edited since
 the last run. This solution will not reduce the runtime for the first time but
 it could have a significant effect on the runs that follow. Overall, this change
 introduces a quality of life improvement by reducing the time developers need to
-wait before receiving the report from AFLuent.
+wait before receiving the report from AFLuent. Once these improvements have been
+made, a more detailed evaluation of AFLuent's performance is also needed. By
+comparing each equation and tie breaking approach combination independently, a
+better understanding can be reached regarding how AFLuent performs based on the
+used approach.
 
 \subsubsection{Evaluation}
 
@@ -83,10 +90,29 @@ including human subjects to write, test, and debug the code. Even though
 the used strategy has some flaws, it is justifiable considering the scope of this
 study. To improve on
 the current understanding of AFLuent's performance,
-additional experiments are needed on a larger sample. Furthermore, extending the
+additional experiments are needed on a larger sample of Python projects that
+includes a variety of programming styles and utilizes a diverse set of Python
+constructs. Furthermore, extending the
 study to include novice developers by asking them to write and debug their code
 using AFLuent would provide great insight on their perspective on the tool
-and how they plan to use it.
+and how they plan to use it. For example, a potentially more thorough evaluation of AFLuent
+would consist of these steps:
+\begin{enumerate}
+    \item Select computer science students with various levels of experience
+    \item Assign the students to write and test a collection of programs
+    \begin{itemize}
+        \item Students can be split into groups to complete different assignments
+        \item Chosen assignments should allow for test driven development
+    \end{itemize}
+    \item Allow some groups of students to use AFLuent and assess it's
+    effectiveness in helping them locate faults
+    \item Collect direct feedback regarding the students' experience while using AFLuent
+\end{enumerate}
+While these steps do not provide a comprehensive plan for an alternative
+approach of evaluating AFLuent, it seeks to take into consideration the human
+experience aspect of using and interacting with the tool. This metric is missing
+from the current evaluation, and AFLuent, as well as the SBFL field, could
+benefit from more data surrounding it.
 
 \section{Ethical Implications}
 
@@ -108,3 +134,4 @@ failures occur. This could be especially harmful if AFLuent was overused in
 educational environments since students could utilize it's functionality without
 fully understanding how to fix the code themselves, and thus negatively impact
 their learning process.
+
