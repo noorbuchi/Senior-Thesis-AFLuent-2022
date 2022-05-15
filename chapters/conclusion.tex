@@ -15,7 +15,7 @@ and tie breaker pair implemented in AFLuent, much was revealed regarding the
 best and worst performances. One observation that stood out
 is the significant underperformance of Tarantula when compared to all other
 equations. Additionally, the statistically significant edge that logical tie
-breaking achieve to outperform it's random and cyclomatic counterparts was
+breaking achieves to outperform its random and cyclomatic counterparts was
 surprising. Overall, Ochiai, Ochiai2 and DStar had very strong performances
 when the same tie breaker was used across all of them, however, the data did not
 suggest that one outperformed the other significantly. Additional experiments may
@@ -58,16 +58,16 @@ to add their favorite SBFL equation into AFLuent easily.
 \subsubsection{Efficiency}
 
 One of the concerning outcomes of this study is the long time AFLuent takes to
-produce fault localization output. Developer usually want fast and optimized
+produce fault localization output. Developers usually want fast and optimized
 tools, which could render AFLuent unusable in the eyes of many. And while
 AFLuent's reliance on several tools reduce the ability to control the time it
 takes to run, there are some measures that could mitigate this problem.
 Throughout manual testing of the tool, it was generally observed that the most
 time consuming feature of AFLuent involves generating the tie breaker datasets.
-In oder for AFLuent to adequately understand the code under test, it must
-generate abstract syntax tree for every file covered in the test suite. Since
+In order for AFLuent to adequately understand the code under test, it must
+generate an abstract syntax tree for every file covered in the test suite. Since
 the debugging process usually involves making small changes at a time and
-rerunning the tests, a time improvement is possible be caching all generated
+rerunning the tests, a time improvement is possible by caching all generated
 syntax trees and only re-generating ones for files that have been edited since
 the last run. This solution will not reduce the runtime for the first time but
 it could have a significant effect on the runs that follow. Overall, this change
@@ -104,7 +104,7 @@ would consist of these steps:
         \item Students can be split into groups to complete different assignments
         \item Chosen assignments should allow for test driven development
     \end{itemize}
-    \item Allow some groups of students to use AFLuent and assess it's
+    \item Allow some groups of students to use AFLuent and assess its
     effectiveness in helping them locate faults
     \item Collect direct feedback regarding the students' experience while using AFLuent
 \end{enumerate}
@@ -131,7 +131,7 @@ dependent on AFLuent, or any automated fault localization tool, it could
 negatively impact their development skills by taking away the experience of
 manually analyzing the code and understanding its expected behavior and why
 failures occur. This could be especially harmful if AFLuent was overused in
-educational environments since students could utilize it's functionality without
+educational environments since students could utilize its functionality without
 fully understanding how to fix the code themselves, and thus negatively impact
 their learning process.
 

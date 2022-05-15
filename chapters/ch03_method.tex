@@ -4,14 +4,14 @@
 This chapter describes the implementation of AFLuent and the experiment setup and
 execution process. More specifically, the reasoning behind design decisions and
 the result are the main focus. Additionally, charts and diagrams  are used to
-demonstrate the the algorithms, structure, and flow of execution.
+demonstrate the algorithms, structure, and flow of execution.
 
 \section{Development Environment and Toolset}
 \label{sec:DevEnviron}
 
 In order to begin discussing how AFLuent is implemented, a ground-up overview of the
 tools used and their roles is necessary to establish definitions and facilitate
-the understanding of how dependencies they are connected. By being a Python
+the understanding of how dependencies are connected. By being a Python
 package AFLuent can rely on a wide variety of helpful and popular
 tools. Some of the most important tools and dependencies are discussed below.
 
@@ -19,7 +19,7 @@ tools. Some of the most important tools and dependencies are discussed below.
 \label{subsec:poetry}
 
 Poetry is a Python virtual environment management tool that allows developers to
-set up an isolated environment for their projects. Furthermore, it manges the
+set up an isolated environment for their projects. Furthermore, it manages the
 installation of Python dependencies on the virtualenv and updates them when
 necessary. Poetry has a crucial role in the implementation of AFLuent since it's
 used to make the development process simpler, its role also goes beyond
@@ -43,10 +43,10 @@ integrated with pytest can be found in Section \ref{sec:makingPytestPlugin}.
 \label{subsec:coverage}
 
 Spectrum-based fault localization requires data on code coverage and test
-results in order to calculate and rank suspicious of elements in the code.
+results in order to calculate and rank the suspicious elements in the code.
 Coverage.py\cite{coverage_py_website} is a Python tool that provides an easy to use application
 programming interface to collect that data. The tool also provides various
-configuration for the user to skip certain files or directories from being
+configurations for the user to skip certain files or directories from being
 considered. AFLuent relies on this tool to calculate what's known as per-test
 coverage. This data describes the lines of code covered by a single test case
 and organized in an accessible way to find out the number of passing and failing
@@ -69,7 +69,7 @@ searching by the line number in question.
 \subsection{Libcst}
 \label{subsec:libcst}
 
-In order to provide additional methods to breaking ties between element
+In order to provide additional methods to break ties between element
 rankings, Libcst is used to create an abstract syntax tree of the code in
 question. This approach allows AFLuent to detect error prone syntax and
 formulate a score to use to break ties between lines if the need arises.
@@ -92,7 +92,7 @@ external code to run at these points. A plugin is essentially a collection of
 packaged hooks that fit in the workflow of Pytest. AFLuent makes use of five
 different hooks to implement automated fault localization.
 Figure \ref{fig:pytest_flow} shows a general overview of the steps changed in the
-workflow of Pytest. Additionally, the section below describes in details how each
+workflow of Pytest. Additionally, the section below describes in detail how each
 step was modified.
 
 \section{Installing AFLuent}
@@ -103,7 +103,7 @@ AFLuent can be installed and set up easily on any system with little to no
 complications. To achieve that, AFLuent is published to the Python Package Index
 (PyPI), which makes it installable through the \code{pip install afluent}
 command. Once this command runs successfully, AFLuent is automatically
-integrated with Pytest as a plugin and will be ran with every pytest session
+integrated with Pytest as a plugin and will be run with every pytest session
 when the user specifies. AFLuent's dependency on Coverage.py
 creates a small but avoidable conflict. In the case that AFluent and another plugin that
 utilizes Coverage.py is active in the same Pytest session, various errors might
@@ -119,7 +119,7 @@ command-line arguments discussed in the following section.
 \label{subsec:pytest_cli}
 
 Pytest already supports a multitude of command line arguments that allow the
-user to pass configuration that change how the test suite is executed and
+user to pass configurations that change how the test suite is executed and
 reported. Similarly, AFLuent requires user passed arguments to complete a
 variety of tasks. The hook \code{pytest\_addoption} allows adding new
 arguments in a fashion similar to the \code{argparse} Python library.
@@ -156,7 +156,7 @@ The added arguments accept values that specify the following:
     \end{itemize}
     \item The types of file reports to create after the Pytest session is over
     \begin{itemize}
-        \item \code{---report}: accepts \code{json} or \code{csv} and generate
+        \item \code{---report}: accepts \code{json} or \code{csv} and generates
         reports with the passed format.
         \item \code{---per-test-report}: requires that a per-test coverage
         report is produced. This report is only generated in JSON format.
@@ -174,7 +174,7 @@ The added arguments accept values that specify the following:
 \subsection{Activating AFLuent}
 \label{subsec:activate_afluent}
 
-After arguments are passed, the next steps parses through some of them to check
+After arguments are passed, the next steps parse through some of them to check
 if AFLuent was enabled and to validate some of their values. The Pytest hook
 \code{pytest\_cmdline\_main} gives access to the collected configuration. In
 this hook, checks are conducted to see if there are other active plugins that
@@ -195,7 +195,7 @@ are as follows:
 
 \begin{enumerate}
     \item \code{cov.start()} begins recording coverage
-    \item the hook yields back control to Pytest which calls the individual test case
+    \item The hook yields back control to Pytest which calls the individual test case
     \item \code{cov.stop()} stops recording coverage
     \item The collected data is then organized in a simpler structure defined as
     the program spectra
@@ -212,7 +212,7 @@ and `Skipped'.
 
 The last step in AFLuent execution as part of Pytest is to report the fault
 localization outcome. The \code{pytest\_sessionfinish} hook is used to detect the
-exit code of the session and display output on the console accordingly. An exist
+exit code of the session and display output on the console accordingly. An exit
 code of 0 means that all tests have passed and there is no need to perform fault
 localization, therefore, a message would display that to the user before
 finishing the Pytest run. On the other hand an exit code of 1, would indicate
@@ -268,7 +268,7 @@ in which every covered line has the maximum suspiciousness of 1. It is important
 to acknowledge that the outcomes reached here only apply to code that has been
 covered by the test suite. Faulty lines, which are not covered by any test case
 will not be investigated since there is no data to calculate their
-suspiciousness. Using values plugged in to Figure \ref{fig:tarantulaEquation}, the
+suspiciousness. Using values plugged into Figure \ref{fig:tarantulaEquation}, the
 examples in Figure \ref{fig:taran_div_by_zero_1} and Figure \ref{fig:taran_div_by_zero_2} show
 the two possible cases where division by zero might occur in the Tarantula
 equation.
@@ -293,16 +293,16 @@ equation.
 	\end{center}
 \end{figure}
 
-Figure \ref{fig:taran_div_by_zero_1} shows the case where there is a total of zero
+Figure \ref{fig:taran_div_by_zero_1} shows the case where there are zero total
 failed test cases, covering AND not covering the element, in which a score
 of 0 is assigned to the element. On the other hand,
-Figure \ref{fig:taran_div_by_zero_2} shows the case where there is a total of zero
+Figure \ref{fig:taran_div_by_zero_2} shows the case where there are zero total
 passing test cases, in which a maximum score of 1 is assigned to the element.
 
 \subsubsection{Division by Zero: Ochiai}
 \label{subsubsec:div_by_zero_ochiai}
 
-Division by zero occurs in the Ochiai formula when there is not test coverage
+Division by zero occurs in the Ochiai formula when there is no test coverage
 information for a line or when the total number of failed tests is zero.
 The latter case indicates that the line is not suspicious since it did not
 cause any failures, therefore, zero is returned as the suspiciousness score.
@@ -332,9 +332,9 @@ the zero values from \ref{fig:ochiaiEquation}
 	\end{center}
 \end{figure}
 
-Figure \ref{fig:ochiai_div_by_zero_1} is an example of when there is zero total
+Figure \ref{fig:ochiai_div_by_zero_1} is an example of when there are zero total
 failed test cases, resulting in a zero suspiciousness score.
-However Fig\ref{fig:ochiai_div_by_zero_2} shows an example where there is no
+However Figure \ref{fig:ochiai_div_by_zero_2} shows an example where there are no
 failed or successful tests that cover the line. This scenario does not
 occur in AFLuent, which only looks at lines that have some coverage data through
 passing or failing tests. Therefore, it wasn't necessary to handle this possibility.
@@ -419,7 +419,7 @@ equation with the zero in the denominator.
 In the DStar equation, division by zero takes place only in one case. When the
 number of passing test cases that cover the line AND the number of failed test
 cases that do not cover the line are both zero, the denominator evaluates to
-zero. This translates to the following: if there is no passing tests executing
+zero. This translates to the following: if there are no passing tests executing
 this line and no failing test executing other lines only, then this line should
 have the maximum suspiciousness score possible. However, since DStar has a
 numerator raised to a power set by the user, it has no numerical upper limit on
@@ -443,7 +443,7 @@ plugging in values from Figure \ref{fig:dstarEquation}
 
 ProjFile objects are designed to contain attributes that describe whole files.
 Additionally, they support functionality that apply to these files. The most
-important attributes of these objects is the \code{lines} instance variable,
+important attribute of these objects is the \code{lines} instance variable,
 which stores a dictionary of contents of the file. Specifically, the keys in
 this dictionary are line numbers in the file and the values are the Line objects
 discussed previously. In addition to storing this data, ProjFile implements an
@@ -492,11 +492,11 @@ infrastructure responsible for performing fault localization.
 	\end{center}
 \end{figure}
 
-Fig\ref{fig:oop_structure} provides a visual simplification of the different
+Fig \ref{fig:oop_structure} provides a visual simplification of the different
 components of AFluent and an overview of their roles in the functioning of the
 tool. Overall the nested structure creates several layers that facilitate
 development by isolating the different components and hiding unnecessary
-information from other objects in the hierarchy. By following this structures,
+information from other objects in the hierarchy. By following these structures,
 unit tests can be written much easier and debugging becomes a simpler task.
 
 \section{AFLuent's Output}
@@ -522,10 +522,10 @@ out to the user and provide a clear and concise description of the scenario.
 \label{subsubsec:success_message}
 
 This message is produced in the case that the test suite passes with no
-error or failures. Using bright green highlighted message with bold white
+error or failures. Using bright green highlighted text with bold white
 letters, the message displays: \code{All tests passed, no need to diagnose using
-AFLuent}. Fig\ref{fig:success_message} demonstrates the success message output
-when AFLuent is ran on the project's test suite.
+AFLuent}. Figure \ref{fig:success_message} demonstrates the success message output
+when AFLuent is run on the project's test suite.
 
 \begin{figure}[!htb]
 	\begin{center}
@@ -580,7 +580,7 @@ Another warning message is displayed when AFLuent is installed to the current
 Python environment but not enabled by the user through the \code{---afl} or
 \code{---afl-debug} flags. This message serves as a reminder to the user to
 enable the plugin if they're interested in utilizing fault localization. The
-message is shown in Fig\ref{fig:warning_message_2}.
+message is shown in Fig \ref{fig:warning_message_2}.
 
 \begin{figure}[!htb]
 	\begin{center}
@@ -645,7 +645,7 @@ spectrum, scores are highlighted with red when they equal the maximum
 suspiciousness score possible (usually 1), the color indicates that these
 elements are extremely likely to be the ones causing the fault. For the
 remaining results, the top 20\% are highlighted using orange to show that they
-are risky of being faulty. The remaining non-zero elements are highlighted using
+are at risk of being faulty. The remaining non-zero elements are highlighted using
 yellow. Figure \ref{fig:report_2} shows an example of how safe statements are
 displayed in the report.
 
@@ -685,7 +685,7 @@ provide another metric to break the tie between two elements.
 \label{subsec:tiebreak_random}
 
 Random tie breaking is the baseline approach for dealing with ties in
-suspiciousness scores. It's the method to compare other approaches to in order
+suspiciousness scores. Other approaches are compared to random tie breaking to in order
 to detect if there are any improvements. In random tie breaking, statements are
 ranked in a descending order by the chosen suspiciousness score first, however,
 the order between tied elements is random. This could lead to different rankings
@@ -698,7 +698,7 @@ One of the available ways to break ties between elements is to use cyclomatic
 complexity as a secondary score to consider when sorting. This score is proposed
 by McCabe \cite{cyclomatic_complexity} and can be easily calculated using the Radon library.
 It measures the number of available paths that execution
-cold go through in a function. Since this type of score only applies to whole
+could go through in a function. Since this type of score only applies to whole
 functions and not to individual elements, lines inherit the cyclomatic
 complexity score of the function they live in when being ranked.Essentially, if
 a function has a cyclomatic complexity score of 7, then all statements within
@@ -714,7 +714,7 @@ Another metric used to break ties between suspicious statements is mutant
 density \cite{Parsai_2020}. More specifically, this score indicates how error prone the statement
 is by calculating the number of all possible mutants. For example, a statement
 that has many mathematical and logical operators to perform a calculation is
-more error prone that a statement that only has one or two of these operations.
+more error prone than a statement that only has one or two of these operations.
 With that in mind, AFLuent uses this information to break ties between
 statements that have the same suspiciousness score but are syntactically
 different.
@@ -756,22 +756,22 @@ not include \code{if} statements, function definition, \code{while} loops and so
 \subsection{Mutant Density: Enhanced Set}
 \label{subsec:tiebreak_mutant_density_enhanced}
 
-This approach to tie breaking also uses mutant density evaluate how error prone
+This approach to tie breaking also uses mutant density to evaluate how error prone
 a statement is. However, it seeks to provide a more holistic metric that also
-considers how error prone the constructs that an a statement is nested in. For
+considers how error prone the constructs that a statement is nested in. For
 example, a statement inside a multi-level if statement, which is also nested in
 a loop, is more error prone than a statement which is outside these constructs.
 Since there is more room for errors in loops and if statement conditions, a
 statement nested in them takes on this risk of error. In order to measure this
-score, the list of mutant used in the logical set was extended to include
+score, the list of mutants used in the logical set was extended to include
 additional constructs that might contain the error. Additionally, the tiebreaker
 looks through and scores each block that the statement is nested in.
-Table\ref{table:enhanced_set_mutants} shows the additional mutants that are
-looked for in the enhanced set. Additionally, Table\ref{table:construct_scoring}
+Table \ref{table:enhanced_set_mutants} shows the additional mutants that are
+looked for in the enhanced set. Additionally, Table \ref{table:construct_scoring}
 discusses how a score is assigned to each construct while parsing through the
 syntax tree and assessing how error prone a statement is. All of these
 approaches are used to calculate a score that gets used in breaking ties of
-suspicious statements while ranking. Figure\ref{fig:enhanced_score_equation}
+suspicious statements while ranking. Figure \ref{fig:enhanced_score_equation}
 shows how each construct score is used in generating the final score of a statement.
 
 \begin{table}[!htb]
@@ -864,7 +864,7 @@ shows how each construct score is used in generating the final score of a statem
 
 Using all the tie breaking approaches discussed previously, this subsection
 provides an overview and an example that demonstrates tie breaking on a sample
-program. Table\ref{table:scoring_examples} shows a sample program that implement
+program. Table \ref{table:scoring_examples} shows a sample program that implements
 two functions with some conditional logic and simple mathematical operations. It also
 contains three columns with each scoring approach. Starting with the cyclomatic
 scores, one can see that all statements in a function contain the same score.

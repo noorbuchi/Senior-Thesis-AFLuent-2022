@@ -14,7 +14,7 @@ test AFLuent on.
 
 In order to evaluate AFLuent, several prerequisites are needed that enable
 collecting data for analysis. The primary requirement is a collection of Python
-programs, which are susceptible of becoming faulty. Additionally, this
+programs, which are susceptible to becoming faulty. Additionally, this
 collection's complexity must be comparable to code typically written by novice
 developers, which AFLuent targets. Another crucial requirement before evaluation
 can begin is a test suite for the selected code python code. The test suite must
@@ -40,8 +40,8 @@ prerequisites are met, and describe the systematic and automated approach in eva
 \label{subsec:research_questions_eval}
 
 Before discussing the evaluation process, it's important to clearly state the
-questions to answer. Previously, Section\ref{sec:researchq} brought up few
-research question concerning the implementation and evaluation of AFL in Python.
+questions to answer. Previously, Section \ref{sec:researchq} brought up a few
+research questions concerning the implementation and evaluation of AFL in Python.
 Related Work and Methods section addressed \hyperref[para:RQ1.1]{\emph{RQ1.1}} as well as
 \hyperref[para:RQ2]{\emph{RQ2}}, however, the answer \hyperref[para:RQ1.2]{\emph{RQ1.2}} remains unclear. While \hyperref[para:RQ1.2]{\emph{RQ1.2}}
 generally involved the efficiency and accuracy of AFLuent, there was no mention
@@ -50,7 +50,7 @@ are sixteen different approaches that will be evaluated and compared. For every 
 equation used, Tarantula, Ochiai, Ochiai2, and Dstar, there are four tie breaking
 approaches. Each equation-tiebreaker pair will be evaluated on the same dataset,
 where the resulting rankings will be used to produce a score to assess how
-close the produced ranking are to localizing the fault correctly. In addition to
+close the produced rankings are to localizing the fault correctly. In addition to
 this score, the time taken to run each approach will be recorded to compare
 their time overhead.
 
@@ -89,7 +89,7 @@ to eliminate entire projects, delete modules, or trim some code.
     expedite generating a test suite using Pynguin, several projects that use
     external packages were removed. These packages include \code{scikit-learn},
     \code{Tensorflow}, \code{Matplotlib}, \code{Sympy}, and \code{PIL}.
-    Generating data and creating unit tests for projects that using theses
+    Generating data and creating unit tests for projects that use these
     packages can be difficult because they are time consuming or simply cannot
     be tested due to their graphical output.
     \item Functions that do not take input or return no results: some implemented
@@ -105,7 +105,7 @@ to eliminate entire projects, delete modules, or trim some code.
     perform. Therefore, these functions were removed. In some instances where
     the documentation explicitly stated the type of input for the function, type
     hints were manually added to avoid the removal of the function. This was
-    especially frequent in sorting function, in which the input was specified as
+    especially frequent in the sorting function, in which the input was specified as
     integer values.
     \item Code snippets under \code{if \_\_name\_\_ == "\_\_main\_\_"}: In most
     instances the code under this if statement either ran the doctest tests, or
@@ -136,9 +136,9 @@ to eliminate entire projects, delete modules, or trim some code.
 Following the initial phase of filtering the codebase, general statistics and
 observations were recorded for the remaining sample thus far.
 Table\ref{table:remaining_projects} shows the name of the remaining project.
-Additionally, SLOCcount was used to calculate the number of non-comment line of
+Additionally, SLOCcount was used to calculate the number of non-comment lines of
 code included in the sample. The output from the tool is shown in
-Fig\ref{fig:SLOCcount_phase1}. Overall, there was 12199 lines of code remaining
+Figure \ref{fig:SLOCcount_phase1}. Overall, there was 12199 lines of code remaining
 in the sample prior to automatically generating tests using Pynguin.
 
 \begin{figure}[!htb]
@@ -186,7 +186,7 @@ in the sample prior to automatically generating tests using Pynguin.
 \subsubsection{Generating a Test Suite}
 \label{subsubsec:generating_test_suite}
 
-Once initial filtering of the codebase was completed, Pynguin was ran to
+Once initial filtering of the codebase was completed, Pynguin was run to
 generate tests. However, additional issues came up in this process that required
 additional filtering to be done. The new content was filtered as follows:
 \begin{itemize}
@@ -197,7 +197,7 @@ additional filtering to be done. The new content was filtered as follows:
     getting timed out. Finally, there were 249 modules where tests were
     successfully generated. Modules with failed and timed out runs were removed
     due to the lack of tests that cover them.
-    \item Some generated tests were faulty and caused errors when ran, or
+    \item Some generated tests were faulty and caused errors when run, or
     indeterminately failed making them flaky. Those tests were removed in some
     instances or fixed when possible.
     \item Since AFLuent relies on a thorough test suite with high coverage in
@@ -245,7 +245,7 @@ additional filtering to be done. The new content was filtered as follows:
 	\begin{center}
 		\includegraphics[width=15.5cm]{cyclomatic_complexity.png}
 		\caption{\label{fig:cyclomatic_complexity_of_sample} Cyclomatic
-		Complextiy of Sample}
+		Complexity of Sample}
 	\end{center}
 \end{figure}
 
@@ -254,7 +254,7 @@ information on the sample, the output from the tool is shown in
 Figure\ref{fig:SLOCcount_phase2}. While the codebase was significantly reduced in
 size, the resulting test suite contains 1105 test cases with 99\% coverage.
 In order to get a better understanding of the remaining sample, additional data
-was collected on the cyclomatic complexity the functions in the code. This
+was collected on the cyclomatic complexity of the functions in the code. This
 information would give some ideas on the structure of the code regarding if
 statements, loops and other constructs. The cyclomatic complexity of the
 remaining 516 functions was calculated and plotted as shown on Figure
@@ -279,7 +279,7 @@ possibility of inserting bugs in many possible locations, there was a need for
 an automated approach to collect this data. Some existing tools such as
 \emph{mutmut} \cite{mutmut} already perform similar steps for
 mutation testing and it could be easily repurposed to generate the bugs/mutants and run
-AFLuent after inserting a mutant into the codebase. Futhermore, \emph{mutmut}
+AFLuent after inserting a mutant into the codebase. Furthermore, \emph{mutmut}
 supports a hook function that facilitates collecting results after each run and
 before the next mutant is applied. Lastly the test suite run command can be
 modified to run AFLuent in evaluation mode and collect fault localization data.
@@ -290,7 +290,7 @@ evaluation:
     approach-tiebreaker combination. Note that a value of 3 was used for \code{*} in
     the DStar equation.
     \item Per-test coverage report
-    \item Timing report containing the time taken to run the test suite befor
+    \item Timing report containing the time taken to run the test suite before
     fault localization and the time to perform fault localization and get
     rankings.
     \item Information about the mutant such as the file and line number it was
@@ -344,7 +344,7 @@ score, the reported results were filtered by project so that they
 only include lines from that project. For example, when the \emph{EXAM}
 score is calculated for a fault in the \code{bit\_manipulation} project, the
 percentage of lines belonging to that project that a developer must read before
-finding the fault is the score. The lower the exam score for an approach, to
+finding the fault is the score. The lower the exam score for an approach, the
 more effective it is because the developer would have to analyze less lines
 before finding the fault.
 
@@ -355,7 +355,7 @@ represented in the graph and gives a clear indicator of where outliers are.
 Additionally, heat maps are used to compare each pair to the other fifteen after
 completing statistical tests.
 
-\subsubsection{Data Vizualization}
+\subsubsection{Data Visualization}
 \label{subsubsec:data_vizualization}
 
 To compare suspiciousness score equations when the tie breaking approach is the
@@ -422,7 +422,7 @@ that breaking ties using cyclomatic complexity is no better than randomly doing
 so. But, further statistical analysis is needed to come to that conclusion.
 
 When analyzing Figure \ref{fig:logical_tiebreak_boxplot}, there is a noticeable
-visual difference to the previous plots. Specifically, the the median
+visual difference to the previous plots. Specifically, the median
 \emph{EXAM} score for all approaches using logical tie breaking is smaller when
 compared to random and cyclomatic tie breaking. While this implies an
 improvement, it's still unclear if it's statistically significant. In addition
@@ -433,7 +433,7 @@ tie breaking provides. As for the rankings between the equations, Tarantula
 still appears to be the worst performing while DStar has the lower scores
 overall.
 
-Lastly, \emph{EXAM} score while using enhanced tie breaking are shown in Figure
+Lastly, \emph{EXAM} scores while using enhanced tie breaking are shown in Figure
 \ref{fig:enhanced_tiebreak_boxplot}. When comparing the results of this figure
 to those in Figure \ref{fig:logical_tiebreak_boxplot}, the median values as well
 as maximums appear to be higher. This indicates that enhanced tie breaking might
@@ -452,7 +452,7 @@ unclear which is more effective.
 In addition to the box plots that showcase the medians, and the quartiles, it's
 worth looking at the average exam score for each approach. Figure
 \ref{fig:averages_barplot} plots the \emph{EXAM} score averages for all
-categories. This barplot further demonstrates the low performance of Tarantula,
+categories and lists the value of the mean at the top of each bar. This bar plot further demonstrates the low performance of Tarantula,
 in which it has the highest averages out of all other equations. Based on the
 averages in the plot, the best performing approach is DStar with logical tie
 breaking with an average of 18.27\% \emph{EXAM} score. It's followed by Ochiai
@@ -492,8 +492,9 @@ significant level of 0.05, the test indicates that the two approaches are
 statistically different. However, it does not conclude which approach had the
 higher or lower exam scores. Figure \ref{fig:two_sided_mw_test} plots a heat map
 of the resulting \emph{p-value}s from the two sided Mann-Whitney test. It compares each
-approach to the fifteen remaining ones.
-
+approach to the fifteen remaining ones. \emph{P-value}s for each comparison are
+included in each square, where squares with lower \emph{p-value} are
+darker color than those with larger value.
 \begin{figure}[!htb]
 	\begin{center}
 		\includegraphics[width=15.5cm]{two_sided_mw_test.png}
@@ -508,9 +509,9 @@ approaches, the \emph{p-value}s for Tarantula clearly
 show that these sets are different from all non-Tarantula approaches to a very
 statistically significant level.
 Therefore, the null hypothesis is rejected
-here. There are only few exceptions, where Tarantula Enhanced and Tarantula
+here. There are only a few exceptions, where Tarantula Enhanced and Tarantula
 Logical are not different from the random and cyclomatic variants of Ochiai,
-Ochiai2, and DStar, so the null hypotheses is accepted for these exceptions.
+Ochiai2, and DStar, so the null hypothesis is accepted for these exceptions.
 These cases represent an interesting case where using the logical and enhanced
 tiebreakers was a significant enough improvement to bring Tarantula in line with
 the random and cyclomatic variants of other equations.
@@ -530,7 +531,7 @@ enhanced, they are not different from each other on a statistically significant
 level. Therefore, the null hypothesis is accepted for these combinations.
 
 While the results of this test are helpful to show if statistically significant
-differences exists between the different approaches, it does not clarify which
+differences exist between the different approaches, it does not clarify which
 one is better than the other. To have a better understanding of that
 relationship, a one sided \code{less} Mann-Whitney test is performed with the
 hypotheses are as follows:
@@ -549,7 +550,7 @@ hypotheses are as follows:
 In contrast to the two-sided test, this one gives a more clear idea on which
 approaches has a lower \emph{EXAM} scores when compared to others. A \emph{p-value}
 less than or equal to 0.05 suggests that the approach on the x-axis is
-significantly more effective than it's counterpart on the y-axis. On the other
+significantly more effective than its counterpart on the y-axis. On the other
 hand, a \emph{p-value} greater than 0.95 indicates the opposite, where the
 approach on the y-axis is significantly more effective than the one on the x-axis. Figure
 \ref{fig:one_sided_mw_test} plots a heat map of the resulting \emph{p-value}s
@@ -573,13 +574,13 @@ variants of Tarantula. The logical and enhanced variants were also outperformed
 by others, however, it was less frequently.
 
 As for other equations, the Random and Cyclomatic variants of Ochiai, Ochiai2,
-and DStar all had similar results between each other, where non of them
+and DStar all had similar results between each other, where none of them
 outperformed another on a significant level. Therefore, for these approaches,
 the null hypotheses is accepted. This result matches the outcome of the
 two-sided test where these approaches were very similar.
 
 Some notable large differences in performance can be seen in the logical variant
-of Ochiai, Ochiai2, and DStar. Theses three significantly outperformed every
+of Ochiai, Ochiai2, and DStar. These three significantly outperformed every
 random and cyclomatic variant of all other equations. On the other hand, the
 enhanced variant of these slightly outperformed the cyclomatic and random ones,
 but not on a statistically significant degree. This result suggests that the
@@ -590,14 +591,14 @@ almost every other combination.
 
 One of the surprising outcomes of this data is the performance of enhanced tie
 breaking. Despite the fact that it adds on the mutant density metric provided by
-logical, and considers wider possibility while generating it's score, it did not
+logical, and considers wider possibility while generating its score, it did not
 outperform the logical tie breaker. In fact, the \emph{p-value} was leaning more
 to the other outcome, but not in any significant way.
 
 \subsubsection{Statistical Tests: Cohen's D Effect Size}
 \label{subsubsec:statistical_test_cohen}
 
-While the Mann-Whitney test checks if the distributions of the approaches is
+While the Mann-Whitney test checks if the distribution of the approaches is
 different to others on a statistically significant level, it does not give an
 idea of the magnitude of this difference. In order to get that information, the
 non-parametric Cohen's D effect size is calculated for each pair of approaches
@@ -624,8 +625,8 @@ which of these three was the best. At the intersections of Ochiai logical and
 Ochiai2 logical with DStar logical, the values 0.0013 and 0.0021 respectively
 show that DStar had an improvement over the other two. This improvement is very
 small and, as established in the previous test, not statistically significant.
-As for the comparison between Ochiai logical and Ochiai2 logical, and even
-smaller value indicate a very small difference in favor of Ochiai logical.
+As for the comparison between Ochiai logical and Ochiai2 logical, an even
+smaller value indicates a very small difference in favor of Ochiai logical.
 Again, this difference is not statistically significant to reach a conclusion of
 which is the better approach. Overall, the performed statistical tests allowed
 the filtering of 16 different approaches to determine the top 3 ones that
@@ -639,7 +640,7 @@ AFLuent runs, three different categories of time data are included: (I) Time to
 execute tests without AFLuent, (II) Time to execute tests with AFLuent enabled,
 (III) Time to locate faults and perform tie breaking using all
 equation-tiebreaker combinations. Generally all these times were calculated when
-all 1105 test cases in the project's suite were ran.
+all 1105 test cases in the project's suite were run.
 
 \begin{figure}[!htb]
 	\begin{center}
@@ -650,7 +651,7 @@ all 1105 test cases in the project's suite were ran.
 
 Figure \ref{fig:test_timings} compares the time taken to execute all test
 functions with and without using AFLuent. The baseline includes
-4000 data points where the tests were ran without AFLuent. On the other hand
+4000 data points where the tests were run without AFLuent. On the other hand
 7613 data points are plotted for when AFLuent generated a timing report. It's
 important to mention that every point in the boxplot on the right represents the
 combined time to run all equation-tiebreaker combinations after one another.
@@ -676,8 +677,8 @@ between the two sets, where the null hypothesis is rejected.
 	\end{center}
 \end{figure}
 
-Another useful time metric for developers hoping to use AFLuent is the time the
-took takes to locate faults. And while
+Another useful time metric for developers hoping to use AFLuent is the time it
+took to locate faults. And while
 comprehensive time data for each equation and tie breaking approach was not
 collected, some conclusions can be drawn from the most time consuming case.
 Figure \ref{fig:localization_timings} shows the time taken to generate a
@@ -685,8 +686,8 @@ statement ranking following a test failure. This includes the time to calculate
 suspiciousness scores using all equations and to retrieve and evaluate tie
 breaking values using all approaches. In general, this is the worst possible
 scenario for AFLuent localization time. While the median time is quite large,
-around 115 second, so is the test suite. For every run, AFLuent generates and parses
-abstract syntax trees using libcst and calculates cyclomatic complexity fo all
+around 115 second, so is the test suite. For every run, AFLuent generates and parse
+abstract syntax trees using LibCST  and calculates cyclomatic complexity fo all
 files covered in the suite. In the case of this evaluation, this includes all
 files in the codebase. Further discussion on how this time can be minimize is
 found in Section \ref{sec:future_work}: Future Work.

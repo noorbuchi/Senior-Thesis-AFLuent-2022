@@ -6,7 +6,7 @@ fault localization have extensive literature exploring the different approaches
 to facilitate debugging and increase developer efficiency. Considering that
 AFLuent relies on many concepts developed by this literature, this section will
 explore and discuss how past work shapes AFLuent. Several sections are created
-to for specific area of literature.
+for specific areas of literature.
 
 \section{Automated Fault Localization}
 \label{sec:AFLlit}
@@ -29,9 +29,9 @@ A breakdown of the found research is shown in Figure \ref{fig:wong_breakdown}, w
 majority of found papers are focused on Spectrum-Based Fault Localization (SBFL).
 Overall this research provides a great
 starting point to find and compare the different types and approaches of AFL.
-Another benefit of this resources is that
+Another benefit of these resources is that
 Wong et al. \cite{wong2016survey} expands on the types of SBFL
-and reviews key literature that contributes show the benefits and drawbacks of
+and reviews key literature that contributes to show the benefits and drawbacks of
 each approach.
 
 Another insightful survey paper is by Idrees Sarhan et. al \cite{sarhan2022Challenges}
@@ -50,7 +50,7 @@ multiple bugs, and many others remain unaddressed.
 One of the most relevant SBFL techniques described by Wong et al.
 \cite{wong2016survey} is similarity coefficient based ones. Generally, these approaches
 seek to quantify how close ``the execution pattern of a statement is to the
-failure pattern of all test cases'', where the the closer they are the more
+failure pattern of all test cases'', where the closer they are the more
 likely that this statement to contain the error. In order to create a
 measurement of closeness, several equations have been developed and evaluated by
 past literature. Figure \ref{fig:sbfl_eq} shows some of the equations reviewed by
@@ -90,14 +90,14 @@ tests that cover the element is clearly the main influencer here because it's
 what causes the numerator to grow larger. This means that an increase in failed
 tests that cover the element cause an increase in suspiciousness. Additionally,
 a decrease in the number of failing tests that do not cover the element also
-increase suspiciousness. Considering these two points, Tarantula gives a better
+increases suspiciousness. Considering these two points, Tarantula gives a better
 indicator of suspiciousness when there are fewer failures in tests covering
 elements not under inspection. In addition to the logical analysis of the
 equation previous works provide an empirical evaluation of Tarantula in
 comparison to other formulas. Jones et al. \cite{Jones2005TarantulaEval}
 compares the effectiveness and efficiency of Tarantula to techniques such as Set Union, Set
 Intersection, and Nearest Neighbor. The results demonstrate that Tarantula
-outperform the other Techniques where it provided a better guidance to the
+outperformed the other Techniques where it provided better guidance to the
 developer. Using Tarantula a developer would need to manually
 inspect fewer elements of the program compared to when using other approaches.
 
@@ -109,7 +109,7 @@ are used to sort elements within each group. By doing so, two layers of sorting
 exist, the first one based on the number of failed tests covering the element,
 and then the suspiciousness scores. The empirical results in Debroy et al.
 \cite{debroy2010grouping} show a statistically significant improvement provided
-by this grouping technique where the developer need to review less elements and
+by this grouping technique where the developer needs to review less elements and
 more faults are accurately detected. While Debroy et al. only applied the
 grouping technique to Tarantula and a neural network-based approach, it could be
 extended to include other similarity coefficient based techniques.
@@ -124,7 +124,7 @@ useful to include Tarantula as one of the available options.
 \label{subsubsec:ochiai_lit}
 
 Ochiai is another similarity coefficient formula for SBFL that uses code
-coverage information and test output to produce as suspiciousness score.
+coverage information and test output to produce a suspiciousness score.
 Originally used in computing genetic similarity in molecular biology and
 evaluated in Abreu et al. \cite{Abreu2006Ochiai}, the equation for this approach
 is shown in fog.\ref{fig:ochiaiEquation}. Similar to Tarantula, the number of
@@ -133,12 +133,12 @@ suspiciousness. The formula uses similar terms as Tarantula such as total number
 of tests that cover the element, unlike Tarantula, however, it does not consider
 successful tests that do not cover the element.
 Papers such as \cite{Abreu2006Ochiai,ABREU20091780} also evaluate the
-performance of Ochiai in comparison to other such as Tarantula, AMPLE, and
+performance of Ochiai in comparison to others such as Tarantula, AMPLE, and
 Jaccard. Another evaluation of Ochiai is done by Le et al. \cite{le2013theory}
 where it was found to have a statistically significant improvement when compared
 to Tarantula. The paper demonstrates that on average developers only need to
 inspect 21.02\% of the source code before finding the fault.
-AFLuent includes and implementation and evaluation of Ochiai to
+AFLuent includes an implementation and evaluation of Ochiai to
 validate that it performs as expected compared to the Tarantula technique.
 Additionally, considering that Ochiai is considered a fairly accurate and
 effective formula to detect faults, AFLuent takes advantage of the performance
@@ -170,7 +170,7 @@ DStar (also written as D*) is another SPFL technique that utilizes code coverage
 information of a program to locate and rank faults. The equation for this
 approach can be found in figure \ref{fig:dstarEquation}. Wong et al.
 \cite{Wong2014DStar} introduce and extensively evaluate this approach in a 2014
-paper that demonstrate it's effectiveness compared to other formulas. In the
+paper that demonstrate its effectiveness compared to other formulas. In the
 process of constructing D*, the paper lists the factors involved in determining
 suspiciousness of an element. The principles are as follows:
 \begin{enumerate}
@@ -185,34 +185,34 @@ suspiciousness of an element. The principles are as follows:
 \end{enumerate}
 
 Considering that multiplying \(\textbf{N$_{CF}$}\) by a constant to increase its
-weight will not affect the ranking of statements, he authors argue that
-rasing \(\textbf{N$_{CF}$}\) to a value * greater than
+weight will not affect the ranking of statements, the authors argue that
+raising \(\textbf{N$_{CF}$}\) to a value * greater than
 or equal to 1 would be more appropriate in increasing the weight of this
 variable. The study continues by illustrating how increasing the value of *
 produces more clear rankings that facilitate the debugging process by requiring
-the developer to examine less elements in bot the best and worst case. However,
-the authors also point out that this benefit of increasing teh value of * levels
+the developer to examine less elements in both the best and worst case. However,
+the authors also point out that this benefit of increasing the value of * levels
 off at a certain point depending on the size of the program under analysis.
 The paper concludes by reviewing performance results showing that D* is more
 effective than the previously discussed formulas (Tarantula, Ochiai, and
 Ochiai2). With that in mind, D* offers the latest and most effective formula to
 calculate suspiciousness compared to all others included in this research.
 AFLuent implements D* to validate this step up in effectiveness in the context of
-Python projects and gives the user the ability to use t.
+Python projects and gives the user the ability to use it.
 
 \subsection{Combining Approaches}
 \label{subsec:combining_approaches}
 
-While AFLuent only relies SBFL approaches in its implementations, it's
+While AFLuent only relies on SBFL approaches in its implementations, it's
 useful to explore other methodologies that could assist in the debugging
-process. This creates a guide for potential extention of AFLuent and
+process. This creates a guide for potential extension of AFLuent and
 provides a way to fill in the shortcomings of AFLuent. Xuan et al. explores the
 possibility of combining several SBFL metrics of fault localization and
 introducing a machine learning model to assist with the ranking
 \cite{Xuan2014Combine}. While AFLuent does not support this approach, Xuan et
 al. shows some promising results that could potentially uncover performance
 improvements in fault localization. There are many tricky aspects of this
-research, especially that it suggests to train a machine learning model to
+research, especially that it suggests training a machine learning model to
 assist with ranking. Depending on the data used to train the model, the results
 could be very different. Overall, while AFLuent does not use machine learning,
 this research provides a great idea for future work and improvements.
@@ -236,7 +236,8 @@ their debugging efforts.
 \label{subsec:acknowledging_problems}
 
 With the multitude of approaches and formulas to use in SBFL, various criticisms
-are brought up for each proposed research. In a survey study, Wong et al.
+are brought up for each proposed research. Some research even suggests that SBFL
+and AFL in general is not effective for all developers \cite{parnin}. In a survey study, Wong et al.
 \cite{wong2016survey} identifies a series of issues and concerns surrounding
 SBFL in general. The main one being the central problem of giving failed and
 successful tests accurate weights in order to produce a meaningful
@@ -251,22 +252,22 @@ the development of AFLuent.
 One of the brought up concerns of SBFL is the inclusion of passed program
 spectra in calculating suspiciousness of an element. Xie et al.
 \cite{xie2010isolating} argue that while a failed program test case does
-indicate the presence of an error a passed program spectra/test data, ``is not
+indicate the presence of an error in a passed program spectra/test data, ``is not
 guaranteed to be absolutely free of any faulty statement''. With that in mind,
-passed tests information alone do not give reliable results on an element
+passed test information alone does not give reliable results on elements
 suspiciousness. The proposed approach to mitigate this problem is to organize
 program entities into two main groups, those who have been ``activated'' at
 least once by a failed program spectra, and ``clean'' ones, which have not at
 all. The research continues by experimenting with this approach and presenting
 results that showed some signs of improvement on existing SBFL formulas.
 Overall, this research provides a way to address inaccuracies with AFLuent and
-assists in expending the project beyond simple calculations based on formulas.
+assists in expanding the project beyond simple calculations based on formulas.
 
 Another concern with the use of SBFL to debug programs is the possibility of
 having equal suspiciousness scores assigned to multiple statements. These ties
 hinder the debugging process and present the developer with a dilemma. Which
 element should be inspected first? they're equally suspicious! This problem
-becomes more significant when only one of the tied elements actually contain the
+becomes more significant when only one of the tied elements actually contains the
 fault. A study by Xu et al. \cite{xu2011ties} recognizes this problem and
 expands on the different outcomes. In the best case, the developer picks the
 statement containing the fault as their first choice and finds the error right
@@ -314,7 +315,7 @@ text editor PyCharm. Similar to AFLuent, it uses the Pytest framework to collect
 program spectra and calculates suspiciousness scores using Tarantula, Ochiai,
 and DStar approaches. Overall, CharmFL has many similarities with AFLuent, but
 it's also less accessible considering that it's a PyCharm plugin which is not
-used by every developer. Overall, the implementation of CharmFL provides and
+used by every developer. Overall, the implementation of CharmFL provides an
 inspiration for AFLuent and encourages improvements where CharmFL may fall
 short.
 
@@ -335,14 +336,14 @@ This can be done in many different ways, one of which is to increase the clarity
 and verbosity of output messages from the tool. Instead of simply displaying the
 ranked scores of statements, it would be more user friendly to explain the
 meaning of the output to guide the user into beginning the debugging process.
-Kohn \cite{kohn2019error} explores the experience of beginner with Python errors
+Kohn \cite{kohn2019error} explores the experience of beginners with Python errors
 with different severity and various Python interpreter error output. The results
 confirm that more clear error messages tend to have a higher percentage of
 students finding and fixing the error. This connection between error output and
 the ability for beginner developers to fix faults is very crucial in the case of
-AFLuent. And while a user survey is out of scope of this research, it's Kohn
+AFLuent. And while a user survey is out of scope of this research, Kohn
 provides encouragement to account for the different use cases in AFLuent and
-attempt to provide a clear output that describes the fault and guides the
+attempts to provide a clear output that describes the fault and guides the
 developer for the next step.
 
 Another aspiration of AFLuent is to assist beginners in debugging their code in
@@ -350,7 +351,7 @@ ways that go beyond simply looking at the suspiciousness ranking of elements. By
 identifying popular python errors in Python among beginners, cause of faults can
 more quickly be pointed out after statement ranking has been produced. These
 steps require additional analysis of the suspicious statements by analyzing
-their syntax to identify potential cause. The goal of AFLuent would then become
+their syntax to identify potential causes. The goal of AFLuent would then become
 more than simply locating the fault, but also giving an educated guess regarding
 the reason behind the error. Cosman et al. \cite{cosman2020pablo} create a tool
 named PABLO that uses a trained classifier to identify common bugs and faults in
